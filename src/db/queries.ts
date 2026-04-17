@@ -1,0 +1,122 @@
+import { Reading, Thresholds, DosingEntry, ParameterKey } from '@/src/models/types';
+import { getDatabase } from './database';
+
+// --- Readings ---
+
+export async function insertReading(
+  parameter: ParameterKey,
+  value: number,
+  unit: string,
+  notes?: string
+): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    'INSERT INTO readings (parameter, value, unit, recorded_at, notes) VALUES (?, ?, ?, ?, ?)',
+    parameter, value, unit, new Date().toISOString(), notes ?? null
+  );
+}
+
+export async function getLatestReadings(): Promise<Reading[]> {
+  const db = await getDatabase();
+  return db.getAllAsync<Reading>(
+    `SELECT r.* FROM readings r
+     INNER JOIN (
+       SELECT parameter, MAX(id) as max_id FROM readings GROUP BY parameter
+     ) latest ON r.id = latest.max_id
+     ORDER BY r.parameter`
+  );
+}
+
+export async function getReadingHistory(
+  parameter: ParameterKey,
+  days?: number
+): Promise<Reading[]> {
+  const db = await getDatabase();
+  if (days) {
+    const since = new Date();
+    since.setDate(since.getDate() - days);
+    return db.getAllAsync<Reading>(
+      'SELECT * FROM readings WHERE parameter = ? AND recorded_at >= ? ORDER BY recorded_at ASC',
+      parameter, since.toISOString()
+    );
+  }
+  return db.getAllAsync<Reading>(
+    'SELECT * FROM readings WHERE parameter = ? ORDER BY recorded_at ASC',
+    parameter
+  );
+}
+
+export async function deleteReading(id: number): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync('DELETE FROM readings WHERE id = ?', id);
+}
+
+export async function updateReading(id: number, value: number): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync('UPDATE readings SET value = ? WHERE id = ?', value, id);
+}
+
+// --- Thresholds ---
+
+export async function getThresholds(): Promise<Thresholds[]> {
+  const db = await getDatabase();
+  return db.getAllAsync<Thresholds>('SELECT * FROM thresholds');
+}
+
+export async function getThresholdForParam(parameter: ParameterKey): Promise<Thresholds | null> {
+  const db = await getDatabase();
+  return db.getFirstAsync<Thresholds>(
+    'SELECT * FROM thresholds WHERE parameter = ?',
+    parameter
+  );
+}
+
+export async function updateThreshold(threshold: Thresholds): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    `UPDATE thresholds SET warning_low = ?, warning_high = ?, critical_low = ?, critical_high = ?
+     WHERE parameter = ?`,
+    threshold.warning_low, threshold.warning_high,
+    threshold.critical_low, threshold.critical_high,
+    threshold.parameter
+  );
+}
+
+// --- Dosing ---
+
+export async function insertDose(
+  product: string,
+  amount: number,
+  unit: string,
+  notes?: string
+): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    'INSERT INTO dosing_log (product, amount, unit, dosed_at, notes) VALUES (?, ?, ?, ?, ?)',
+    product, amount, unit, new Date().toISOString(), notes ?? null
+  );
+}
+
+export async function getDosingHistory(days?: number): Promise<DosingEntry[]> {
+  const db = await getDatabase();
+  if (days) {
+    const since = new Date();
+    since.setDate(since.getDate() - days);
+    return db.getAllAsync<DosingEntry>(
+      'SELECT * FROM dosing_log WHERE dosed_at >= ? ORDER BY dosed_at DESC',
+      since.toISOString()
+    );
+  }
+  return db.getAllAsync<DosingEntry>(
+    'SELECT * FROM dosing_log ORDER BY dosed_at DESC'
+  );
+}
+
+// --- CSV Export ---
+
+export async function getAllReadingsForExport(): Promise<Reading[]> {
+  const db = await getDatabase();
+  return db.getAllAsync<Reading>(
+    'SELECT * FROM readings ORDER BY recorded_at ASC'
+  );
+}

@@ -1,0 +1,117 @@
+export default {
+  // Tabs
+  tabs: {
+    dashboard: 'Dashboard',
+    log: 'Log',
+    trends: 'Trends',
+    settings: 'Settings',
+  },
+  // Parameters
+  params: {
+    temperature: 'Temperature',
+    salinity: 'Salinity',
+    ph: 'pH',
+    alkalinity: 'Alkalinity',
+    calcium: 'Calcium',
+    magnesium: 'Magnesium',
+    nitrate: 'Nitrate',
+    phosphate: 'Phosphate',
+  },
+  // Dashboard
+  dashboard: {
+    waterChemistry: 'Water Chemistry',
+    nutrients: 'Nutrients',
+    ratioNO3PO4: 'NO3:PO4 Ratio',
+    ionicBalance: 'Ionic Balance',
+    noData: 'no data',
+  },
+  // Log
+  log: {
+    subtitle: 'Tap a parameter to record',
+    cancel: 'Cancel',
+    save: 'Save Reading',
+    saving: 'Saving...',
+    step: 'Step',
+  },
+  // Nitrate timers
+  timers: {
+    title: 'Salifert Timers',
+    shake: 'Shake 30 sec',
+    wait: 'Wait 3 min',
+    start: 'Start',
+    cancel: 'Cancel',
+    done: 'Done',
+  },
+  // Trends
+  trends: {
+    consumptionRate: 'Consumption Rate',
+    consumptionHigh: 'High consumption — corals growing actively',
+    consumptionNormal: 'Normal — steady uptake',
+    consumptionStable: 'Stable — no net change',
+    consumptionRising: 'Rising — check dosing',
+    history: 'History',
+    noReadings: 'No readings for this period',
+    deleteTitle: 'Delete reading',
+    deleteMessage: '%{value} %{unit} on %{date}?',
+    deleteConfirm: 'Delete',
+  },
+  // Chart
+  chart: {
+    noReadings: 'No readings yet',
+    noReadingsHint: 'Log your first %{param} reading to see trends',
+    current: 'Current',
+    min: 'Min',
+    max: 'Max',
+    avg: 'Avg',
+  },
+  // Settings
+  settings: {
+    thresholds: 'Alert Thresholds',
+    data: 'Data',
+    dosingLog: 'Dosing Log',
+    exportCsv: 'Export as CSV',
+    noDataExport: 'No data',
+    noDataExportMsg: 'No readings to export yet.',
+    save: 'Save',
+    warnLow: 'Warn Low',
+    warnHigh: 'Warn High',
+    critLow: 'Crit Low',
+    critHigh: 'Crit High',
+  },
+  // Dosing
+  dosing: {
+    title: 'Dosing Log',
+    add: 'Add Dose',
+    empty: 'No doses recorded',
+    emptyHint: 'Track what you dose and when to correlate with parameter changes',
+    product: 'Product',
+    productPlaceholder: 'Or type product name...',
+    amount: 'Amount',
+    notes: 'Notes',
+    notesPlaceholder: 'Optional...',
+    cancel: 'Cancel',
+    save: 'Save',
+    products: {
+      kalkwasser: 'Kalkwasser',
+      allForReef: 'All-for-Reef',
+      caBalling: 'Ca (2-part)',
+      alkBalling: 'Alk (2-part)',
+      mgSupplement: 'Mg supplement',
+      aminoAcids: 'Amino acids',
+      coralFood: 'Coral food',
+    },
+  },
+  // Ratios
+  ratios: {
+    po4Undetectable: 'PO4 undetectable with elevated NO3 — risk of cyano/dinos',
+    no3Undetectable: 'NO3 undetectable with elevated PO4 — nutrient imbalance',
+    insufficientData: 'Insufficient data',
+    ratioLow: 'NO3:PO4 ratio low (%{ratio}:1) — excess phosphate',
+    ratioHigh: 'NO3:PO4 ratio high (%{ratio}:1) — excess nitrate',
+    ratioOk: 'NO3:PO4 ratio %{ratio}:1',
+    mgLow: 'Mg too low relative to Ca — raise Mg first',
+    mgHigh: 'Mg too high relative to Ca',
+    mgInstability: 'Low Mg may be causing Ca/Alk instability',
+    ionicOk: 'Ca/Alk/Mg balance OK',
+  },
+};
