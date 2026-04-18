@@ -5,7 +5,7 @@ import { Reading, Status, Thresholds } from '@/src/models/types';
 import { ParameterDef } from '@/src/models/types';
 import { StatusBadge } from './StatusBadge';
 import { MiniSparkline } from './MiniSparkline';
-import { THEME, STATUS_COLORS } from '@/src/constants/colors';
+import { THEME } from '@/src/constants/colors';
 import i18n, { getDateLocale } from '@/src/i18n';
 
 interface Props {
@@ -36,12 +36,12 @@ export function ParamCard({ paramDef, reading, status, history, thresholds, onPr
         {reading ? reading.value.toFixed(paramDef.decimals) : '—'}
         {paramDef.unit ? <Text style={styles.unit}> {paramDef.unit}</Text> : null}
       </Text>
-      <View style={styles.bottomRow}>
-        <Text style={styles.timeAgo}>{timeAgo}</Text>
-        {history && history.length >= 2 && (
-          <MiniSparkline readings={history} thresholds={thresholds ?? null} />
-        )}
-      </View>
+      <Text style={styles.timeAgo}>{timeAgo}</Text>
+      {history && history.length >= 2 && (
+        <View style={styles.sparklineContainer}>
+          <MiniSparkline readings={history} thresholds={thresholds ?? null} width={0} height={28} fill />
+        </View>
+      )}
     </TouchableOpacity>
   );
 }
@@ -52,6 +52,6 @@ const styles = StyleSheet.create({
   label: { color: THEME.textSecondary, fontSize: 13, fontWeight: '500', letterSpacing: 0.3 },
   value: { color: THEME.text, fontSize: 30, fontWeight: '700', letterSpacing: -0.5, fontVariant: ['tabular-nums'] },
   unit: { color: THEME.textSecondary, fontSize: 14, fontWeight: '400' },
-  bottomRow: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 8 },
-  timeAgo: { color: THEME.textSecondary, fontSize: 11, fontWeight: '400' },
+  timeAgo: { color: THEME.textSecondary, fontSize: 11, marginTop: 2, fontWeight: '400' },
+  sparklineContainer: { marginTop: 8, marginHorizontal: -6 },
 });

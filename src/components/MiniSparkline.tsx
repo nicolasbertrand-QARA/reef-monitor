@@ -1,13 +1,14 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, LayoutChangeEvent } from 'react-native';
 import { Reading, Thresholds } from '@/src/models/types';
-import { STATUS_COLORS, THEME } from '@/src/constants/colors';
+import { STATUS_COLORS } from '@/src/constants/colors';
 
 interface Props {
   readings: Reading[];
   thresholds: Thresholds | null;
   width?: number;
   height?: number;
+  fill?: boolean; // if true, ignores width and fills container
 }
 
 const MID_GREY = '#b5ada3';
@@ -17,15 +18,13 @@ function getSparklineColor(value: number, thresholds: Thresholds | null): string
 
   const { warning_low, warning_high, critical_low, critical_high } = thresholds;
 
-  // Check critical
   if (critical_low !== null && value <= critical_low) return STATUS_COLORS.critical;
   if (critical_high !== null && value >= critical_high) return STATUS_COLORS.critical;
 
-  // Check warning — interpolate between grey and warning color
   if (warning_low !== null && value < warning_low) {
     if (critical_low !== null && critical_low < warning_low) {
       const t = Math.min(1, (warning_low - value) / (warning_low - critical_low));
-      return interpolateColor(MID_GREY, STATUS_COLORS.warning, t);
+      return interpolateColor(STATUS_COLORS.warning, STATUS_COLORS.critical, t);
     }
     return STATUS_COLORS.warning;
   }
@@ -47,27 +46,38 @@ function interpolateColor(c1: string, c2: string, t: number): string {
   return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 }
 
-export function MiniSparkline({ readings, thresholds, width = 70, height = 30 }: Props) {
-  if (readings.length < 2) return <View style={{ width, height }} />;
+export function MiniSparkline({ readings, thresholds, width: fixedWidth = 70, height = 30, fill }: Props) {
+  const [containerWidth, setContainerWidth] = useState(0);
 
-  // Use last 20 readings max for the sparkline
+  if (readings.length < 2) return <View style={{ height }} />;
+
+  const width = fill ? containerWidth : fixedWidth;
+
+  const onLayout = (e: LayoutChangeEvent) => {
+    if (fill) setContainerWidth(e.nativeEvent.layout.width);
+  };
+
   const data = readings.slice(-20);
   const values = data.map((r) => r.value);
   const min = Math.min(...values);
   const max = Math.max(...values);
   const range = max - min || 1;
-  const padding = 3;
+  const pad = 3;
 
   const latest = values[values.length - 1];
   const color = getSparklineColor(latest, thresholds);
 
+  if (width === 0 && fill) {
+    return <View style={{ height }} onLayout={onLayout} />;
+  }
+
   const points = data.map((r, i) => ({
-    x: padding + (i / (data.length - 1)) * (width - padding * 2),
-    y: padding + (1 - (r.value - min) / range) * (height - padding * 2),
+    x: pad + (i / (data.length - 1)) * (width - pad * 2),
+    y: pad + (1 - (r.value - min) / range) * (height - pad * 2),
   }));
 
   return (
-    <View style={{ width, height, position: 'relative' }}>
+    <View style={{ width: fill ? '100%' : width, height, position: 'relative' }} onLayout={onLayout}>
       {points.map((pt, i) => {
         if (i === 0) return null;
         const prev = points[i - 1];
