@@ -53,32 +53,27 @@ export default function SettingsScreen() {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <Text style={styles.sectionTitle}>{i18n.t('settings.parameters')}</Text>
       <View style={styles.section}>
-        {paramList.map((paramDef, idx) => (
-          <View key={paramDef.key} style={[styles.toggleRow, idx < paramList.length - 1 && styles.rowBorder]}>
-            <Text style={styles.rowLabel}>{paramDef.label}</Text>
-            <Switch
-              value={visibility[paramDef.key] ?? true}
-              onValueChange={() => toggleParam(paramDef.key)}
-              trackColor={{ false: THEME.surface, true: THEME.accent }}
-              thumbColor={THEME.surfaceElevated}
-            />
-          </View>
-        ))}
-      </View>
-
-      <Text style={styles.sectionTitle}>{i18n.t('settings.thresholds')}</Text>
-      <View style={styles.section}>
         {paramList.map((paramDef, idx) => {
           const t = thresholds.find((th) => th.parameter === paramDef.key);
           const isEditing = editing === paramDef.key;
           const isLast = idx === paramList.length - 1;
+          const isVisible = visibility[paramDef.key] ?? true;
           return (
             <View key={paramDef.key}>
-              <TouchableOpacity style={[styles.row, !isLast && styles.rowBorder]} onPress={() => setEditing(isEditing ? null : paramDef.key)}>
-                <Text style={styles.rowLabel}>{paramDef.label}</Text>
-                <Text style={styles.rowValue}>{t ? `${t.warning_low ?? '—'} – ${t.warning_high ?? '—'} ${paramDef.unit}` : '—'}</Text>
-                <FontAwesome name={isEditing ? 'chevron-up' : 'chevron-down'} size={12} color={THEME.textSecondary} />
-              </TouchableOpacity>
+              <View style={[styles.row, !isLast && styles.rowBorder]}>
+                <Switch
+                  value={isVisible}
+                  onValueChange={() => toggleParam(paramDef.key)}
+                  trackColor={{ false: THEME.surface, true: THEME.accent }}
+                  thumbColor={THEME.surfaceElevated}
+                  style={styles.toggle}
+                />
+                <TouchableOpacity style={styles.rowContent} onPress={() => setEditing(isEditing ? null : paramDef.key)}>
+                  <Text style={[styles.rowLabel, !isVisible && styles.rowLabelDisabled]}>{paramDef.label}</Text>
+                  <Text style={styles.rowValue}>{t ? `${t.warning_low ?? '—'} – ${t.warning_high ?? '—'} ${paramDef.unit}` : '—'}</Text>
+                  <FontAwesome name={isEditing ? 'chevron-up' : 'chevron-down'} size={12} color={THEME.textSecondary} />
+                </TouchableOpacity>
+              </View>
               {isEditing && t && (
                 <ThresholdEditor threshold={t} onSave={async (updated) => { await updateThreshold(updated); const fresh = await getThresholds(); setThresholds(fresh); setEditing(null); }} />
               )}
@@ -139,8 +134,10 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: THEME.background },
   sectionTitle: { color: THEME.textSecondary, fontSize: 12, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1, paddingHorizontal: 20, paddingTop: 28, paddingBottom: 10 },
   section: { backgroundColor: THEME.surfaceElevated, marginHorizontal: 20, borderRadius: 14, overflow: 'hidden' },
-  toggleRow: { paddingHorizontal: 16, paddingVertical: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  row: { paddingHorizontal: 16, paddingVertical: 14, flexDirection: 'row', alignItems: 'center' },
+  row: { paddingHorizontal: 16, paddingVertical: 12, flexDirection: 'row', alignItems: 'center' },
+  toggle: { marginRight: 12, transform: [{ scale: 0.85 }] },
+  rowContent: { flex: 1, flexDirection: 'row', alignItems: 'center' },
+  rowLabelDisabled: { opacity: 0.4 },
   rowBorder: { borderBottomWidth: 0.5, borderBottomColor: THEME.border },
   rowLabel: { color: THEME.text, fontSize: 15, flex: 1 },
   rowValue: { color: THEME.textSecondary, fontSize: 13, marginRight: 10, fontVariant: ['tabular-nums'] },
