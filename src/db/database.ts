@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 import { PARAMETER_LIST } from '@/src/constants/parameters';
 
 const DB_NAME = 'reef-monitor.db';
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 
 let db: SQLite.SQLiteDatabase | null = null;
 
@@ -88,6 +88,13 @@ async function initDatabase(database: SQLite.SQLiteDatabase) {
         param.key, visible
       );
     }
+  }
+
+  if (user_version < 4) {
+    // Fix salinity thresholds: was ppt (33/37/30/40), now specific gravity
+    await database.runAsync(
+      `UPDATE thresholds SET warning_low = 1.023, warning_high = 1.027, critical_low = 1.020, critical_high = 1.030 WHERE parameter = 'salinity'`
+    );
   }
 
   // Always seed any missing params (handles upgrades that add new parameters)

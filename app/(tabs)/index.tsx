@@ -1,7 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { useFocusEffect } from 'expo-router';
-import { getCoreParams, getNutrientParams, PARAMETERS } from '@/src/constants/parameters';
+import { getCoreParams, getNutrientParams, PARAMETERS, getParameterList } from '@/src/constants/parameters';
 import { THEME } from '@/src/constants/colors';
 import { useLatestReadings } from '@/src/hooks/useParameters';
 import { evaluateStatus } from '@/src/utils/thresholds';
@@ -11,14 +11,32 @@ import { ParamInput } from '@/src/components/ParamInput';
 import { RatioIndicator } from '@/src/components/RatioIndicator';
 import { Reading, Thresholds, ParameterKey, ParameterDef } from '@/src/models/types';
 import { useVisibleParams } from '@/src/hooks/useVisibility';
+import { getReadingHistory } from '@/src/db/queries';
 import i18n from '@/src/i18n';
 
 export default function DashboardScreen() {
   const { readings, thresholds, loading, refresh } = useLatestReadings();
   const { visible, refresh: refreshVisibility } = useVisibleParams();
   const [selectedParam, setSelectedParam] = useState<ParameterDef | null>(null);
+  const [historyMap, setHistoryMap] = useState<Map<ParameterKey, Reading[]>>(new Map());
 
-  useFocusEffect(useCallback(() => { refresh(); refreshVisibility(); }, [refresh, refreshVisibility]));
+  const loadHistory = useCallback(async () => {
+    const map = new Map<ParameterKey, Reading[]>();
+    const params = getParameterList();
+    await Promise.all(
+      params.map(async (p) => {
+        const history = await getReadingHistory(p.key, 30);
+        map.set(p.key, history);
+      })
+    );
+    setHistoryMap(map);
+  }, []);
+
+  useFocusEffect(useCallback(() => {
+    refresh();
+    refreshVisibility();
+    loadHistory();
+  }, [refresh, refreshVisibility, loadHistory]));
 
   const readingMap = new Map<ParameterKey, Reading>();
   readings.forEach((r) => readingMap.set(r.parameter as ParameterKey, r));
@@ -36,6 +54,8 @@ export default function DashboardScreen() {
     const status = reading && threshold ? evaluateStatus(reading.value, threshold) : 'unknown';
     return (
       <ParamCard key={paramDef.key} paramDef={paramDef} reading={reading} status={status}
+        history={historyMap.get(paramDef.key)}
+        thresholds={threshold}
         onPress={() => setSelectedParam(PARAMETERS[paramDef.key])} />
     );
   };
@@ -62,7 +82,7 @@ export default function DashboardScreen() {
           paramDef={selectedParam}
           visible={true}
           onClose={() => setSelectedParam(null)}
-          onSaved={() => { setSelectedParam(null); refresh(); }}
+          onSaved={() => { setSelectedParam(null); refresh(); loadHistory(); }}
         />
       )}
     </ScrollView>
