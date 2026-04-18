@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import { Reading, Thresholds, DosingEntry } from '@/src/models/types';
+import { Reading, Thresholds, DosingEntry, WaterChange } from '@/src/models/types';
 import { ParameterDef } from '@/src/models/types';
 import { THEME } from '@/src/constants/colors';
 import { format } from 'date-fns';
@@ -9,15 +9,17 @@ import i18n, { getDateLocale } from '@/src/i18n';
 const CHART_HEIGHT = 200;
 const CHART_PADDING = 40;
 const DOSE_COLOR = '#c4943e';
+const WC_COLOR = '#5a8fb8';
 
 interface Props {
   readings: Reading[];
   paramDef: ParameterDef;
   thresholds: Thresholds | null;
   doses?: DosingEntry[];
+  waterChanges?: WaterChange[];
 }
 
-export function TrendChart({ readings, paramDef, thresholds, doses }: Props) {
+export function TrendChart({ readings, paramDef, thresholds, doses, waterChanges }: Props) {
   if (readings.length === 0) {
     return (
       <View style={styles.empty}>
@@ -60,6 +62,18 @@ export function TrendChart({ readings, paramDef, thresholds, doses }: Props) {
     })
     .filter(Boolean) as { x: number; label: string; shortLabel: string }[];
 
+  // Water change markers — shown on ALL charts
+  const wcMarkers = (waterChanges ?? [])
+    .map((w) => {
+      const t = new Date(w.changed_at).getTime();
+      if (t < timeStart || t > timeEnd) return null;
+      return {
+        x: CHART_PADDING + ((t - timeStart) / timeRange) * chartWidth,
+        label: `${w.percentage}%`,
+      };
+    })
+    .filter(Boolean) as { x: number; label: string }[];
+
   const warnLowY = thresholds?.warning_low != null ? CHART_HEIGHT - ((thresholds.warning_low - yMin) / yRange) * CHART_HEIGHT : null;
   const warnHighY = thresholds?.warning_high != null ? CHART_HEIGHT - ((thresholds.warning_high - yMin) / yRange) * CHART_HEIGHT : null;
   const avg = values.reduce((s, v) => s + v, 0) / values.length;
@@ -78,6 +92,14 @@ export function TrendChart({ readings, paramDef, thresholds, doses }: Props) {
           <View key={`dose-${i}`} style={[styles.doseLine, { left: dm.x }]}>
             <View style={styles.doseLineInner} />
             <View style={styles.doseDot} />
+          </View>
+        ))}
+
+        {/* Water change markers — blue vertical lines */}
+        {wcMarkers.map((wm, i) => (
+          <View key={`wc-${i}`} style={[styles.doseLine, { left: wm.x }]}>
+            <View style={[styles.doseLineInner, { backgroundColor: WC_COLOR }]} />
+            <View style={[styles.doseDot, { backgroundColor: WC_COLOR }]} />
           </View>
         ))}
 
@@ -112,13 +134,25 @@ export function TrendChart({ readings, paramDef, thresholds, doses }: Props) {
         ))}
       </View>
 
-      {/* Dosing legend below stats */}
-      {doseMarkers.length > 0 && (
-        <View style={styles.doseLegend}>
-          <View style={styles.doseLegendDot} />
-          <Text style={styles.doseLegendText}>
-            {[...new Set((doses ?? []).map((d) => d.product))].join(', ')}
-          </Text>
+      {/* Legends below stats */}
+      {(doseMarkers.length > 0 || wcMarkers.length > 0) && (
+        <View style={styles.legendRow}>
+          {doseMarkers.length > 0 && (
+            <View style={styles.doseLegend}>
+              <View style={styles.doseLegendDot} />
+              <Text style={styles.doseLegendText}>
+                {[...new Set((doses ?? []).map((d) => d.product))].join(', ')}
+              </Text>
+            </View>
+          )}
+          {wcMarkers.length > 0 && (
+            <View style={styles.doseLegend}>
+              <View style={[styles.doseLegendDot, { backgroundColor: WC_COLOR }]} />
+              <Text style={styles.doseLegendText}>
+                {wcMarkers.map((w) => w.label).join(', ')}
+              </Text>
+            </View>
+          )}
         </View>
       )}
     </View>
@@ -143,7 +177,8 @@ const styles = StyleSheet.create({
   doseLine: { position: 'absolute', top: 0, height: CHART_HEIGHT, width: 1, alignItems: 'center' },
   doseLineInner: { width: 1, height: '100%', backgroundColor: DOSE_COLOR, opacity: 0.4 },
   doseDot: { position: 'absolute', top: -4, width: 8, height: 8, borderRadius: 4, backgroundColor: DOSE_COLOR },
-  doseLegend: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 8, paddingHorizontal: 4 },
+  legendRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 16, marginTop: 8, paddingHorizontal: 4 },
+  doseLegend: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   doseLegendDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: DOSE_COLOR },
   doseLegendText: { color: THEME.textSecondary, fontSize: 11 },
 });

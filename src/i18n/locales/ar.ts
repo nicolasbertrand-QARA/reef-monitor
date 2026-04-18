@@ -1,5 +1,5 @@
 export default {
-  tabs: { dashboard: 'لوحة القيادة', log: 'تسجيل', trends: 'الاتجاهات', settings: 'الإعدادات' },
+  tabs: { dashboard: 'لوحة القيادة', log: 'تسجيل', trends: 'الاتجاهات', dosing: 'التصحيحات', settings: 'الإعدادات' },
   params: { temperature: 'الحرارة', salinity: 'الملوحة', ph: 'pH', alkalinity: 'القلوية', calcium: 'الكالسيوم', magnesium: 'المغنيسيوم', nitrate: 'النترات', phosphate: 'الفوسفات' },
   dashboard: { waterChemistry: 'كيمياء المياه', nutrients: 'المغذيات', ratioNO3PO4: 'نسبة NO3:PO4', ionicBalance: 'التوازن الأيوني', noData: 'لا توجد بيانات' },
   log: { subtitle: 'انقر على معامل للتسجيل', cancel: 'إلغاء', save: 'حفظ', saving: 'جارٍ الحفظ...', step: 'خطوة' },

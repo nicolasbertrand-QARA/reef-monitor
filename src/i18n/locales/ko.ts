@@ -1,5 +1,5 @@
 export default {
-  tabs: { dashboard: '대시보드', log: '기록', trends: '추세', settings: '설정' },
+  tabs: { dashboard: '대시보드', log: '기록', trends: '추세', dosing: '보정', settings: '설정' },
   params: { temperature: '수온', salinity: '염도', ph: 'pH', alkalinity: '알칼리도', calcium: '칼슘', magnesium: '마그네슘', nitrate: '질산염', phosphate: '인산염' },
   dashboard: { waterChemistry: '수질', nutrients: '영양염', ratioNO3PO4: 'NO3:PO4 비율', ionicBalance: '이온 균형', noData: '데이터 없음' },
   log: { subtitle: '매개변수를 탭하여 기록', cancel: '취소', save: '저장', saving: '저장 중...', step: '단계' },

@@ -1,5 +1,5 @@
 export default {
-  tabs: { dashboard: '仪表盘', log: '记录', trends: '趋势', settings: '设置' },
+  tabs: { dashboard: '仪表盘', log: '记录', trends: '趋势', dosing: '校正', settings: '设置' },
   params: { temperature: '温度', salinity: '盐度', ph: 'pH', alkalinity: '碱度', calcium: '钙', magnesium: '镁', nitrate: '硝酸盐', phosphate: '磷酸盐' },
   dashboard: { waterChemistry: '水质化学', nutrients: '营养盐', ratioNO3PO4: 'NO3:PO4比值', ionicBalance: '离子平衡', noData: '无数据' },
   log: { subtitle: '点击参数进行记录', cancel: '取消', save: '保存', saving: '保存中...', step: '步进' },

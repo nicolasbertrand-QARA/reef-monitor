@@ -5,9 +5,9 @@ import { format } from 'date-fns';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { getParameterList, PARAMETERS } from '@/src/constants/parameters';
 import { THEME, STATUS_COLORS } from '@/src/constants/colors';
-import { ParameterKey, Reading, DosingEntry } from '@/src/models/types';
+import { ParameterKey, Reading, DosingEntry, WaterChange } from '@/src/models/types';
 import { useReadingHistory } from '@/src/hooks/useParameters';
-import { getThresholdForParam, deleteReading, updateReading, getDosingHistory } from '@/src/db/queries';
+import { getThresholdForParam, deleteReading, updateReading, getDosingHistory, getWaterChanges } from '@/src/db/queries';
 import { Thresholds } from '@/src/models/types';
 import { isDoseRelevant } from '@/src/constants/dosingMap';
 import { TrendChart } from '@/src/components/TrendChart';
@@ -24,6 +24,7 @@ export default function TrendsScreen() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editValue, setEditValue] = useState('');
   const [doses, setDoses] = useState<DosingEntry[]>([]);
+  const [waterChanges, setWaterChanges] = useState<WaterChange[]>([]);
 
   const days = timeRange === 0 ? undefined : timeRange;
   const { readings, refresh } = useReadingHistory(selected, days);
@@ -31,12 +32,13 @@ export default function TrendsScreen() {
 
   useEffect(() => { getThresholdForParam(selected).then(setThresholds); }, [selected]);
 
-  // Fetch dosing data filtered by parameter relevance
+  // Fetch dosing data filtered by parameter relevance + water changes
   useEffect(() => {
     getDosingHistory(days).then((allDoses) => {
       const relevant = allDoses.filter((d) => isDoseRelevant(d.product, selected));
       setDoses(relevant);
     });
+    getWaterChanges(days).then(setWaterChanges);
   }, [selected, days]);
 
   const consumptionRate = selected === 'alkalinity' ? calculateConsumptionRate(readings) : null;
@@ -77,7 +79,7 @@ export default function TrendsScreen() {
         ))}
       </ScrollView>
       <TimeRangeSelector selected={timeRange} onSelect={setTimeRange} />
-      <TrendChart readings={readings} paramDef={paramDef} thresholds={thresholds} doses={doses} />
+      <TrendChart readings={readings} paramDef={paramDef} thresholds={thresholds} doses={doses} waterChanges={waterChanges} />
 
       {selected === 'alkalinity' && consumptionRate !== null && (
         <View style={styles.consumptionCard}>

@@ -26,6 +26,7 @@ Reef Monitor is a mobile app for tracking nano reef aquarium water parameters. I
 | Storage | SQLite via `expo-sqlite` (local only, no backend) |
 | i18n | `i18n-js` + `expo-localization` (15 languages) |
 | Date formatting | `date-fns` with per-locale imports |
+| Slider | `@react-native-community/slider` |
 | Haptics | `expo-haptics` |
 | File sharing | `expo-sharing` + `expo-file-system` |
 | File picking | `expo-document-picker` (CSV import) |
@@ -44,12 +45,11 @@ reef-monitor/
 │   ├── _layout.tsx               # Root layout: DB provider, splash, StatusBar
 │   ├── +not-found.tsx            # 404 screen
 │   ├── (tabs)/
-│   │   ├── _layout.tsx           # Tab bar config (3 tabs)
+│   │   ├── _layout.tsx           # Tab bar config (4 tabs)
 │   │   ├── index.tsx             # Dashboard: param cards, tap to log
 │   │   ├── trends.tsx            # Charts, history list, dosing overlay
-│   │   └── settings.tsx          # Thresholds, dosing log, CSV export/import
-│   └── dosing/
-│       └── index.tsx             # Dosing log modal
+│   │   ├── dosing.tsx            # Dosing log: add/view doses
+│   │   └── settings.tsx          # Thresholds, CSV export/import
 ├── src/
 │   ├── components/
 │   │   ├── ParamCard.tsx         # Dashboard card (value, status color, time-ago)
@@ -134,6 +134,17 @@ CREATE TABLE dosing_log (
 );
 ```
 
+### `water_changes`
+```sql
+CREATE TABLE water_changes (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  percentage REAL NOT NULL,
+  salt_brand TEXT,
+  dilution_gpl REAL,
+  changed_at TEXT NOT NULL
+);
+```
+
 ### `reminder_schedules`
 ```sql
 CREATE TABLE reminder_schedules (
@@ -163,7 +174,7 @@ Parameters are defined in `src/constants/parameters.ts`. Labels come from i18n.
 
 ---
 
-## App Screens (3 tabs + 1 modal)
+## App Screens (4 tabs)
 
 ### Dashboard (`app/(tabs)/index.tsx`)
 - 2-column grid of ParamCard components, grouped: "Water Chemistry" (6) + "Nutrients" (2)
@@ -181,15 +192,17 @@ Parameters are defined in `src/constants/parameters.ts`. Labels come from i18n.
 - History list: all readings reverse-chronological with inline edit (pencil) and delete (trash)
 - KeyboardAvoidingView for inline editing
 
+### Corrections (`app/(tabs)/dosing.tsx`)
+- Two buttons: "Add Dose" and "Water Change"
+- Add dose: product quick-pick chips + free text, amount, unit (ml/g/gouttes), notes
+- Water change: percentage slider (0–100%, step 5), salt brand (free text), dilution (g/L). All fields retain last entered values.
+- Merged chronological list of doses and water changes, sorted by date
+- Water changes appear as blue markers on ALL trend charts; doses appear as amber markers on relevant charts only
+
 ### Settings (`app/(tabs)/settings.tsx`)
 - Alert thresholds: expandable per-parameter editor (warn low/high, crit low/high)
-- Dosing log link (opens modal)
 - Export as CSV (via `expo-sharing`)
 - Import CSV backup (via `expo-document-picker`)
-
-### Dosing Log (`app/dosing/index.tsx`) — presented as modal
-- Add dose: product quick-pick chips + free text, amount, unit (ml/g/gouttes), notes
-- Chronological list of recent doses
 
 ---
 

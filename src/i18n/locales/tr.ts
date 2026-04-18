@@ -1,5 +1,5 @@
 export default {
-  tabs: { dashboard: 'Panel', log: 'Kayıt', trends: 'Trendler', settings: 'Ayarlar' },
+  tabs: { dashboard: 'Panel', log: 'Kayıt', trends: 'Trendler', dosing: 'Düzeltmeler', settings: 'Ayarlar' },
   params: { temperature: 'Sıcaklık', salinity: 'Tuzluluk', ph: 'pH', alkalinity: 'Alkalinite', calcium: 'Kalsiyum', magnesium: 'Magnezyum', nitrate: 'Nitrat', phosphate: 'Fosfat' },
   dashboard: { waterChemistry: 'Su Kimyası', nutrients: 'Besinler', ratioNO3PO4: 'NO3:PO4 Oranı', ionicBalance: 'İyonik Denge', noData: 'veri yok' },
   log: { subtitle: 'Kayıt için bir parametreye dokunun', cancel: 'İptal', save: 'Kaydet', saving: 'Kaydediliyor...', step: 'Adım' },

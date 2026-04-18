@@ -3,6 +3,7 @@ export default {
     dashboard: 'Tableau de bord',
     log: 'Mesures',
     trends: 'Tendances',
+    dosing: 'Corrections',
     settings: 'Réglages',
   },
   params: {
@@ -95,6 +96,16 @@ export default {
       aminoAcids: 'Acides aminés',
       coralFood: 'Nourriture coraux',
     },
+  },
+  waterChange: {
+    title: "Changement d'eau",
+    add: "Changement d'eau",
+    percentage: 'Volume changé',
+    saltBrand: 'Marque de sel',
+    saltPlaceholder: 'ex. Red Sea Coral Pro...',
+    dilution: 'Dilution',
+    save: 'Enregistrer',
+    cancel: 'Annuler',
   },
   ratios: {
     po4Undetectable: 'PO4 indétectable avec NO3 élevé — risque de cyano/dinos',

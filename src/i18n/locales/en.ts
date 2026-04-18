@@ -4,6 +4,7 @@ export default {
     dashboard: 'Dashboard',
     log: 'Log',
     trends: 'Trends',
+    dosing: 'Corrections',
     settings: 'Settings',
   },
   // Parameters
@@ -104,6 +105,17 @@ export default {
       aminoAcids: 'Amino acids',
       coralFood: 'Coral food',
     },
+  },
+  // Water changes
+  waterChange: {
+    title: 'Water Change',
+    add: 'Water Change',
+    percentage: 'Volume changed',
+    saltBrand: 'Salt brand',
+    saltPlaceholder: 'e.g. Red Sea Coral Pro...',
+    dilution: 'Dilution',
+    save: 'Save',
+    cancel: 'Cancel',
   },
   // Ratios
   ratios: {

@@ -50,14 +50,6 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="dosing/index"
-          options={{
-            title: i18n.t('dosing.title'),
-            presentation: 'modal',
-            headerStyle: { backgroundColor: THEME.background },
-          }}
-        />
       </Stack>
     </DatabaseContext.Provider>
   );

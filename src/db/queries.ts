@@ -1,4 +1,4 @@
-import { Reading, Thresholds, DosingEntry, ParameterKey } from '@/src/models/types';
+import { Reading, Thresholds, DosingEntry, WaterChange, ParameterKey } from '@/src/models/types';
 import { getDatabase } from './database';
 
 // --- Readings ---
@@ -152,4 +152,40 @@ export async function importReadingsFromCSV(csvContent: string): Promise<number>
     imported++;
   }
   return imported;
+}
+
+// --- Water Changes ---
+
+export async function insertWaterChange(
+  percentage: number,
+  saltBrand?: string,
+  dilutionGpl?: number
+): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    'INSERT INTO water_changes (percentage, salt_brand, dilution_gpl, changed_at) VALUES (?, ?, ?, ?)',
+    percentage, saltBrand ?? null, dilutionGpl ?? null, new Date().toISOString()
+  );
+}
+
+export async function getWaterChanges(days?: number): Promise<WaterChange[]> {
+  const db = await getDatabase();
+  if (days) {
+    const since = new Date();
+    since.setDate(since.getDate() - days);
+    return db.getAllAsync<WaterChange>(
+      'SELECT * FROM water_changes WHERE changed_at >= ? ORDER BY changed_at DESC',
+      since.toISOString()
+    );
+  }
+  return db.getAllAsync<WaterChange>(
+    'SELECT * FROM water_changes ORDER BY changed_at DESC'
+  );
+}
+
+export async function getLastWaterChange(): Promise<WaterChange | null> {
+  const db = await getDatabase();
+  return db.getFirstAsync<WaterChange>(
+    'SELECT * FROM water_changes ORDER BY id DESC LIMIT 1'
+  );
 }

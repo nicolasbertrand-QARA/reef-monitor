@@ -1,5 +1,5 @@
 export default {
-  tabs: { dashboard: 'डैशबोर्ड', log: 'रिकॉर्ड', trends: 'रुझान', settings: 'सेटिंग्स' },
+  tabs: { dashboard: 'डैशबोर्ड', log: 'रिकॉर्ड', trends: 'रुझान', dosing: 'सुधार', settings: 'सेटिंग्स' },
   params: { temperature: 'तापमान', salinity: 'लवणता', ph: 'pH', alkalinity: 'क्षारीयता', calcium: 'कैल्शियम', magnesium: 'मैग्नीशियम', nitrate: 'नाइट्रेट', phosphate: 'फॉस्फेट' },
   dashboard: { waterChemistry: 'जल रसायन', nutrients: 'पोषक तत्व', ratioNO3PO4: 'NO3:PO4 अनुपात', ionicBalance: 'आयनिक संतुलन', noData: 'कोई डेटा नहीं' },
   log: { subtitle: 'रिकॉर्ड करने के लिए पैरामीटर टैप करें', cancel: 'रद्द करें', save: 'सहेजें', saving: 'सहेज रहे हैं...', step: 'स्टेप' },

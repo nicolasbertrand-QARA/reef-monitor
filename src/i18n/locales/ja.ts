@@ -1,5 +1,5 @@
 export default {
-  tabs: { dashboard: 'ダッシュボード', log: '記録', trends: 'トレンド', settings: '設定' },
+  tabs: { dashboard: 'ダッシュボード', log: '記録', trends: 'トレンド', dosing: '補正', settings: '設定' },
   params: { temperature: '水温', salinity: '塩分濃度', ph: 'pH', alkalinity: 'アルカリ度', calcium: 'カルシウム', magnesium: 'マグネシウム', nitrate: '硝酸塩', phosphate: 'リン酸塩' },
   dashboard: { waterChemistry: '水質', nutrients: '栄養塩', ratioNO3PO4: 'NO3:PO4比', ionicBalance: 'イオンバランス', noData: 'データなし' },
   log: { subtitle: 'パラメータをタップして記録', cancel: 'キャンセル', save: '保存', saving: '保存中...', step: 'ステップ' },

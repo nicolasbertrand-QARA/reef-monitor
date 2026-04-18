@@ -36,6 +36,14 @@ export interface DosingEntry {
   notes: string | null;
 }
 
+export interface WaterChange {
+  id: number;
+  percentage: number;
+  salt_brand: string | null;
+  dilution_gpl: number | null;
+  changed_at: string;
+}
+
 export interface ReminderSchedule {
   parameter: ParameterKey;
   interval_hours: number;

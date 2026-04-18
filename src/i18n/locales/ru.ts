@@ -1,5 +1,5 @@
 export default {
-  tabs: { dashboard: 'Панель', log: 'Записать', trends: 'Тренды', settings: 'Настройки' },
+  tabs: { dashboard: 'Панель', log: 'Записать', trends: 'Тренды', dosing: 'Коррекция', settings: 'Настройки' },
   params: { temperature: 'Температура', salinity: 'Солёность', ph: 'pH', alkalinity: 'Щёлочность', calcium: 'Кальций', magnesium: 'Магний', nitrate: 'Нитраты', phosphate: 'Фосфаты' },
   dashboard: { waterChemistry: 'Химия воды', nutrients: 'Нутриенты', ratioNO3PO4: 'Соотношение NO3:PO4', ionicBalance: 'Ионный баланс', noData: 'нет данных' },
   log: { subtitle: 'Нажмите на параметр для записи', cancel: 'Отмена', save: 'Сохранить', saving: 'Сохранение...', step: 'Шаг' },

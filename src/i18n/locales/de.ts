@@ -1,5 +1,5 @@
 export default {
-  tabs: { dashboard: 'Übersicht', log: 'Erfassen', trends: 'Trends', settings: 'Einstellungen' },
+  tabs: { dashboard: 'Übersicht', log: 'Erfassen', trends: 'Trends', dosing: 'Korrekturen', settings: 'Einstellungen' },
   params: { temperature: 'Temperatur', salinity: 'Salinität', ph: 'pH', alkalinity: 'Alkalinität', calcium: 'Calcium', magnesium: 'Magnesium', nitrate: 'Nitrat', phosphate: 'Phosphat' },
   dashboard: { waterChemistry: 'Wasserchemie', nutrients: 'Nährstoffe', ratioNO3PO4: 'NO3:PO4 Verhältnis', ionicBalance: 'Ionisches Gleichgewicht', noData: 'keine Daten' },
   log: { subtitle: 'Parameter antippen zum Erfassen', cancel: 'Abbrechen', save: 'Speichern', saving: 'Speichern...', step: 'Schritt' },

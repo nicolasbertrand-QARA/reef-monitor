@@ -1,5 +1,5 @@
 export default {
-  tabs: { dashboard: 'Pannello', log: 'Registra', trends: 'Tendenze', settings: 'Impostazioni' },
+  tabs: { dashboard: 'Pannello', log: 'Registra', trends: 'Tendenze', dosing: 'Correzioni', settings: 'Impostazioni' },
   params: { temperature: 'Temperatura', salinity: 'Salinità', ph: 'pH', alkalinity: 'Alcalinità', calcium: 'Calcio', magnesium: 'Magnesio', nitrate: 'Nitrati', phosphate: 'Fosfati' },
   dashboard: { waterChemistry: "Chimica dell'acqua", nutrients: 'Nutrienti', ratioNO3PO4: 'Rapporto NO3:PO4', ionicBalance: 'Equilibrio ionico', noData: 'nessun dato' },
   log: { subtitle: 'Tocca un parametro per registrare', cancel: 'Annulla', save: 'Salva', saving: 'Salvataggio...', step: 'Passo' },

@@ -1,5 +1,5 @@
 export default {
-  tabs: { dashboard: 'Dashboard', log: 'Registreren', trends: 'Trends', settings: 'Instellingen' },
+  tabs: { dashboard: 'Dashboard', log: 'Registreren', trends: 'Trends', dosing: 'Correcties', settings: 'Instellingen' },
   params: { temperature: 'Temperatuur', salinity: 'Saliniteit', ph: 'pH', alkalinity: 'Alkaliniteit', calcium: 'Calcium', magnesium: 'Magnesium', nitrate: 'Nitraat', phosphate: 'Fosfaat' },
   dashboard: { waterChemistry: 'Waterchemie', nutrients: 'Nutriënten', ratioNO3PO4: 'NO3:PO4 verhouding', ionicBalance: 'Ionisch evenwicht', noData: 'geen data' },
   log: { subtitle: 'Tik op een parameter om te registreren', cancel: 'Annuleren', save: 'Opslaan', saving: 'Opslaan...', step: 'Stap' },

@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 import { PARAMETER_LIST } from '@/src/constants/parameters';
 
 const DB_NAME = 'reef-monitor.db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 let db: SQLite.SQLiteDatabase | null = null;
 
@@ -18,7 +18,7 @@ async function initDatabase(database: SQLite.SQLiteDatabase) {
     'PRAGMA user_version'
   ) ?? { user_version: 0 };
 
-  if (user_version < DB_VERSION) {
+  if (user_version < 1) {
     await database.execAsync(`
       CREATE TABLE IF NOT EXISTS readings (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,12 +55,24 @@ async function initDatabase(database: SQLite.SQLiteDatabase) {
         enabled INTEGER NOT NULL DEFAULT 1,
         last_notified_at TEXT
       );
-
-      PRAGMA user_version = ${DB_VERSION};
     `);
 
     await seedDefaults(database);
   }
+
+  if (user_version < 2) {
+    await database.execAsync(`
+      CREATE TABLE IF NOT EXISTS water_changes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        percentage REAL NOT NULL,
+        salt_brand TEXT,
+        dilution_gpl REAL,
+        changed_at TEXT NOT NULL
+      );
+    `);
+  }
+
+  await database.execAsync(`PRAGMA user_version = ${DB_VERSION}`);
 }
 
 async function seedDefaults(database: SQLite.SQLiteDatabase) {

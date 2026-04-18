@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, TouchableOpacity, TextInput, StyleSheet, Alert } from 'react-native';
-import { useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
@@ -14,7 +13,6 @@ import i18n from '@/src/i18n';
 export default function SettingsScreen() {
   const [thresholds, setThresholds] = useState<Thresholds[]>([]);
   const [editing, setEditing] = useState<ParameterKey | null>(null);
-  const router = useRouter();
   const paramList = getParameterList();
 
   useEffect(() => { getThresholds().then(setThresholds); }, []);
@@ -65,11 +63,6 @@ export default function SettingsScreen() {
       </View>
       <Text style={styles.sectionTitle}>{i18n.t('settings.data')}</Text>
       <View style={styles.section}>
-        <TouchableOpacity style={[styles.actionRow, styles.rowBorder]} onPress={() => router.push('/dosing' as any)}>
-          <FontAwesome name="eyedropper" size={16} color={THEME.accent} />
-          <Text style={styles.actionLabel}>{i18n.t('settings.dosingLog')}</Text>
-          <FontAwesome name="chevron-right" size={12} color={THEME.textSecondary} style={{ marginLeft: 'auto' }} />
-        </TouchableOpacity>
         <TouchableOpacity style={[styles.actionRow, styles.rowBorder]} onPress={handleExport}>
           <FontAwesome name="share-square-o" size={16} color={THEME.accent} />
           <Text style={styles.actionLabel}>{i18n.t('settings.exportCsv')}</Text>
