@@ -67,18 +67,15 @@ export default function TrendsScreen() {
     getWaterChanges(days).then(setWaterChanges);
   }, [selectedSet, days]);
 
-  // Tap logic: tap unselected → add. Tap selected → make it the only one.
   const handleChipTap = (key: ParameterKey) => {
     setSelectedSet((prev) => {
-      if (prev.has(key)) {
-        // Already selected → keep only this one
-        return new Set([key]);
+      const next = new Set(prev);
+      if (next.has(key)) {
+        if (next.size > 1) next.delete(key); // don't allow empty selection
       } else {
-        // Not selected → add it
-        const next = new Set(prev);
         next.add(key);
-        return next;
       }
+      return next;
     });
   };
 
