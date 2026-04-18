@@ -35,6 +35,34 @@ function getParams(): Record<ParameterKey, ParameterDef> {
       key: 'phosphate', label: i18n.t('params.phosphate'), unit: 'ppm', step: 0.01, decimals: 2, defaultValue: 0.05, icon: 'eyedropper', group: 'nutrients',
       defaultThresholds: { warningLow: 0.01, warningHigh: 0.15, criticalLow: 0, criticalHigh: 0.25 }, reminderIntervalHours: 168,
     },
+    ammonia: {
+      key: 'ammonia', label: i18n.t('params.ammonia'), unit: 'ppm', step: 0.05, decimals: 2, defaultValue: 0, icon: 'warning', group: 'nutrients',
+      defaultThresholds: { warningLow: null, warningHigh: 0.1, criticalLow: null, criticalHigh: 0.25 }, reminderIntervalHours: 168,
+    },
+    nitrite: {
+      key: 'nitrite', label: i18n.t('params.nitrite'), unit: 'ppm', step: 0.05, decimals: 2, defaultValue: 0, icon: 'exclamation-triangle', group: 'nutrients',
+      defaultThresholds: { warningLow: null, warningHigh: 0.1, criticalLow: null, criticalHigh: 0.25 }, reminderIntervalHours: 168,
+    },
+    potassium: {
+      key: 'potassium', label: i18n.t('params.potassium'), unit: 'ppm', step: 5, decimals: 0, defaultValue: 400, icon: 'bolt', group: 'core',
+      defaultThresholds: { warningLow: 380, warningHigh: 450, criticalLow: 350, criticalHigh: 480 }, reminderIntervalHours: 720,
+    },
+    strontium: {
+      key: 'strontium', label: i18n.t('params.strontium'), unit: 'ppm', step: 0.5, decimals: 1, defaultValue: 9, icon: 'certificate', group: 'core',
+      defaultThresholds: { warningLow: 7, warningHigh: 12, criticalLow: 5, criticalHigh: 14 }, reminderIntervalHours: 720,
+    },
+    iodine: {
+      key: 'iodine', label: i18n.t('params.iodine'), unit: 'ppm', step: 0.01, decimals: 2, defaultValue: 0.06, icon: 'sun-o', group: 'core',
+      defaultThresholds: { warningLow: 0.02, warningHigh: 0.1, criticalLow: 0.01, criticalHigh: 0.15 }, reminderIntervalHours: 720,
+    },
+    boron: {
+      key: 'boron', label: i18n.t('params.boron'), unit: 'ppm', step: 0.5, decimals: 1, defaultValue: 5, icon: 'tint', group: 'core',
+      defaultThresholds: { warningLow: 3, warningHigh: 7, criticalLow: 2, criticalHigh: 9 }, reminderIntervalHours: 720,
+    },
+    silicate: {
+      key: 'silicate', label: i18n.t('params.silicate'), unit: 'ppm', step: 0.1, decimals: 1, defaultValue: 0, icon: 'filter', group: 'nutrients',
+      defaultThresholds: { warningLow: null, warningHigh: 0.5, criticalLow: null, criticalHigh: 2 }, reminderIntervalHours: 720,
+    },
   };
 }
 

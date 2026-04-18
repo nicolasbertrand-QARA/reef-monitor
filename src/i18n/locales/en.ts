@@ -17,6 +17,13 @@ export default {
     magnesium: 'Magnesium',
     nitrate: 'Nitrate',
     phosphate: 'Phosphate',
+    ammonia: 'Ammonia',
+    nitrite: 'Nitrite',
+    potassium: 'Potassium',
+    strontium: 'Strontium',
+    iodine: 'Iodine',
+    boron: 'Boron',
+    silicate: 'Silicate',
   },
   // Dashboard
   dashboard: {
@@ -67,6 +74,7 @@ export default {
   },
   // Settings
   settings: {
+    parameters: 'Parameters',
     thresholds: 'Alert Thresholds',
     data: 'Data',
     dosingLog: 'Dosing Log',

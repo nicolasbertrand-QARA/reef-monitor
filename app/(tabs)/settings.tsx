@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, TouchableOpacity, TextInput, StyleSheet, Alert } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, TextInput, Switch, StyleSheet, Alert } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
@@ -7,15 +7,25 @@ import { Paths, File } from 'expo-file-system/next';
 import { getParameterList } from '@/src/constants/parameters';
 import { THEME } from '@/src/constants/colors';
 import { Thresholds, ParameterKey } from '@/src/models/types';
-import { getThresholds, updateThreshold, getAllReadingsForExport, importReadingsFromCSV } from '@/src/db/queries';
+import { getThresholds, updateThreshold, getAllReadingsForExport, importReadingsFromCSV, getAllParamVisibility, setParamVisibility } from '@/src/db/queries';
 import i18n from '@/src/i18n';
 
 export default function SettingsScreen() {
   const [thresholds, setThresholds] = useState<Thresholds[]>([]);
   const [editing, setEditing] = useState<ParameterKey | null>(null);
+  const [visibility, setVisibility] = useState<Record<string, boolean>>({});
   const paramList = getParameterList();
 
-  useEffect(() => { getThresholds().then(setThresholds); }, []);
+  useEffect(() => {
+    getThresholds().then(setThresholds);
+    getAllParamVisibility().then(setVisibility);
+  }, []);
+
+  const toggleParam = async (key: ParameterKey) => {
+    const newVal = !visibility[key];
+    await setParamVisibility(key, newVal);
+    setVisibility((prev) => ({ ...prev, [key]: newVal }));
+  };
 
   const handleExport = async () => {
     const readings = await getAllReadingsForExport();
@@ -41,6 +51,21 @@ export default function SettingsScreen() {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <Text style={styles.sectionTitle}>{i18n.t('settings.parameters')}</Text>
+      <View style={styles.section}>
+        {paramList.map((paramDef, idx) => (
+          <View key={paramDef.key} style={[styles.toggleRow, idx < paramList.length - 1 && styles.rowBorder]}>
+            <Text style={styles.rowLabel}>{paramDef.label}</Text>
+            <Switch
+              value={visibility[paramDef.key] ?? true}
+              onValueChange={() => toggleParam(paramDef.key)}
+              trackColor={{ false: THEME.surface, true: THEME.accent }}
+              thumbColor={THEME.surfaceElevated}
+            />
+          </View>
+        ))}
+      </View>
+
       <Text style={styles.sectionTitle}>{i18n.t('settings.thresholds')}</Text>
       <View style={styles.section}>
         {paramList.map((paramDef, idx) => {
@@ -114,6 +139,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: THEME.background },
   sectionTitle: { color: THEME.textSecondary, fontSize: 12, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1, paddingHorizontal: 20, paddingTop: 28, paddingBottom: 10 },
   section: { backgroundColor: THEME.surfaceElevated, marginHorizontal: 20, borderRadius: 14, overflow: 'hidden' },
+  toggleRow: { paddingHorizontal: 16, paddingVertical: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   row: { paddingHorizontal: 16, paddingVertical: 14, flexDirection: 'row', alignItems: 'center' },
   rowBorder: { borderBottomWidth: 0.5, borderBottomColor: THEME.border },
   rowLabel: { color: THEME.text, fontSize: 15, flex: 1 },

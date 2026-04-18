@@ -10,13 +10,15 @@ import { ParamCard } from '@/src/components/ParamCard';
 import { ParamInput } from '@/src/components/ParamInput';
 import { RatioIndicator } from '@/src/components/RatioIndicator';
 import { Reading, Thresholds, ParameterKey, ParameterDef } from '@/src/models/types';
+import { useVisibleParams } from '@/src/hooks/useVisibility';
 import i18n from '@/src/i18n';
 
 export default function DashboardScreen() {
   const { readings, thresholds, loading, refresh } = useLatestReadings();
+  const { visible, refresh: refreshVisibility } = useVisibleParams();
   const [selectedParam, setSelectedParam] = useState<ParameterDef | null>(null);
 
-  useFocusEffect(useCallback(() => { refresh(); }, [refresh]));
+  useFocusEffect(useCallback(() => { refresh(); refreshVisibility(); }, [refresh, refreshVisibility]));
 
   const readingMap = new Map<ParameterKey, Reading>();
   readings.forEach((r) => readingMap.set(r.parameter as ParameterKey, r));
@@ -51,9 +53,9 @@ export default function DashboardScreen() {
         </View>
       )}
       <Text style={styles.sectionLabel}>{i18n.t('dashboard.waterChemistry')}</Text>
-      <View style={styles.grid}>{getCoreParams().map(renderCard)}</View>
+      <View style={styles.grid}>{getCoreParams().filter((p) => visible.has(p.key)).map(renderCard)}</View>
       <Text style={styles.sectionLabel}>{i18n.t('dashboard.nutrients')}</Text>
-      <View style={styles.grid}>{getNutrientParams().map(renderCard)}</View>
+      <View style={styles.grid}>{getNutrientParams().filter((p) => visible.has(p.key)).map(renderCard)}</View>
 
       {selectedParam && (
         <ParamInput

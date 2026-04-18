@@ -2,7 +2,7 @@ import * as SQLite from 'expo-sqlite';
 import { PARAMETER_LIST } from '@/src/constants/parameters';
 
 const DB_NAME = 'reef-monitor.db';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
 let db: SQLite.SQLiteDatabase | null = null;
 
@@ -70,6 +70,24 @@ async function initDatabase(database: SQLite.SQLiteDatabase) {
         changed_at TEXT NOT NULL
       );
     `);
+  }
+
+  if (user_version < 3) {
+    await database.execAsync(`
+      CREATE TABLE IF NOT EXISTS parameter_visibility (
+        parameter TEXT PRIMARY KEY,
+        visible INTEGER NOT NULL DEFAULT 1
+      );
+    `);
+    // Seed visibility: existing params visible, new ones hidden
+    const hiddenByDefault = ['ammonia', 'nitrite', 'potassium', 'strontium', 'iodine', 'boron', 'silicate'];
+    for (const param of PARAMETER_LIST) {
+      const visible = hiddenByDefault.includes(param.key) ? 0 : 1;
+      await database.runAsync(
+        'INSERT OR IGNORE INTO parameter_visibility (parameter, visible) VALUES (?, ?)',
+        param.key, visible
+      );
+    }
   }
 
   await database.execAsync(`PRAGMA user_version = ${DB_VERSION}`);

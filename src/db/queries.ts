@@ -1,4 +1,32 @@
 import { Reading, Thresholds, DosingEntry, WaterChange, ParameterKey } from '@/src/models/types';
+
+// --- Parameter Visibility ---
+
+export async function getVisibleParams(): Promise<Set<ParameterKey>> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<{ parameter: string; visible: number }>(
+    'SELECT parameter, visible FROM parameter_visibility WHERE visible = 1'
+  );
+  return new Set(rows.map((r) => r.parameter as ParameterKey));
+}
+
+export async function getAllParamVisibility(): Promise<Record<string, boolean>> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<{ parameter: string; visible: number }>(
+    'SELECT parameter, visible FROM parameter_visibility'
+  );
+  const result: Record<string, boolean> = {};
+  rows.forEach((r) => { result[r.parameter] = r.visible === 1; });
+  return result;
+}
+
+export async function setParamVisibility(parameter: ParameterKey, visible: boolean): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    'INSERT OR REPLACE INTO parameter_visibility (parameter, visible) VALUES (?, ?)',
+    parameter, visible ? 1 : 0
+  );
+}
 import { getDatabase } from './database';
 
 // --- Readings ---

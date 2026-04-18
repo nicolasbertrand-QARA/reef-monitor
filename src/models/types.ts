@@ -6,7 +6,14 @@ export type ParameterKey =
   | 'calcium'
   | 'magnesium'
   | 'nitrate'
-  | 'phosphate';
+  | 'phosphate'
+  | 'ammonia'
+  | 'nitrite'
+  | 'potassium'
+  | 'strontium'
+  | 'iodine'
+  | 'boron'
+  | 'silicate';
 
 export type Status = 'critical' | 'warning' | 'ok' | 'unknown';
 

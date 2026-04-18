@@ -1,12 +1,12 @@
 export default {
   tabs: { dashboard: '仪表盘', log: '记录', trends: '趋势', dosing: '校正', settings: '设置' },
-  params: { temperature: '温度', salinity: '盐度', ph: 'pH', alkalinity: '碱度', calcium: '钙', magnesium: '镁', nitrate: '硝酸盐', phosphate: '磷酸盐' },
+  params: { temperature: '温度', salinity: '盐度', ph: 'pH', alkalinity: '碱度', calcium: '钙', magnesium: '镁', nitrate: '硝酸盐', phosphate: '磷酸盐', ammonia: '氨', nitrite: '亚硝酸盐', potassium: '钾', strontium: '锶', iodine: '碘', boron: '硼', silicate: '硅酸盐' },
   dashboard: { waterChemistry: '水质化学', nutrients: '营养盐', ratioNO3PO4: 'NO3:PO4比值', ionicBalance: '离子平衡', noData: '无数据' },
   log: { subtitle: '点击参数进行记录', cancel: '取消', save: '保存', saving: '保存中...', step: '步进' },
   timers: { title: 'Salifert计时器', shake: '摇晃30秒', wait: '等待3分钟', start: '开始', cancel: '取消', done: '完成' },
   trends: { consumptionRate: '消耗速率', consumptionHigh: '高消耗 — 珊瑚正在活跃生长', consumptionNormal: '正常 — 稳定吸收', consumptionStable: '稳定 — 无净变化', consumptionRising: '上升中 — 检查添加量', history: '历史记录', noReadings: '该期间无测量值', deleteTitle: '删除测量值', deleteMessage: '%{date}的%{value} %{unit}？', deleteConfirm: '删除' },
   chart: { noReadings: '无测量值', noReadingsHint: '记录您的第一个%{param}测量值以查看趋势', current: '当前', min: '最小', max: '最大', avg: '平均' },
-  settings: { thresholds: '警报阈值', data: '数据', dosingLog: '添加记录', exportCsv: '导出CSV', noDataExport: '无数据', noDataExportMsg: '没有可导出的测量值。', save: '保存', importCsv: '导入CSV备份', importSuccess: '导入完成', importSuccessMsg: '已导入%{count}条测量值。', importError: '导入失败', warnLow: '警告下限', warnHigh: '警告上限', critLow: '危急下限', critHigh: '危急上限' },
+  settings: { parameters: '参数', thresholds: '警报阈值', data: '数据', dosingLog: '添加记录', exportCsv: '导出CSV', noDataExport: '无数据', noDataExportMsg: '没有可导出的测量值。', save: '保存', importCsv: '导入CSV备份', importSuccess: '导入完成', importSuccessMsg: '已导入%{count}条测量值。', importError: '导入失败', warnLow: '警告下限', warnHigh: '警告上限', critLow: '危急下限', critHigh: '危急上限' },
   dosing: { title: '添加记录', add: '添加剂量', empty: '无添加记录', emptyHint: '记录添加量以关联参数变化', product: '产品', productPlaceholder: '或输入产品名称...', amount: '数量', notes: '备注', notesPlaceholder: '可选...', cancel: '取消', save: '保存', products: { kalkwasser: 'Kalkwasser', allForReef: 'All-for-Reef', caBalling: 'Ca（三要素）', alkBalling: 'Alk（三要素）', mgSupplement: 'Mg补充剂', aminoAcids: '氨基酸', coralFood: '珊瑚粮' } },
   ratios: { po4Undetectable: 'NO3升高时PO4未检出 — 蓝藻/甲藻风险', no3Undetectable: 'PO4升高时NO3未检出 — 营养盐失衡', insufficientData: '数据不足', ratioLow: 'NO3:PO4比值偏低（%{ratio}:1）— 磷酸盐过量', ratioHigh: 'NO3:PO4比值偏高（%{ratio}:1）— 硝酸盐过量', ratioOk: 'NO3:PO4比值 %{ratio}:1', mgLow: 'Mg相对Ca过低 — 先提高Mg', mgHigh: 'Mg相对Ca过高', mgInstability: '低Mg可能导致Ca/Alk不稳定', ionicOk: 'Ca/Alk/Mg平衡正常' },
 };

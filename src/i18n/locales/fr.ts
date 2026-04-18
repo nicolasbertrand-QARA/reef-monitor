@@ -15,6 +15,13 @@ export default {
     magnesium: 'Magnésium',
     nitrate: 'Nitrates',
     phosphate: 'Phosphates',
+    ammonia: 'Ammoniac',
+    nitrite: 'Nitrites',
+    potassium: 'Potassium',
+    strontium: 'Strontium',
+    iodine: 'Iode',
+    boron: 'Bore',
+    silicate: 'Silicates',
   },
   dashboard: {
     waterChemistry: "Chimie de l'eau",
@@ -59,6 +66,7 @@ export default {
     avg: 'Moy',
   },
   settings: {
+    parameters: 'Paramètres',
     thresholds: "Seuils d'alerte",
     data: 'Données',
     dosingLog: 'Journal de dosage',

@@ -14,6 +14,7 @@ import { TrendChart } from '@/src/components/TrendChart';
 import { TimeRangeSelector, TimeRange } from '@/src/components/TimeRangeSelector';
 import { calculateConsumptionRate } from '@/src/utils/consumption';
 import { evaluateStatus } from '@/src/utils/thresholds';
+import { useVisibleParams } from '@/src/hooks/useVisibility';
 import i18n, { getDateLocale } from '@/src/i18n';
 
 export default function TrendsScreen() {
@@ -23,6 +24,7 @@ export default function TrendsScreen() {
   const [thresholds, setThresholds] = useState<Thresholds | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editValue, setEditValue] = useState('');
+  const { visible: visibleParams } = useVisibleParams();
   const [doses, setDoses] = useState<DosingEntry[]>([]);
   const [waterChanges, setWaterChanges] = useState<WaterChange[]>([]);
 
@@ -72,7 +74,7 @@ export default function TrendsScreen() {
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={90}>
     <ScrollView ref={scrollRef} style={styles.container} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
-        {getParameterList().map((p) => (
+        {getParameterList().filter((p) => visibleParams.has(p.key)).map((p) => (
           <TouchableOpacity key={p.key} style={[styles.chip, selected === p.key && styles.chipActive]} onPress={() => setSelected(p.key)}>
             <Text style={[styles.chipText, selected === p.key && styles.chipTextActive]}>{p.label}</Text>
           </TouchableOpacity>
