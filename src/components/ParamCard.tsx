@@ -48,7 +48,7 @@ export function ParamCard({ paramDef, reading, status, history, thresholds, onPr
 
 const styles = StyleSheet.create({
   card: { borderRadius: 14, paddingTop: 16, paddingHorizontal: 16, paddingBottom: 8, width: '47%', marginBottom: 12 },
-  topRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 },
+  topRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 },
   label: { color: THEME.textSecondary, fontSize: 13, fontWeight: '500', letterSpacing: 0.3 },
   value: { color: THEME.text, fontSize: 30, fontWeight: '700', letterSpacing: -0.5, fontVariant: ['tabular-nums'] },
   unit: { color: THEME.textSecondary, fontSize: 14, fontWeight: '400' },
