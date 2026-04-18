@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, LayoutChangeEvent } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 import { Reading, Thresholds } from '@/src/models/types';
 import { STATUS_COLORS } from '@/src/constants/colors';
 
@@ -8,14 +9,13 @@ interface Props {
   thresholds: Thresholds | null;
   width?: number;
   height?: number;
-  fill?: boolean; // if true, ignores width and fills container
+  fill?: boolean;
 }
 
 const MID_GREY = '#b5ada3';
 
 function getSparklineColor(value: number, thresholds: Thresholds | null): string {
   if (!thresholds) return MID_GREY;
-
   const { warning_low, warning_high, critical_low, critical_high } = thresholds;
 
   if (critical_low !== null && value <= critical_low) return STATUS_COLORS.critical;
@@ -35,7 +35,6 @@ function getSparklineColor(value: number, thresholds: Thresholds | null): string
     }
     return STATUS_COLORS.warning;
   }
-
   return MID_GREY;
 }
 
@@ -46,63 +45,48 @@ function interpolateColor(c1: string, c2: string, t: number): string {
   return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 }
 
+function smoothPath(points: { x: number; y: number }[]): string {
+  if (points.length < 2) return '';
+  let d = `M ${points[0].x} ${points[0].y}`;
+  for (let i = 1; i < points.length; i++) {
+    const prev = points[i - 1];
+    const curr = points[i];
+    const cpx = (prev.x + curr.x) / 2;
+    d += ` C ${cpx} ${prev.y}, ${cpx} ${curr.y}, ${curr.x} ${curr.y}`;
+  }
+  return d;
+}
+
 export function MiniSparkline({ readings, thresholds, width: fixedWidth = 70, height = 30, fill }: Props) {
   const [containerWidth, setContainerWidth] = useState(0);
-
   if (readings.length < 2) return <View style={{ height }} />;
 
   const width = fill ? containerWidth : fixedWidth;
+  const onLayout = (e: LayoutChangeEvent) => { if (fill) setContainerWidth(e.nativeEvent.layout.width); };
 
-  const onLayout = (e: LayoutChangeEvent) => {
-    if (fill) setContainerWidth(e.nativeEvent.layout.width);
-  };
+  if (width === 0 && fill) return <View style={{ height }} onLayout={onLayout} />;
 
   const data = readings.slice(-20);
   const values = data.map((r) => r.value);
-  const min = Math.min(...values);
-  const max = Math.max(...values);
+  const min = Math.min(...values), max = Math.max(...values);
   const range = max - min || 1;
-  const pad = 3;
+  const pad = 4;
 
   const latest = values[values.length - 1];
   const color = getSparklineColor(latest, thresholds);
-
-  if (width === 0 && fill) {
-    return <View style={{ height }} onLayout={onLayout} />;
-  }
 
   const points = data.map((r, i) => ({
     x: pad + (i / (data.length - 1)) * (width - pad * 2),
     y: pad + (1 - (r.value - min) / range) * (height - pad * 2),
   }));
 
-  return (
-    <View style={{ width: fill ? '100%' : width, height, position: 'relative' }} onLayout={onLayout}>
-      {points.map((pt, i) => {
-        if (i === 0) return null;
-        const prev = points[i - 1];
-        const dx = pt.x - prev.x;
-        const dy = pt.y - prev.y;
-        const length = Math.sqrt(dx * dx + dy * dy);
-        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+  const d = smoothPath(points);
 
-        return (
-          <View
-            key={i}
-            style={{
-              position: 'absolute',
-              left: prev.x,
-              top: prev.y - 1,
-              width: length,
-              height: 2,
-              backgroundColor: color,
-              borderRadius: 1,
-              transform: [{ rotate: `${angle}deg` }],
-              transformOrigin: 'left center',
-            }}
-          />
-        );
-      })}
+  return (
+    <View style={{ width: fill ? '100%' : width, height }} onLayout={onLayout}>
+      <Svg width={width} height={height}>
+        <Path d={d} stroke={color} strokeWidth={2} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      </Svg>
     </View>
   );
 }
