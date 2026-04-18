@@ -90,6 +90,9 @@ async function initDatabase(database: SQLite.SQLiteDatabase) {
     }
   }
 
+  // Always seed any missing params (handles upgrades that add new parameters)
+  await seedDefaults(database);
+
   await database.execAsync(`PRAGMA user_version = ${DB_VERSION}`);
 }
 
