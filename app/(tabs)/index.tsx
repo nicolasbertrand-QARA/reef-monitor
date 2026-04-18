@@ -1,19 +1,20 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
-import { useFocusEffect, useRouter } from 'expo-router';
-import { getCoreParams, getNutrientParams } from '@/src/constants/parameters';
+import { useFocusEffect } from 'expo-router';
+import { getCoreParams, getNutrientParams, PARAMETERS } from '@/src/constants/parameters';
 import { THEME } from '@/src/constants/colors';
 import { useLatestReadings } from '@/src/hooks/useParameters';
 import { evaluateStatus } from '@/src/utils/thresholds';
 import { evaluateNO3PO4Ratio, evaluateIonicBalance } from '@/src/utils/ratios';
 import { ParamCard } from '@/src/components/ParamCard';
+import { ParamInput } from '@/src/components/ParamInput';
 import { RatioIndicator } from '@/src/components/RatioIndicator';
-import { Reading, Thresholds, ParameterKey } from '@/src/models/types';
+import { Reading, Thresholds, ParameterKey, ParameterDef } from '@/src/models/types';
 import i18n from '@/src/i18n';
 
 export default function DashboardScreen() {
   const { readings, thresholds, loading, refresh } = useLatestReadings();
-  const router = useRouter();
+  const [selectedParam, setSelectedParam] = useState<ParameterDef | null>(null);
 
   useFocusEffect(useCallback(() => { refresh(); }, [refresh]));
 
@@ -33,7 +34,7 @@ export default function DashboardScreen() {
     const status = reading && threshold ? evaluateStatus(reading.value, threshold) : 'unknown';
     return (
       <ParamCard key={paramDef.key} paramDef={paramDef} reading={reading} status={status}
-        onPress={() => router.push({ pathname: '/(tabs)/trends', params: { param: paramDef.key } })} />
+        onPress={() => setSelectedParam(PARAMETERS[paramDef.key])} />
     );
   };
 
@@ -53,6 +54,15 @@ export default function DashboardScreen() {
       <View style={styles.grid}>{getCoreParams().map(renderCard)}</View>
       <Text style={styles.sectionLabel}>{i18n.t('dashboard.nutrients')}</Text>
       <View style={styles.grid}>{getNutrientParams().map(renderCard)}</View>
+
+      {selectedParam && (
+        <ParamInput
+          paramDef={selectedParam}
+          visible={true}
+          onClose={() => setSelectedParam(null)}
+          onSaved={() => { setSelectedParam(null); refresh(); }}
+        />
+      )}
     </ScrollView>
   );
 }

@@ -69,6 +69,7 @@ const sizes = [
 for (const { name, size } of sizes) {
   await sharp(Buffer.from(svg))
     .resize(size, size)
+    .flatten({ background: '#f5f2ed' })
     .png()
     .toFile(`assets/images/${name}.png`);
   console.log(`✓ ${name}.png (${size}x${size})`);

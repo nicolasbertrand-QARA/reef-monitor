@@ -1,0 +1,332 @@
+# Reef Monitor — Claude Code Instructions
+
+## CRITICAL RULE
+
+**Every change to this codebase MUST be reflected in this documentation.** If you add a screen, parameter, component, dependency, or i18n key — update this file before completing the task. If you remove something, remove it from this file too. Stale documentation is worse than no documentation.
+
+---
+
+## What This App Is
+
+Reef Monitor is a mobile app for tracking nano reef aquarium water parameters. It targets reef keepers who use Salifert test kits to manually measure Ca, Alk, Mg, NO3, PO4, and other water chemistry values.
+
+**Core value proposition:** Fast, wet-hands-friendly data entry with trend visualization and drift alerts. All data stays local on the device.
+
+**Published on the Apple App Store** as "Reef Monitor" under bundle ID `com.nicolasbertrand.reefmonitor`, Apple Developer Team ID `MS3V6TWCPK`.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Expo SDK 54 + React Native |
+| Language | TypeScript (strict mode) |
+| Routing | Expo Router (file-based, tab navigation) |
+| Storage | SQLite via `expo-sqlite` (local only, no backend) |
+| i18n | `i18n-js` + `expo-localization` (15 languages) |
+| Date formatting | `date-fns` with per-locale imports |
+| Haptics | `expo-haptics` |
+| File sharing | `expo-sharing` + `expo-file-system` |
+| File picking | `expo-document-picker` (CSV import) |
+| Icons | `@expo/vector-icons` (FontAwesome) |
+| Icon generation | `sharp` (devDependency, scripts only) |
+
+**No backend. No auth. No network calls. No state management library** (React context + hooks only).
+
+---
+
+## Project Structure
+
+```
+reef-monitor/
+├── app/                          # Expo Router screens
+│   ├── _layout.tsx               # Root layout: DB provider, splash, StatusBar
+│   ├── +not-found.tsx            # 404 screen
+│   ├── (tabs)/
+│   │   ├── _layout.tsx           # Tab bar config (3 tabs)
+│   │   ├── index.tsx             # Dashboard: param cards, tap to log
+│   │   ├── trends.tsx            # Charts, history list, dosing overlay
+│   │   └── settings.tsx          # Thresholds, dosing log, CSV export/import
+│   └── dosing/
+│       └── index.tsx             # Dosing log modal
+├── src/
+│   ├── components/
+│   │   ├── ParamCard.tsx         # Dashboard card (value, status color, time-ago)
+│   │   ├── ParamInput.tsx        # Log entry modal (stepper, timers for NO3/PO4)
+│   │   ├── RatioIndicator.tsx    # Alert banner for ratio/ionic balance issues
+│   │   ├── StatusBadge.tsx       # Colored dot (ok/warning/critical)
+│   │   ├── TestTimer.tsx         # Countdown timer for Salifert kits
+│   │   ├── TimeRangeSelector.tsx # 7d/30d/90d/All toggle chips
+│   │   └── TrendChart.tsx        # Line chart with range bands + dosing markers
+│   ├── constants/
+│   │   ├── colors.ts             # Theme colors + status colors
+│   │   ├── dosingMap.ts          # Product → parameter mapping for chart overlay
+│   │   └── parameters.ts        # Parameter definitions (units, steps, thresholds)
+│   ├── db/
+│   │   ├── database.ts           # SQLite init, table creation, seeding
+│   │   └── queries.ts            # All SQL queries as typed async functions
+│   ├── hooks/
+│   │   ├── useDatabase.ts        # React context for SQLite connection
+│   │   └── useParameters.ts      # Hooks for latest readings + history
+│   ├── i18n/
+│   │   ├── index.ts              # i18n setup, locale detection, date-fns locale map
+│   │   └── locales/              # 15 locale files (en, fr, es, pt, de, it, nl, ru, ja, ko, zh, ar, hi, tr, pl)
+│   ├── models/
+│   │   └── types.ts              # TypeScript interfaces (Reading, Thresholds, DosingEntry, etc.)
+│   └── utils/
+│       ├── consumption.ts        # Alkalinity consumption rate (linear regression)
+│       ├── ratios.ts             # NO3:PO4 ratio, Ca/Alk/Mg balance, Alk swing detection
+│       └── thresholds.ts         # Status evaluation (ok/warning/critical)
+├── scripts/
+│   ├── generate-icon.mjs         # SVG → PNG icon generation (uses sharp)
+│   └── generate-screenshots.mjs  # App Store screenshot generation (uses sharp)
+├── appstore/                     # App Store assets (screenshots, descriptions)
+├── docs/
+│   └── index.html                # Privacy policy (hosted via GitHub Pages)
+├── assets/
+│   ├── fonts/SpaceMono-Regular.ttf
+│   └── images/                   # icon.png, adaptive-icon.png, favicon.png, splash-icon.png
+├── ios/                          # Native iOS project (generated by Expo prebuild)
+├── app.json                      # Expo config
+├── tsconfig.json                 # TypeScript config (strict, @/* path alias)
+├── privacy-policy.html           # Privacy policy source
+└── .impeccable.md                # Design context for the /impeccable skill
+```
+
+---
+
+## Database Schema
+
+SQLite database `reef-monitor.db` with 4 tables. Schema version tracked via `PRAGMA user_version`.
+
+### `readings`
+```sql
+CREATE TABLE readings (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  parameter TEXT NOT NULL,   -- ParameterKey: temperature|salinity|ph|alkalinity|calcium|magnesium|nitrate|phosphate
+  value REAL NOT NULL,
+  unit TEXT NOT NULL,
+  recorded_at TEXT NOT NULL, -- ISO 8601
+  notes TEXT
+);
+CREATE INDEX idx_readings_param_date ON readings(parameter, recorded_at DESC);
+```
+
+### `thresholds`
+```sql
+CREATE TABLE thresholds (
+  parameter TEXT PRIMARY KEY,
+  warning_low REAL, warning_high REAL,
+  critical_low REAL, critical_high REAL
+);
+```
+
+### `dosing_log`
+```sql
+CREATE TABLE dosing_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  product TEXT NOT NULL,
+  amount REAL NOT NULL,
+  unit TEXT NOT NULL,       -- ml, g, gouttes
+  dosed_at TEXT NOT NULL,
+  notes TEXT
+);
+```
+
+### `reminder_schedules`
+```sql
+CREATE TABLE reminder_schedules (
+  parameter TEXT PRIMARY KEY,
+  interval_hours INTEGER NOT NULL,
+  enabled INTEGER NOT NULL DEFAULT 1,
+  last_notified_at TEXT
+);
+```
+
+---
+
+## The 8 Monitored Parameters
+
+| Key | Label (en) | Unit | Step | Default | Thresholds (warn/crit) |
+|-----|-----------|------|------|---------|----------------------|
+| temperature | Temperature | °C | 0.1 | 25.5 | 24–27.5 / 22–29 |
+| salinity | Salinity | (density) | 0.001 | 1.025 | 1.023–1.027 / 1.020–1.030 |
+| ph | pH | — | 0.05 | 8.2 | 7.8–8.5 / 7.6–8.6 |
+| alkalinity | Alkalinity | dKH | 0.1 | 8.0 | 6.5–11 / 5.5–12.5 |
+| calcium | Calcium | ppm | 5 | 420 | 380–480 / 350–500 |
+| magnesium | Magnesium | ppm | 10 | 1350 | 1200–1450 / 1100–1500 |
+| nitrate | Nitrate | ppm | 0.1 | 5 | 0.5–20 / 0–40 |
+| phosphate | Phosphate | ppm | 0.01 | 0.05 | 0.01–0.15 / 0–0.25 |
+
+Parameters are defined in `src/constants/parameters.ts`. Labels come from i18n.
+
+---
+
+## App Screens (3 tabs + 1 modal)
+
+### Dashboard (`app/(tabs)/index.tsx`)
+- 2-column grid of ParamCard components, grouped: "Water Chemistry" (6) + "Nutrients" (2)
+- Each card shows: label, last value, status dot (green/amber/red), time-ago
+- Alert banners at top for NO3:PO4 ratio and Ca/Alk/Mg ionic balance issues
+- **Tapping a card opens the ParamInput modal** to log a new reading
+- After saving, dashboard refreshes automatically
+
+### Trends (`app/(tabs)/trends.tsx`)
+- Horizontal parameter selector chips
+- Time range toggle (7d / 30d / 90d / All)
+- TrendChart with: data points, target range band (green), dosing markers (amber vertical lines)
+- Stats row: current, min, max, avg
+- Alkalinity-specific: consumption rate card (dKH/day via linear regression)
+- History list: all readings reverse-chronological with inline edit (pencil) and delete (trash)
+- KeyboardAvoidingView for inline editing
+
+### Settings (`app/(tabs)/settings.tsx`)
+- Alert thresholds: expandable per-parameter editor (warn low/high, crit low/high)
+- Dosing log link (opens modal)
+- Export as CSV (via `expo-sharing`)
+- Import CSV backup (via `expo-document-picker`)
+
+### Dosing Log (`app/dosing/index.tsx`) — presented as modal
+- Add dose: product quick-pick chips + free text, amount, unit (ml/g/gouttes), notes
+- Chronological list of recent doses
+
+---
+
+## Internationalization (i18n)
+
+15 languages: `en`, `fr`, `es`, `pt`, `de`, `it`, `nl`, `ru`, `ja`, `ko`, `zh`, `ar`, `hi`, `tr`, `pl`.
+
+- Setup: `src/i18n/index.ts` — auto-detects device language via `expo-localization`, falls back to `en`
+- Locale files: `src/i18n/locales/{code}.ts` — flat object with nested keys
+- Date formatting: `getDateLocale()` helper returns the matching `date-fns` locale
+- Parameter labels: dynamically resolved via `i18n.t('params.{key}')` in `src/constants/parameters.ts`
+
+### Adding a new i18n key
+1. Add key + English value to `src/i18n/locales/en.ts`
+2. Add translated value to ALL 14 other locale files
+3. Use via `i18n.t('section.key')` or `i18n.t('section.key', { variable })` for interpolation
+
+### Adding a new language
+1. Create `src/i18n/locales/{code}.ts` copying structure from `en.ts`
+2. Import and register in `src/i18n/index.ts`
+3. Add `date-fns` locale mapping in the `getDateLocale()` switch
+
+---
+
+## Dosing → Parameter Mapping
+
+Defined in `src/constants/dosingMap.ts`. Maps product names (substring match) to the parameters they affect, so dosing markers appear on the right trend charts.
+
+| Product contains | Shows on |
+|-----------------|----------|
+| kalkwasser | alkalinity, calcium, ph |
+| all-for-reef | alkalinity, calcium, magnesium |
+| ca, calcium | calcium |
+| alk, kh | alkalinity |
+| mg, magnes | magnesium |
+| amino | nitrate |
+| nourriture, coral food | nitrate, phosphate |
+| (unknown product) | all charts |
+
+---
+
+## Salifert Test Timers
+
+Built into `ParamInput.tsx`, shown at the bottom of the log entry modal:
+- **Nitrate**: 30-sec shake timer + 3-min wait timer
+- **Phosphate**: 30-sec shake timer
+
+Timer component: `src/components/TestTimer.tsx` — countdown with progress bar and haptic feedback on completion.
+
+---
+
+## Design System
+
+Defined in `src/constants/colors.ts`. Light theme with warm sand/driftwood tones.
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| background | #f5f2ed | Screen backgrounds |
+| surface | #ece8e1 | Section backgrounds, inactive chips |
+| surfaceElevated | #ffffff | Cards, stats rows |
+| text | #2d2a26 | Primary text |
+| textSecondary | #8a8478 | Labels, hints, time-ago |
+| accent | #5a8f8b | Buttons, active chips, data dots |
+| border | #ddd8d0 | Dividers |
+
+Status colors: ok `#6b9e7a` (sage), warning `#c4943e` (amber), critical `#c4644a` (coral).
+
+Cards use background tint for status (no border-left stripes). See `.impeccable.md` for full design context.
+
+---
+
+## Building & Deploying
+
+### Development (Expo Go)
+```bash
+npx expo start
+```
+
+### Build for iPhone (requires Xcode + device connected)
+```bash
+npx expo run:ios --device "NickPhone" --configuration Release
+```
+
+**Important:** The Xcode project has `ENABLE_USER_SCRIPT_SANDBOXING = NO` in `ios/reefmonitor.xcodeproj/project.pbxproj`. This is required for the React Native bundle script to work during build.
+
+### App Store submission
+1. In Xcode: Product → Archive → Distribute App
+2. App Store Connect: appstoreconnect.apple.com
+3. Privacy policy: https://nicolasbertrand-qara.github.io/reef-monitor/
+
+### Regenerate app icon
+```bash
+node scripts/generate-icon.mjs
+cp assets/images/icon.png ios/reefmonitor/Images.xcassets/AppIcon.appiconset/App-Icon-1024x1024@1x.png
+```
+
+### Regenerate App Store screenshots
+```bash
+node scripts/generate-screenshots.mjs
+```
+Output in `appstore/` directory, sizes: 1284x2778 (6.7") and 1242x2688 (6.5").
+
+---
+
+## How To: Common Tasks
+
+### Add a new parameter
+1. Add key to `ParameterKey` union in `src/models/types.ts`
+2. Add definition in `src/constants/parameters.ts` (unit, step, decimals, defaultValue, thresholds, group)
+3. Add `params.{key}` translation to all 15 locale files
+4. Default thresholds and reminder schedule are auto-seeded on first DB init
+5. The parameter automatically appears on Dashboard, Trends, and Settings
+
+### Add a Salifert timer to a parameter
+1. In `src/components/ParamInput.tsx`, add a condition like `const isMyParam = paramDef.key === 'myParam'`
+2. Add a timer block in the JSX (see nitrate/phosphate examples)
+3. Add i18n keys for timer labels if needed
+
+### Modify alert thresholds defaults
+1. Edit `defaultThresholds` in `src/constants/parameters.ts`
+2. Note: existing installations keep their DB values. Only new installs get the new defaults.
+
+### Add a dosing product mapping
+1. Add entry to `DOSING_PARAMETER_MAP` in `src/constants/dosingMap.ts`
+2. Use lowercase substring matching
+
+### Bump version
+1. Update `version` in `app.json`
+2. Rebuild and archive
+
+---
+
+## Constraints & Decisions
+
+- **No ORM**: Direct SQL via `expo-sqlite` async API. ~15 queries total, not worth the abstraction.
+- **No charting library**: TrendChart renders dots and bands using absolute-positioned Views. Simple, no native dependency overhead. If complex charts are needed later, consider `victory-native`.
+- **Flat readings table**: One table with a `parameter` column, not one table per param. Simpler queries, single index handles everything.
+- **ISO 8601 strings for dates**: SQLite has no date type. ISO strings sort lexicographically.
+- **Parameters are functions, not constants**: `getParameterList()` re-evaluates i18n labels on each call so language changes are reflected without app restart.
+- **Salinity as specific gravity** (e.g., 1.025), not ppt. Matches what reef keepers read on refractometers.

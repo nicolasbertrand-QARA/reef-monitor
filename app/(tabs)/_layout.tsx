@@ -22,7 +22,6 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen name="index" options={{ title: i18n.t('tabs.dashboard'), tabBarIcon: ({ color }) => <TabBarIcon name="tachometer" color={color} /> }} />
-      <Tabs.Screen name="log" options={{ title: i18n.t('tabs.log'), tabBarIcon: ({ color }) => <TabBarIcon name="plus-circle" color={color} /> }} />
       <Tabs.Screen name="trends" options={{ title: i18n.t('tabs.trends'), tabBarIcon: ({ color }) => <TabBarIcon name="line-chart" color={color} /> }} />
       <Tabs.Screen name="settings" options={{ title: i18n.t('tabs.settings'), tabBarIcon: ({ color }) => <TabBarIcon name="sliders" color={color} /> }} />
     </Tabs>

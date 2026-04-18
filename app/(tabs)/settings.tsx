@@ -3,11 +3,12 @@ import { ScrollView, View, Text, TouchableOpacity, TextInput, StyleSheet, Alert 
 import { useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as Sharing from 'expo-sharing';
+import * as DocumentPicker from 'expo-document-picker';
 import { Paths, File } from 'expo-file-system/next';
 import { getParameterList } from '@/src/constants/parameters';
 import { THEME } from '@/src/constants/colors';
 import { Thresholds, ParameterKey } from '@/src/models/types';
-import { getThresholds, updateThreshold, getAllReadingsForExport } from '@/src/db/queries';
+import { getThresholds, updateThreshold, getAllReadingsForExport, importReadingsFromCSV } from '@/src/db/queries';
 import i18n from '@/src/i18n';
 
 export default function SettingsScreen() {
@@ -25,6 +26,19 @@ export default function SettingsScreen() {
     const file = new File(Paths.document, 'reef-monitor-export.csv');
     file.create(); file.write(csv);
     await Sharing.shareAsync(file.uri);
+  };
+
+  const handleImport = async () => {
+    const result = await DocumentPicker.getDocumentAsync({ type: 'text/csv', copyToCacheDirectory: true });
+    if (result.canceled || !result.assets?.[0]) return;
+    const file = new File(result.assets[0].uri);
+    const content = await file.text();
+    try {
+      const count = await importReadingsFromCSV(content);
+      Alert.alert(i18n.t('settings.importSuccess'), i18n.t('settings.importSuccessMsg', { count }));
+    } catch (e: any) {
+      Alert.alert(i18n.t('settings.importError'), e.message);
+    }
   };
 
   return (
@@ -56,9 +70,14 @@ export default function SettingsScreen() {
           <Text style={styles.actionLabel}>{i18n.t('settings.dosingLog')}</Text>
           <FontAwesome name="chevron-right" size={12} color={THEME.textSecondary} style={{ marginLeft: 'auto' }} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionRow} onPress={handleExport}>
+        <TouchableOpacity style={[styles.actionRow, styles.rowBorder]} onPress={handleExport}>
           <FontAwesome name="share-square-o" size={16} color={THEME.accent} />
           <Text style={styles.actionLabel}>{i18n.t('settings.exportCsv')}</Text>
+          <FontAwesome name="chevron-right" size={12} color={THEME.textSecondary} style={{ marginLeft: 'auto' }} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.actionRow} onPress={handleImport}>
+          <FontAwesome name="upload" size={16} color={THEME.accent} />
+          <Text style={styles.actionLabel}>{i18n.t('settings.importCsv')}</Text>
           <FontAwesome name="chevron-right" size={12} color={THEME.textSecondary} style={{ marginLeft: 'auto' }} />
         </TouchableOpacity>
       </View>

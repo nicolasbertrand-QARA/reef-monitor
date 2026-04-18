@@ -8,8 +8,8 @@ function getParams(): Record<ParameterKey, ParameterDef> {
       defaultThresholds: { warningLow: 24, warningHigh: 27.5, criticalLow: 22, criticalHigh: 29 }, reminderIntervalHours: 24,
     },
     salinity: {
-      key: 'salinity', label: i18n.t('params.salinity'), unit: 'ppt', step: 0.5, decimals: 1, defaultValue: 35, icon: 'tint', group: 'core',
-      defaultThresholds: { warningLow: 33, warningHigh: 37, criticalLow: 30, criticalHigh: 40 }, reminderIntervalHours: 24,
+      key: 'salinity', label: i18n.t('params.salinity'), unit: '', step: 0.001, decimals: 3, defaultValue: 1.025, icon: 'tint', group: 'core',
+      defaultThresholds: { warningLow: 1.023, warningHigh: 1.027, criticalLow: 1.020, criticalHigh: 1.030 }, reminderIntervalHours: 24,
     },
     ph: {
       key: 'ph', label: i18n.t('params.ph'), unit: '', step: 0.05, decimals: 2, defaultValue: 8.2, icon: 'flask', group: 'core',
@@ -28,7 +28,7 @@ function getParams(): Record<ParameterKey, ParameterDef> {
       defaultThresholds: { warningLow: 1200, warningHigh: 1450, criticalLow: 1100, criticalHigh: 1500 }, reminderIntervalHours: 168,
     },
     nitrate: {
-      key: 'nitrate', label: i18n.t('params.nitrate'), unit: 'ppm', step: 1, decimals: 0, defaultValue: 5, icon: 'leaf', group: 'nutrients',
+      key: 'nitrate', label: i18n.t('params.nitrate'), unit: 'ppm', step: 0.1, decimals: 1, defaultValue: 5, icon: 'leaf', group: 'nutrients',
       defaultThresholds: { warningLow: 0.5, warningHigh: 20, criticalLow: 0, criticalHigh: 40 }, reminderIntervalHours: 168,
     },
     phosphate: {

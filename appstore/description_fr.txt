@@ -1,0 +1,31 @@
+Reef Monitor — Suivi des paramètres de votre aquarium récifal
+
+Suivez les paramètres de votre nano récifal avec précision et sérénité. Conçu pour les récifalistes exigeants, Reef Monitor vous permet d'enregistrer vos mesures, visualiser les tendances et détecter les dérives avant qu'elles ne deviennent un problème.
+
+ENREGISTREMENT RAPIDE
+• Interface tactile grand format, utilisable les mains mouillées
+• Boutons +/- avec pas configuré par paramètre (0.1 dKH, 5 ppm Ca...)
+• Retour haptique à chaque enregistrement
+• Minuteurs intégrés pour les tests Salifert (30 sec, 3 min)
+
+8 PARAMÈTRES ESSENTIELS
+• Chimie de l'eau : température, salinité, pH, alcalinité, calcium, magnésium
+• Nutriments : nitrates, phosphates
+
+TENDANCES ET ALERTES
+• Graphiques par paramètre sur 7j, 30j, 90j ou tout l'historique
+• Taux de consommation d'alcalinité (dKH/jour) — indicateur clé pour les SPS
+• Seuils d'alerte configurables (avertissement et critique)
+• Détection automatique du ratio NO3:PO4 et de l'équilibre ionique Ca/Alk/Mg
+
+JOURNAL DE DOSAGE
+• Enregistrez vos ajouts (Kalkwasser, balling, All-for-Reef...)
+• Historique chronologique pour corréler dosage et paramètres
+
+VOS DONNÉES RESTENT LES VÔTRES
+• Stockage 100% local sur votre appareil
+• Aucun compte requis, aucune connexion internet
+• Export CSV pour sauvegarder ou analyser vos données
+• Aucune collecte de données personnelles
+
+Disponible en 15 langues : français, anglais, espagnol, portugais, allemand, italien, néerlandais, russe, japonais, coréen, chinois, arabe, hindi, turc, polonais.

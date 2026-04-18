@@ -120,3 +120,36 @@ export async function getAllReadingsForExport(): Promise<Reading[]> {
     'SELECT * FROM readings ORDER BY recorded_at ASC'
   );
 }
+
+// --- CSV Import ---
+
+export async function importReadingsFromCSV(csvContent: string): Promise<number> {
+  const db = await getDatabase();
+  const lines = csvContent.trim().split('\n');
+  if (lines.length < 2) return 0;
+
+  // Skip header row
+  const header = lines[0].toLowerCase();
+  if (!header.includes('parameter') || !header.includes('value')) {
+    throw new Error('Invalid CSV format: missing parameter or value columns');
+  }
+
+  let imported = 0;
+  for (let i = 1; i < lines.length; i++) {
+    const cols = lines[i].split(',');
+    if (cols.length < 4) continue;
+
+    const [parameter, valueStr, unit, recorded_at, ...rest] = cols;
+    const value = parseFloat(valueStr);
+    if (isNaN(value) || !parameter || !recorded_at) continue;
+
+    const notes = rest.join(',').trim() || null;
+
+    await db.runAsync(
+      'INSERT INTO readings (parameter, value, unit, recorded_at, notes) VALUES (?, ?, ?, ?, ?)',
+      parameter.trim(), value, unit.trim(), recorded_at.trim(), notes
+    );
+    imported++;
+  }
+  return imported;
+}

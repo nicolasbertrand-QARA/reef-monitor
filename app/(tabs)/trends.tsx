@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ScrollView, View, Text, TouchableOpacity, TextInput, Alert, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, TouchableOpacity, TextInput, Alert, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { format } from 'date-fns';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { getParameterList, PARAMETERS } from '@/src/constants/parameters';
 import { THEME, STATUS_COLORS } from '@/src/constants/colors';
-import { ParameterKey, Reading } from '@/src/models/types';
+import { ParameterKey, Reading, DosingEntry } from '@/src/models/types';
 import { useReadingHistory } from '@/src/hooks/useParameters';
-import { getThresholdForParam, deleteReading, updateReading } from '@/src/db/queries';
+import { getThresholdForParam, deleteReading, updateReading, getDosingHistory } from '@/src/db/queries';
 import { Thresholds } from '@/src/models/types';
+import { isDoseRelevant } from '@/src/constants/dosingMap';
 import { TrendChart } from '@/src/components/TrendChart';
 import { TimeRangeSelector, TimeRange } from '@/src/components/TimeRangeSelector';
 import { calculateConsumptionRate } from '@/src/utils/consumption';
@@ -22,12 +23,21 @@ export default function TrendsScreen() {
   const [thresholds, setThresholds] = useState<Thresholds | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editValue, setEditValue] = useState('');
+  const [doses, setDoses] = useState<DosingEntry[]>([]);
 
   const days = timeRange === 0 ? undefined : timeRange;
   const { readings, refresh } = useReadingHistory(selected, days);
   const paramDef = PARAMETERS[selected];
 
   useEffect(() => { getThresholdForParam(selected).then(setThresholds); }, [selected]);
+
+  // Fetch dosing data filtered by parameter relevance
+  useEffect(() => {
+    getDosingHistory(days).then((allDoses) => {
+      const relevant = allDoses.filter((d) => isDoseRelevant(d.product, selected));
+      setDoses(relevant);
+    });
+  }, [selected, days]);
 
   const consumptionRate = selected === 'alkalinity' ? calculateConsumptionRate(readings) : null;
 
@@ -39,7 +49,12 @@ export default function TrendsScreen() {
     );
   }, [paramDef, refresh]);
 
-  const handleEditStart = useCallback((reading: Reading) => { setEditingId(reading.id); setEditValue(reading.value.toFixed(paramDef.decimals)); }, [paramDef]);
+  const handleEditStart = useCallback((reading: Reading) => {
+    setEditingId(reading.id);
+    setEditValue(reading.value.toFixed(paramDef.decimals));
+    // Scroll down so the editing row stays visible above keyboard
+    setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 300);
+  }, [paramDef]);
   const handleEditSave = useCallback(async () => {
     if (editingId === null) return;
     const parsed = parseFloat(editValue);
@@ -49,8 +64,11 @@ export default function TrendsScreen() {
 
   const sortedReadings = [...readings].reverse();
 
+  const scrollRef = React.useRef<ScrollView>(null);
+
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={90}>
+    <ScrollView ref={scrollRef} style={styles.container} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
         {getParameterList().map((p) => (
           <TouchableOpacity key={p.key} style={[styles.chip, selected === p.key && styles.chipActive]} onPress={() => setSelected(p.key)}>
@@ -59,7 +77,7 @@ export default function TrendsScreen() {
         ))}
       </ScrollView>
       <TimeRangeSelector selected={timeRange} onSelect={setTimeRange} />
-      <TrendChart readings={readings} paramDef={paramDef} thresholds={thresholds} />
+      <TrendChart readings={readings} paramDef={paramDef} thresholds={thresholds} doses={doses} />
 
       {selected === 'alkalinity' && consumptionRate !== null && (
         <View style={styles.consumptionCard}>
@@ -111,6 +129,7 @@ export default function TrendsScreen() {
       )}
       <View style={{ height: 32 }} />
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 

@@ -43,6 +43,7 @@ export function ParamInput({ paramDef, visible, onClose, onSaved }: Props) {
 
   const bigStep = paramDef.step * 10;
   const isNitrate = paramDef.key === 'nitrate';
+  const isPhosphate = paramDef.key === 'phosphate';
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
@@ -71,6 +72,12 @@ export function ParamInput({ paramDef, visible, onClose, onSaved }: Props) {
             <Text style={styles.timerSectionLabel}>{i18n.t('timers.title')}</Text>
             <View style={styles.timerRow}><TestTimer seconds={30} label={i18n.t('timers.shake')} /></View>
             <View style={styles.timerRow}><TestTimer seconds={180} label={i18n.t('timers.wait')} /></View>
+          </View>
+        )}
+        {isPhosphate && (
+          <View style={styles.timers}>
+            <Text style={styles.timerSectionLabel}>{i18n.t('timers.title')}</Text>
+            <View style={styles.timerRow}><TestTimer seconds={30} label={i18n.t('timers.shake')} /></View>
           </View>
         )}
       </ScrollView>
