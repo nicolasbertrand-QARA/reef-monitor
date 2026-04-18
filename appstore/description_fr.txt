@@ -7,25 +7,30 @@ ENREGISTREMENT RAPIDE
 • Boutons +/- avec pas configuré par paramètre (0.1 dKH, 5 ppm Ca...)
 • Retour haptique à chaque enregistrement
 • Minuteurs intégrés pour les tests Salifert (30 sec, 3 min)
+• La dernière valeur enregistrée est pré-remplie
 
-8 PARAMÈTRES ESSENTIELS
-• Chimie de l'eau : température, salinité, pH, alcalinité, calcium, magnésium
-• Nutriments : nitrates, phosphates
+JUSQU'À 15 PARAMÈTRES
+• Chimie de l'eau : température, densité, pH, alcalinité, calcium, magnésium, potassium, strontium, iode, bore
+• Nutriments : nitrates, phosphates, ammoniac, nitrites, silicates
+• Activez uniquement les paramètres que vous suivez
 
 TENDANCES ET ALERTES
 • Graphiques par paramètre sur 7j, 30j, 90j ou tout l'historique
 • Taux de consommation d'alcalinité (dKH/jour) — indicateur clé pour les SPS
 • Seuils d'alerte configurables (avertissement et critique)
 • Détection automatique du ratio NO3:PO4 et de l'équilibre ionique Ca/Alk/Mg
+• Historique des mesures avec modification et suppression en ligne
 
-JOURNAL DE DOSAGE
-• Enregistrez vos ajouts (Kalkwasser, balling, All-for-Reef...)
-• Historique chronologique pour corréler dosage et paramètres
+CORRECTIONS
+• Journal de dosage : Kalkwasser, balling, All-for-Reef et produits personnalisés
+• Changements d'eau : pourcentage, marque de sel, dilution en g/L
+• Dosages et changements d'eau affichés sur les graphiques de tendances
+• Les dosages apparaissent sur les paramètres concernés, les changements d'eau sur tous
 
 VOS DONNÉES RESTENT LES VÔTRES
 • Stockage 100% local sur votre appareil
 • Aucun compte requis, aucune connexion internet
-• Export CSV pour sauvegarder ou analyser vos données
+• Export et import CSV pour sauvegarder ou restaurer vos données
 • Aucune collecte de données personnelles
 
 Disponible en 15 langues : français, anglais, espagnol, portugais, allemand, italien, néerlandais, russe, japonais, coréen, chinois, arabe, hindi, turc, polonais.

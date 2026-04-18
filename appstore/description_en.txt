@@ -7,25 +7,30 @@ QUICK LOGGING
 • +/- steppers tuned per parameter (0.1 dKH, 5 ppm Ca...)
 • Haptic feedback on every save
 • Built-in Salifert test timers (30 sec, 3 min)
+• Last recorded value pre-filled
 
-8 ESSENTIAL PARAMETERS
-• Water chemistry: temperature, salinity, pH, alkalinity, calcium, magnesium
-• Nutrients: nitrate, phosphate
+UP TO 15 PARAMETERS
+• Water chemistry: temperature, specific gravity, pH, alkalinity, calcium, magnesium, potassium, strontium, iodine, boron
+• Nutrients: nitrate, phosphate, ammonia, nitrite, silicate
+• Enable only the parameters you track
 
 TRENDS & ALERTS
 • Charts per parameter over 7d, 30d, 90d, or all history
 • Alkalinity consumption rate (dKH/day) — key SPS health indicator
 • Configurable alert thresholds (warning and critical)
 • Automatic NO3:PO4 ratio and Ca/Alk/Mg ionic balance detection
+• Full reading history with inline edit and delete
 
-DOSING LOG
-• Record your additions (Kalkwasser, 2-part, All-for-Reef...)
-• Chronological history to correlate dosing with parameter changes
+CORRECTIONS
+• Dosing log: Kalkwasser, 2-part, All-for-Reef, and custom products
+• Water changes: percentage, salt brand, dilution in g/L
+• Dosing and water changes displayed on trend charts
+• Doses appear on relevant parameters, water changes on all charts
 
 YOUR DATA STAYS YOURS
 • 100% local storage on your device
 • No account required, no internet connection needed
-• CSV export to back up or analyze your data
+• CSV export and import for backup and restore
 • Zero personal data collection
 
 Available in 15 languages: English, French, Spanish, Portuguese, German, Italian, Dutch, Russian, Japanese, Korean, Chinese, Arabic, Hindi, Turkish, Polish.
