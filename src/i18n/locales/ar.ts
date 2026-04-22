@@ -8,5 +8,14 @@ export default {
   chart: { noReadings: 'لا توجد قراءات', noReadingsHint: 'سجل أول قراءة %{param} لعرض الاتجاهات', current: 'الحالي', min: 'أدنى', max: 'أقصى', avg: 'متوسط' },
   settings: { parameters: 'المعاملات', thresholds: 'حدود التنبيه', data: 'البيانات', dosingLog: 'سجل الجرعات', exportCsv: 'تصدير CSV', noDataExport: 'لا توجد بيانات', noDataExportMsg: 'لا توجد قراءات للتصدير.', save: 'حفظ', importCsv: 'استيراد نسخة CSV احتياطية', importSuccess: 'اكتمل الاستيراد', importSuccessMsg: 'تم استيراد %{count} قراءة.', importError: 'فشل الاستيراد', warnLow: 'تحذير أدنى', warnHigh: 'تحذير أعلى', critLow: 'حرج أدنى', critHigh: 'حرج أعلى' },
   dosing: { title: 'سجل الجرعات', add: 'إضافة جرعة', empty: 'لا توجد جرعات مسجلة', emptyHint: 'سجل جرعاتك لربطها بتغييرات المعاملات', product: 'المنتج', productPlaceholder: 'أو اكتب اسم المنتج...', amount: 'الكمية', notes: 'ملاحظات', notesPlaceholder: 'اختياري...', cancel: 'إلغاء', save: 'حفظ', products: { kalkwasser: 'Kalkwasser', allForReef: 'All-for-Reef', caBalling: 'Ca (بالينغ)', alkBalling: 'Alk (بالينغ)', mgSupplement: 'مكمل Mg', aminoAcids: 'أحماض أمينية', coralFood: 'غذاء المرجان' } },
+  tanks: {
+    title: 'الأحواض',
+    add: 'إضافة حوض',
+    rename: 'إعادة تسمية',
+    delete: 'حذف',
+    deleteConfirm: 'حذف "%{name}" وجميع بياناته؟',
+    cantDeleteLast: 'لا يمكن حذف الحوض الوحيد',
+    namePrompt: 'اسم الحوض',
+  },
   ratios: { po4Undetectable: 'PO4 غير قابل للكشف مع ارتفاع NO3 — خطر السيانو/الدينو', no3Undetectable: 'NO3 غير قابل للكشف مع ارتفاع PO4 — اختلال المغذيات', insufficientData: 'بيانات غير كافية', ratioLow: 'نسبة NO3:PO4 منخفضة (%{ratio}:1) — فائض فوسفات', ratioHigh: 'نسبة NO3:PO4 مرتفعة (%{ratio}:1) — فائض نترات', ratioOk: 'نسبة NO3:PO4 %{ratio}:1', mgLow: 'Mg منخفض جداً مقارنة بـ Ca — ارفع Mg أولاً', mgHigh: 'Mg مرتفع جداً مقارنة بـ Ca', mgInstability: 'انخفاض Mg قد يسبب عدم استقرار Ca/Alk', ionicOk: 'توازن Ca/Alk/Mg جيد' },
 };

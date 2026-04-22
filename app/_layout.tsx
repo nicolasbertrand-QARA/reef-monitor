@@ -8,15 +8,31 @@ import { StatusBar } from 'expo-status-bar';
 import { DatabaseContext } from '@/src/hooks/useDatabase';
 import { getDatabase } from '@/src/db/database';
 import { THEME } from '@/src/constants/colors';
+import { TankContext, useTankProvider } from '@/src/hooks/useTank';
 import i18n from '@/src/i18n';
 
 export { ErrorBoundary } from 'expo-router';
 
-export const unstable_settings = {
-  initialRouteName: '(tabs)',
-};
+export const unstable_settings = { initialRouteName: '(tabs)' };
 
 SplashScreen.preventAutoHideAsync();
+
+function AppContent() {
+  const tankState = useTankProvider();
+
+  return (
+    <TankContext.Provider value={tankState}>
+      <StatusBar style="dark" />
+      <Stack screenOptions={{
+        headerStyle: { backgroundColor: THEME.background },
+        headerTintColor: THEME.text,
+        contentStyle: { backgroundColor: THEME.background },
+      }}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack>
+    </TankContext.Provider>
+  );
+}
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -25,32 +41,15 @@ export default function RootLayout() {
   });
   const [db, setDb] = useState<SQLite.SQLiteDatabase | null>(null);
 
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
-
-  useEffect(() => {
-    getDatabase().then(setDb);
-  }, []);
-
-  useEffect(() => {
-    if (loaded && db) SplashScreen.hideAsync();
-  }, [loaded, db]);
+  useEffect(() => { if (error) throw error; }, [error]);
+  useEffect(() => { getDatabase().then(setDb); }, []);
+  useEffect(() => { if (loaded && db) SplashScreen.hideAsync(); }, [loaded, db]);
 
   if (!loaded || !db) return null;
 
   return (
     <DatabaseContext.Provider value={db}>
-      <StatusBar style="dark" />
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: THEME.background },
-          headerTintColor: THEME.text,
-          contentStyle: { backgroundColor: THEME.background },
-        }}
-      >
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <AppContent />
     </DatabaseContext.Provider>
   );
 }

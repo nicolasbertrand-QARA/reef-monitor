@@ -8,5 +8,14 @@ export default {
   chart: { noReadings: '无测量值', noReadingsHint: '记录您的第一个%{param}测量值以查看趋势', current: '当前', min: '最小', max: '最大', avg: '平均' },
   settings: { parameters: '参数', thresholds: '警报阈值', data: '数据', dosingLog: '添加记录', exportCsv: '导出CSV', noDataExport: '无数据', noDataExportMsg: '没有可导出的测量值。', save: '保存', importCsv: '导入CSV备份', importSuccess: '导入完成', importSuccessMsg: '已导入%{count}条测量值。', importError: '导入失败', warnLow: '警告下限', warnHigh: '警告上限', critLow: '危急下限', critHigh: '危急上限' },
   dosing: { title: '添加记录', add: '添加剂量', empty: '无添加记录', emptyHint: '记录添加量以关联参数变化', product: '产品', productPlaceholder: '或输入产品名称...', amount: '数量', notes: '备注', notesPlaceholder: '可选...', cancel: '取消', save: '保存', products: { kalkwasser: 'Kalkwasser', allForReef: 'All-for-Reef', caBalling: 'Ca（三要素）', alkBalling: 'Alk（三要素）', mgSupplement: 'Mg补充剂', aminoAcids: '氨基酸', coralFood: '珊瑚粮' } },
+  tanks: {
+    title: '鱼缸',
+    add: '添加鱼缸',
+    rename: '重命名',
+    delete: '删除',
+    deleteConfirm: '删除"%{name}"及其所有数据？',
+    cantDeleteLast: '无法删除唯一的鱼缸',
+    namePrompt: '鱼缸名称',
+  },
   ratios: { po4Undetectable: 'NO3升高时PO4未检出 — 蓝藻/甲藻风险', no3Undetectable: 'PO4升高时NO3未检出 — 营养盐失衡', insufficientData: '数据不足', ratioLow: 'NO3:PO4比值偏低（%{ratio}:1）— 磷酸盐过量', ratioHigh: 'NO3:PO4比值偏高（%{ratio}:1）— 硝酸盐过量', ratioOk: 'NO3:PO4比值 %{ratio}:1', mgLow: 'Mg相对Ca过低 — 先提高Mg', mgHigh: 'Mg相对Ca过高', mgInstability: '低Mg可能导致Ca/Alk不稳定', ionicOk: 'Ca/Alk/Mg平衡正常' },
 };

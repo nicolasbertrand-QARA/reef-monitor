@@ -105,6 +105,15 @@ export default {
       coralFood: 'Nourriture coraux',
     },
   },
+  tanks: {
+    title: 'Aquariums',
+    add: 'Ajouter un bac',
+    rename: 'Renommer',
+    delete: 'Supprimer',
+    deleteConfirm: 'Supprimer « %{name} » et toutes ses données ?',
+    cantDeleteLast: 'Impossible de supprimer le dernier bac',
+    namePrompt: "Nom de l'aquarium",
+  },
   waterChange: {
     title: "Changement d'eau",
     add: "Changement d'eau",

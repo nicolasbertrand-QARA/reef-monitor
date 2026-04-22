@@ -13,17 +13,20 @@ import { calculateConsumptionRate } from '@/src/utils/consumption';
 import { evaluateStatus } from '@/src/utils/thresholds';
 import { isDoseRelevant } from '@/src/constants/dosingMap';
 import { useVisibleParams } from '@/src/hooks/useVisibility';
+import { useTank } from '@/src/hooks/useTank';
 import i18n, { getDateLocale } from '@/src/i18n';
 
 export default function TrendsScreen() {
   const params = useLocalSearchParams<{ param?: string }>();
+  const { activeTank } = useTank();
+  const tankId = activeTank?.id ?? 1;
   const initialParam = (params.param as ParameterKey) || 'alkalinity';
 
   const [selectedSet, setSelectedSet] = useState<Set<ParameterKey>>(new Set([initialParam]));
   const [timeRange, setTimeRange] = useState<TimeRange>(30);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editValue, setEditValue] = useState('');
-  const { visible: visibleParams } = useVisibleParams();
+  const { visible: visibleParams } = useVisibleParams(tankId);
 
   // Data for all selected params
   const [allReadings, setAllReadings] = useState<Map<ParameterKey, Reading[]>>(new Map());
@@ -44,8 +47,8 @@ export default function TrendsScreen() {
       const thresholdsMap = new Map<ParameterKey, Thresholds>();
       await Promise.all(selectedArray.map(async (key) => {
         const [readings, threshold] = await Promise.all([
-          getReadingHistory(key, days),
-          getThresholdForParam(key),
+          getReadingHistory(key, tankId, days),
+          getThresholdForParam(key, tankId),
         ]);
         readingsMap.set(key, readings);
         if (threshold) thresholdsMap.set(key, threshold);
@@ -53,19 +56,19 @@ export default function TrendsScreen() {
       setAllReadings(readingsMap);
       setAllThresholds(thresholdsMap);
     })();
-  }, [selectedSet, days]);
+  }, [selectedSet, days, tankId]);
 
   // Fetch dosing + water changes
   useEffect(() => {
     if (isSingle) {
-      getDosingHistory(days).then((allDoses) => {
+      getDosingHistory(tankId, days).then((allDoses) => {
         setDoses(allDoses.filter((d) => isDoseRelevant(d.product, primaryKey)));
       });
     } else {
       setDoses([]);
     }
-    getWaterChanges(days).then(setWaterChanges);
-  }, [selectedSet, days]);
+    getWaterChanges(tankId, days).then(setWaterChanges);
+  }, [selectedSet, days, tankId]);
 
   const handleChipTap = (key: ParameterKey) => {
     setSelectedSet((prev) => {

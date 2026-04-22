@@ -8,5 +8,14 @@ export default {
   chart: { noReadings: 'कोई रीडिंग नहीं', noReadingsHint: 'रुझान देखने के लिए अपनी पहली %{param} रीडिंग रिकॉर्ड करें', current: 'वर्तमान', min: 'न्यूनतम', max: 'अधिकतम', avg: 'औसत' },
   settings: { parameters: 'पैरामीटर', thresholds: 'अलर्ट सीमाएं', data: 'डेटा', dosingLog: 'डोसिंग लॉग', exportCsv: 'CSV निर्यात', noDataExport: 'कोई डेटा नहीं', noDataExportMsg: 'निर्यात के लिए कोई रीडिंग नहीं।', save: 'सहेजें', importCsv: 'CSV बैकअप आयात करें', importSuccess: 'आयात पूर्ण', importSuccessMsg: '%{count} रीडिंग आयात की गईं।', importError: 'आयात विफल', warnLow: 'चेतावनी निम्न', warnHigh: 'चेतावनी उच्च', critLow: 'गंभीर निम्न', critHigh: 'गंभीर उच्च' },
   dosing: { title: 'डोसिंग लॉग', add: 'डोज़ जोड़ें', empty: 'कोई डोज़ रिकॉर्ड नहीं', emptyHint: 'पैरामीटर परिवर्तनों से सहसंबंध के लिए अपनी डोज़ रिकॉर्ड करें', product: 'उत्पाद', productPlaceholder: 'या उत्पाद का नाम टाइप करें...', amount: 'मात्रा', notes: 'नोट्स', notesPlaceholder: 'वैकल्पिक...', cancel: 'रद्द करें', save: 'सहेजें', products: { kalkwasser: 'Kalkwasser', allForReef: 'All-for-Reef', caBalling: 'Ca (बॉलिंग)', alkBalling: 'Alk (बॉलिंग)', mgSupplement: 'Mg सप्लीमेंट', aminoAcids: 'अमीनो एसिड', coralFood: 'कोरल फूड' } },
+  tanks: {
+    title: 'टैंक',
+    add: 'टैंक जोड़ें',
+    rename: 'नाम बदलें',
+    delete: 'हटाएं',
+    deleteConfirm: '"%{name}" और उसका सारा डेटा हटाएं?',
+    cantDeleteLast: 'एकमात्र टैंक नहीं हटा सकते',
+    namePrompt: 'टैंक का नाम',
+  },
   ratios: { po4Undetectable: 'उच्च NO3 के साथ PO4 अनडिटेक्टेबल — सायनो/डायनो का खतरा', no3Undetectable: 'उच्च PO4 के साथ NO3 अनडिटेक्टेबल — पोषक असंतुलन', insufficientData: 'अपर्याप्त डेटा', ratioLow: 'NO3:PO4 अनुपात कम (%{ratio}:1) — फॉस्फेट अधिक', ratioHigh: 'NO3:PO4 अनुपात उच्च (%{ratio}:1) — नाइट्रेट अधिक', ratioOk: 'NO3:PO4 अनुपात %{ratio}:1', mgLow: 'Ca की तुलना में Mg बहुत कम — पहले Mg बढ़ाएं', mgHigh: 'Ca की तुलना में Mg बहुत अधिक', mgInstability: 'कम Mg Ca/Alk अस्थिरता का कारण बन सकता है', ionicOk: 'Ca/Alk/Mg संतुलन ठीक' },
 };

@@ -7,15 +7,15 @@ import { insertReading, getReadingHistory } from '@/src/db/queries';
 import { TestTimer } from './TestTimer';
 import i18n from '@/src/i18n';
 
-interface Props { paramDef: ParameterDef; visible: boolean; onClose: () => void; onSaved: () => void; }
+interface Props { paramDef: ParameterDef; visible: boolean; tankId: number; onClose: () => void; onSaved: () => void; }
 
-export function ParamInput({ paramDef, visible, onClose, onSaved }: Props) {
+export function ParamInput({ paramDef, visible, tankId, onClose, onSaved }: Props) {
   const [value, setValue] = useState(paramDef.defaultValue);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (visible) {
-      getReadingHistory(paramDef.key).then((readings) => {
+      getReadingHistory(paramDef.key, tankId).then((readings) => {
         if (readings.length > 0) {
           setValue(readings[readings.length - 1].value);
         } else {
@@ -36,7 +36,7 @@ export function ParamInput({ paramDef, visible, onClose, onSaved }: Props) {
   };
   const handleSave = async () => {
     setSaving(true);
-    await insertReading(paramDef.key, value, paramDef.unit);
+    await insertReading(paramDef.key, value, paramDef.unit, tankId);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     setSaving(false); onSaved(); onClose();
   };

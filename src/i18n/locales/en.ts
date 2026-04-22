@@ -114,6 +114,16 @@ export default {
       coralFood: 'Coral food',
     },
   },
+  // Tanks
+  tanks: {
+    title: 'Tanks',
+    add: 'Add Tank',
+    rename: 'Rename',
+    delete: 'Delete',
+    deleteConfirm: 'Delete "%{name}" and all its data?',
+    cantDeleteLast: "Can't delete the only tank",
+    namePrompt: 'Tank name',
+  },
   // Water changes
   waterChange: {
     title: 'Water Change',

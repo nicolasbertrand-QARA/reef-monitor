@@ -51,6 +51,12 @@ export interface WaterChange {
   changed_at: string;
 }
 
+export interface Tank {
+  id: number;
+  name: string;
+  created_at: string;
+}
+
 export interface ReminderSchedule {
   parameter: ParameterKey;
   interval_hours: number;

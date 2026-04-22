@@ -2,6 +2,7 @@ import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
 import { THEME } from '@/src/constants/colors';
+import { TankSwitcher } from '@/src/components/TankSwitcher';
 import i18n from '@/src/i18n';
 
 function TabBarIcon(props: { name: React.ComponentProps<typeof FontAwesome>['name']; color: string }) {
@@ -19,6 +20,8 @@ export default function TabLayout() {
         headerStyle: { backgroundColor: THEME.background, shadowColor: 'transparent', elevation: 0 },
         headerTitleStyle: { color: THEME.text, fontSize: 17, fontWeight: '600' },
         headerTintColor: THEME.text,
+        headerLeft: () => <TankSwitcher />,
+        headerLeftContainerStyle: { paddingLeft: 16 },
       }}
     >
       <Tabs.Screen name="index" options={{ title: i18n.t('tabs.log'), tabBarIcon: ({ color }) => <TabBarIcon name="tachometer" color={color} /> }} />

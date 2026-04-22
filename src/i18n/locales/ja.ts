@@ -8,5 +8,14 @@ export default {
   chart: { noReadings: '測定値なし', noReadingsHint: '%{param}の最初の測定値を記録してトレンドを表示', current: '現在', min: '最小', max: '最大', avg: '平均' },
   settings: { parameters: 'パラメータ', thresholds: 'アラートしきい値', data: 'データ', dosingLog: '添加記録', exportCsv: 'CSVエクスポート', noDataExport: 'データなし', noDataExportMsg: 'エクスポートする測定値がありません。', save: '保存', importCsv: 'CSVバックアップをインポート', importSuccess: 'インポート完了', importSuccessMsg: '%{count}件の測定値をインポートしました。', importError: 'インポート失敗', warnLow: '警告下限', warnHigh: '警告上限', critLow: '危険下限', critHigh: '危険上限' },
   dosing: { title: '添加記録', add: '添加を記録', empty: '添加記録なし', emptyHint: '添加を記録してパラメータの変化と関連付けましょう', product: '製品', productPlaceholder: '製品名を入力...', amount: '量', notes: 'メモ', notesPlaceholder: '任意...', cancel: 'キャンセル', save: '保存', products: { kalkwasser: 'カルクワッサー', allForReef: 'All-for-Reef', caBalling: 'Ca（バリング）', alkBalling: 'Alk（バリング）', mgSupplement: 'Mg添加剤', aminoAcids: 'アミノ酸', coralFood: 'サンゴフード' } },
+  tanks: {
+    title: '水槽',
+    add: '水槽を追加',
+    rename: '名前変更',
+    delete: '削除',
+    deleteConfirm: '「%{name}」とすべてのデータを削除？',
+    cantDeleteLast: '最後の水槽は削除できません',
+    namePrompt: '水槽名',
+  },
   ratios: { po4Undetectable: 'NO3上昇時にPO4検出不可 — シアノ/ディノリスク', no3Undetectable: 'PO4上昇時にNO3検出不可 — 栄養塩バランス不良', insufficientData: 'データ不足', ratioLow: 'NO3:PO4比が低い（%{ratio}:1）— リン酸塩過剰', ratioHigh: 'NO3:PO4比が高い（%{ratio}:1）— 硝酸塩過剰', ratioOk: 'NO3:PO4比 %{ratio}:1', mgLow: 'Caに対してMgが低すぎる — まずMgを上げる', mgHigh: 'Caに対してMgが高すぎる', mgInstability: 'Mg低下がCa/Alk不安定の原因の可能性', ionicOk: 'Ca/Alk/Mgバランス OK' },
 };

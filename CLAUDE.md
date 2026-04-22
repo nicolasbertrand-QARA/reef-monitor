@@ -58,7 +58,10 @@ reef-monitor/
 │   │   ├── StatusBadge.tsx       # Colored dot (ok/warning/critical)
 │   │   ├── TestTimer.tsx         # Countdown timer for Salifert kits
 │   │   ├── TimeRangeSelector.tsx # 7d/30d/90d/All toggle chips
-│   │   └── TrendChart.tsx        # Line chart with range bands + dosing markers
+│   │   ├── TrendChart.tsx         # Line chart with range bands + dosing markers
+│   │   ├── MultiTrendChart.tsx   # Multi-parameter overlay chart (SVG bezier)
+│   │   ├── MiniSparkline.tsx     # Mini sparkline for dashboard cards (SVG)
+│   │   └── TankSwitcher.tsx      # Header dropdown to switch active tank
 │   ├── constants/
 │   │   ├── colors.ts             # Theme colors + status colors
 │   │   ├── dosingMap.ts          # Product → parameter mapping for chart overlay
@@ -68,7 +71,9 @@ reef-monitor/
 │   │   └── queries.ts            # All SQL queries as typed async functions
 │   ├── hooks/
 │   │   ├── useDatabase.ts        # React context for SQLite connection
-│   │   └── useParameters.ts      # Hooks for latest readings + history
+│   │   ├── useParameters.ts      # Hooks for latest readings + history (tank-scoped)
+│   │   ├── useTank.ts            # TankContext provider + useTank hook
+│   │   └── useVisibility.ts      # Hook for parameter visibility (tank-scoped)
 │   ├── i18n/
 │   │   ├── index.ts              # i18n setup, locale detection, date-fns locale map
 │   │   └── locales/              # 15 locale files (en, fr, es, pt, de, it, nl, ru, ja, ko, zh, ar, hi, tr, pl)
@@ -98,27 +103,41 @@ reef-monitor/
 
 ## Database Schema
 
-SQLite database `reef-monitor.db` with 4 tables. Schema version tracked via `PRAGMA user_version`.
+SQLite database `reef-monitor.db`. Schema version tracked via `PRAGMA user_version` (currently v5).
+
+**All data tables are tank-scoped** via `tank_id` foreign key.
+
+### `tanks`
+```sql
+CREATE TABLE tanks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+```
 
 ### `readings`
 ```sql
 CREATE TABLE readings (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  parameter TEXT NOT NULL,   -- ParameterKey: temperature|salinity|ph|alkalinity|calcium|magnesium|nitrate|phosphate
+  parameter TEXT NOT NULL,
   value REAL NOT NULL,
   unit TEXT NOT NULL,
-  recorded_at TEXT NOT NULL, -- ISO 8601
+  recorded_at TEXT NOT NULL,
+  tank_id INTEGER NOT NULL,
   notes TEXT
 );
-CREATE INDEX idx_readings_param_date ON readings(parameter, recorded_at DESC);
+CREATE INDEX idx_readings_tank_param_date ON readings(tank_id, parameter, recorded_at DESC);
 ```
 
 ### `thresholds`
 ```sql
 CREATE TABLE thresholds (
-  parameter TEXT PRIMARY KEY,
+  parameter TEXT NOT NULL,
+  tank_id INTEGER NOT NULL,
   warning_low REAL, warning_high REAL,
-  critical_low REAL, critical_high REAL
+  critical_low REAL, critical_high REAL,
+  PRIMARY KEY (parameter, tank_id)
 );
 ```
 
@@ -128,8 +147,9 @@ CREATE TABLE dosing_log (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   product TEXT NOT NULL,
   amount REAL NOT NULL,
-  unit TEXT NOT NULL,       -- ml, g, gouttes
+  unit TEXT NOT NULL,
   dosed_at TEXT NOT NULL,
+  tank_id INTEGER NOT NULL,
   notes TEXT
 );
 ```
@@ -141,8 +161,28 @@ CREATE TABLE water_changes (
   percentage REAL NOT NULL,
   salt_brand TEXT,
   dilution_gpl REAL,
-  changed_at TEXT NOT NULL
+  changed_at TEXT NOT NULL,
+  tank_id INTEGER NOT NULL
 );
+```
+
+### `parameter_visibility`
+```sql
+CREATE TABLE parameter_visibility (
+  parameter TEXT NOT NULL,
+  tank_id INTEGER NOT NULL,
+  visible INTEGER NOT NULL DEFAULT 1,
+  PRIMARY KEY (parameter, tank_id)
+);
+```
+
+### `app_settings`
+```sql
+CREATE TABLE app_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL
+);
+-- Stores active_tank_id
 ```
 
 ### `reminder_schedules`
@@ -200,9 +240,23 @@ Parameters are defined in `src/constants/parameters.ts`. Labels come from i18n.
 - Water changes appear as blue markers on ALL trend charts; doses appear as amber markers on relevant charts only
 
 ### Settings (`app/(tabs)/settings.tsx`)
-- Alert thresholds: expandable per-parameter editor (warn low/high, crit low/high)
-- Export as CSV (via `expo-sharing`)
-- Import CSV backup (via `expo-document-picker`)
+- **Tank management** (top section): list tanks with rename/delete, add new tank button
+- **Parameter toggles + thresholds**: expandable per-parameter editor with visibility toggle
+- Export as CSV (via `expo-sharing`) — exports active tank only
+- Import CSV backup (via `expo-document-picker`) — imports into active tank
+
+---
+
+## Multi-Tank Architecture
+
+All data is scoped to the active tank via `tank_id`. A `TankContext` provider wraps the app and provides `activeTank`, `tanks`, `switchTank()`, and `refreshTanks()`.
+
+- **TankSwitcher** component appears in the header of all tabs (only shown when 2+ tanks exist)
+- Tapping it shows a dropdown to switch active tank
+- Settings screen has a "Tanks" section at the top to add/rename/delete tanks
+- When a new tank is created, default thresholds and visibility are seeded automatically
+- Deleting a tank removes all its data (readings, doses, water changes, thresholds, visibility)
+- The active tank ID is persisted in `app_settings` table
 
 ---
 

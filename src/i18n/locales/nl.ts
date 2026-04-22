@@ -8,5 +8,14 @@ export default {
   chart: { noReadings: 'Geen metingen', noReadingsHint: 'Registreer je eerste %{param} meting om trends te zien', current: 'Huidig', min: 'Min', max: 'Max', avg: 'Gem' },
   settings: { parameters: 'Parameters', thresholds: 'Alarmdrempels', data: 'Gegevens', dosingLog: 'Doseringslog', exportCsv: 'Exporteer als CSV', noDataExport: 'Geen data', noDataExportMsg: 'Geen metingen om te exporteren.', save: 'Opslaan', importCsv: 'CSV-backup importeren', importSuccess: 'Import voltooid', importSuccessMsg: '%{count} metingen geïmporteerd.', importError: 'Import mislukt', warnLow: 'Warn laag', warnHigh: 'Warn hoog', critLow: 'Krit laag', critHigh: 'Krit hoog' },
   dosing: { title: 'Doseringslog', add: 'Dosis toevoegen', empty: 'Geen doseringen geregistreerd', emptyHint: 'Registreer je doseringen om ze te correleren met parameterwijzigingen', product: 'Product', productPlaceholder: 'Of typ productnaam...', amount: 'Hoeveelheid', notes: 'Notities', notesPlaceholder: 'Optioneel...', cancel: 'Annuleren', save: 'Opslaan', products: { kalkwasser: 'Kalkwasser', allForReef: 'All-for-Reef', caBalling: 'Ca (balling)', alkBalling: 'Alk (balling)', mgSupplement: 'Mg-supplement', aminoAcids: 'Aminozuren', coralFood: 'Koraalvoer' } },
+  tanks: {
+    title: 'Aquaria',
+    add: 'Aquarium toevoegen',
+    rename: 'Hernoemen',
+    delete: 'Verwijderen',
+    deleteConfirm: '"%{name}" en alle data verwijderen?',
+    cantDeleteLast: 'Kan het enige aquarium niet verwijderen',
+    namePrompt: 'Aquariumnaam',
+  },
   ratios: { po4Undetectable: 'PO4 niet detecteerbaar met verhoogd NO3 — risico op cyano/dino', no3Undetectable: 'NO3 niet detecteerbaar met verhoogd PO4 — nutriëntenonbalans', insufficientData: 'Onvoldoende gegevens', ratioLow: 'NO3:PO4 verhouding laag (%{ratio}:1) — fosfaatoverschot', ratioHigh: 'NO3:PO4 verhouding hoog (%{ratio}:1) — nitraatoverschot', ratioOk: 'NO3:PO4 verhouding %{ratio}:1', mgLow: 'Mg te laag t.o.v. Ca — eerst Mg verhogen', mgHigh: 'Mg te hoog t.o.v. Ca', mgInstability: 'Laag Mg kan Ca/Alk instabiliteit veroorzaken', ionicOk: 'Ca/Alk/Mg balans OK' },
 };

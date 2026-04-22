@@ -11,32 +11,27 @@ import { ParamInput } from '@/src/components/ParamInput';
 import { RatioIndicator } from '@/src/components/RatioIndicator';
 import { Reading, Thresholds, ParameterKey, ParameterDef } from '@/src/models/types';
 import { useVisibleParams } from '@/src/hooks/useVisibility';
+import { useTank } from '@/src/hooks/useTank';
 import { getReadingHistory } from '@/src/db/queries';
 import i18n from '@/src/i18n';
 
 export default function DashboardScreen() {
-  const { readings, thresholds, loading, refresh } = useLatestReadings();
-  const { visible, refresh: refreshVisibility } = useVisibleParams();
+  const { activeTank } = useTank();
+  const tankId = activeTank?.id ?? 1;
+  const { readings, thresholds, loading, refresh } = useLatestReadings(tankId);
+  const { visible, refresh: refreshVisibility } = useVisibleParams(tankId);
   const [selectedParam, setSelectedParam] = useState<ParameterDef | null>(null);
   const [historyMap, setHistoryMap] = useState<Map<ParameterKey, Reading[]>>(new Map());
 
   const loadHistory = useCallback(async () => {
     const map = new Map<ParameterKey, Reading[]>();
-    const params = getParameterList();
-    await Promise.all(
-      params.map(async (p) => {
-        const history = await getReadingHistory(p.key, 30);
-        map.set(p.key, history);
-      })
-    );
+    await Promise.all(getParameterList().map(async (p) => {
+      map.set(p.key, await getReadingHistory(p.key, tankId, 30));
+    }));
     setHistoryMap(map);
-  }, []);
+  }, [tankId]);
 
-  useFocusEffect(useCallback(() => {
-    refresh();
-    refreshVisibility();
-    loadHistory();
-  }, [refresh, refreshVisibility, loadHistory]));
+  useFocusEffect(useCallback(() => { refresh(); refreshVisibility(); loadHistory(); }, [refresh, refreshVisibility, loadHistory]));
 
   const readingMap = new Map<ParameterKey, Reading>();
   readings.forEach((r) => readingMap.set(r.parameter as ParameterKey, r));
@@ -54,8 +49,7 @@ export default function DashboardScreen() {
     const status = reading && threshold ? evaluateStatus(reading.value, threshold) : 'unknown';
     return (
       <ParamCard key={paramDef.key} paramDef={paramDef} reading={reading} status={status}
-        history={historyMap.get(paramDef.key)}
-        thresholds={threshold}
+        history={historyMap.get(paramDef.key)} thresholds={threshold}
         onPress={() => setSelectedParam(PARAMETERS[paramDef.key])} />
     );
   };
@@ -63,27 +57,19 @@ export default function DashboardScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       {ratioResult && ratioResult.status !== 'ok' && ratioResult.status !== 'unknown' && (
-        <View style={styles.alertSection}>
-          <RatioIndicator title={i18n.t('dashboard.ratioNO3PO4')} message={ratioResult.message} status={ratioResult.status} />
-        </View>
+        <View style={styles.alertSection}><RatioIndicator title={i18n.t('dashboard.ratioNO3PO4')} message={ratioResult.message} status={ratioResult.status} /></View>
       )}
       {ionicResult && ionicResult.status !== 'ok' && ionicResult.status !== 'unknown' && (
-        <View style={styles.alertSection}>
-          <RatioIndicator title={i18n.t('dashboard.ionicBalance')} message={ionicResult.message} status={ionicResult.status} />
-        </View>
+        <View style={styles.alertSection}><RatioIndicator title={i18n.t('dashboard.ionicBalance')} message={ionicResult.message} status={ionicResult.status} /></View>
       )}
       <Text style={styles.sectionLabel}>{i18n.t('dashboard.waterChemistry')}</Text>
       <View style={styles.grid}>{getCoreParams().filter((p) => visible.has(p.key)).map(renderCard)}</View>
       <Text style={styles.sectionLabel}>{i18n.t('dashboard.nutrients')}</Text>
       <View style={styles.grid}>{getNutrientParams().filter((p) => visible.has(p.key)).map(renderCard)}</View>
-
       {selectedParam && (
-        <ParamInput
-          paramDef={selectedParam}
-          visible={true}
+        <ParamInput paramDef={selectedParam} visible={true} tankId={tankId}
           onClose={() => setSelectedParam(null)}
-          onSaved={() => { setSelectedParam(null); refresh(); loadHistory(); }}
-        />
+          onSaved={() => { setSelectedParam(null); refresh(); loadHistory(); }} />
       )}
     </ScrollView>
   );

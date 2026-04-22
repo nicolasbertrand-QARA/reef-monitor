@@ -6,22 +6,25 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { THEME } from '@/src/constants/colors';
 import { DosingEntry, WaterChange } from '@/src/models/types';
 import { insertDose, getDosingHistory, insertWaterChange, getWaterChanges, getLastWaterChange } from '@/src/db/queries';
+import { useTank } from '@/src/hooks/useTank';
 import i18n, { getDateLocale } from '@/src/i18n';
 
 const PRODUCT_KEYS = ['kalkwasser', 'allForReef', 'caBalling', 'alkBalling', 'mgSupplement', 'aminoAcids', 'coralFood'] as const;
 const WC_COLOR = '#5a8fb8';
 
 export default function DosingScreen() {
+  const { activeTank } = useTank();
+  const tankId = activeTank?.id ?? 1;
   const [entries, setEntries] = useState<DosingEntry[]>([]);
   const [waterChanges, setWaterChanges] = useState<WaterChange[]>([]);
   const [showAdd, setShowAdd] = useState(false);
   const [showWC, setShowWC] = useState(false);
 
   const refresh = useCallback(async () => {
-    const [doses, wcs] = await Promise.all([getDosingHistory(90), getWaterChanges(90)]);
+    const [doses, wcs] = await Promise.all([getDosingHistory(tankId, 90), getWaterChanges(tankId, 90)]);
     setEntries(doses);
     setWaterChanges(wcs);
-  }, []);
+  }, [tankId]);
 
   useEffect(() => { refresh(); }, [refresh]);
 
@@ -85,20 +88,20 @@ export default function DosingScreen() {
         })}
       </ScrollView>
 
-      <AddDoseModal visible={showAdd} onClose={() => setShowAdd(false)} onSaved={() => { setShowAdd(false); refresh(); }} />
-      <WaterChangeModal visible={showWC} onClose={() => setShowWC(false)} onSaved={() => { setShowWC(false); refresh(); }} />
+      <AddDoseModal visible={showAdd} tankId={tankId} onClose={() => setShowAdd(false)} onSaved={() => { setShowAdd(false); refresh(); }} />
+      <WaterChangeModal visible={showWC} tankId={tankId} onClose={() => setShowWC(false)} onSaved={() => { setShowWC(false); refresh(); }} />
     </View>
   );
 }
 
-function AddDoseModal({ visible, onClose, onSaved }: { visible: boolean; onClose: () => void; onSaved: () => void }) {
+function AddDoseModal({ visible, tankId, onClose, onSaved }: { visible: boolean; tankId: number; onClose: () => void; onSaved: () => void }) {
   const [product, setProduct] = useState('');
   const [amount, setAmount] = useState('');
   const [unit, setUnit] = useState('ml');
   const [notes, setNotes] = useState('');
   const handleSave = async () => {
     if (!product || !amount) return;
-    await insertDose(product, parseFloat(amount), unit, notes || undefined);
+    await insertDose(product, parseFloat(amount), unit, tankId, notes || undefined);
     setProduct(''); setAmount(''); setNotes(''); onSaved();
   };
   const products = PRODUCT_KEYS.map((k) => i18n.t(`dosing.products.${k}`));
@@ -138,7 +141,7 @@ function AddDoseModal({ visible, onClose, onSaved }: { visible: boolean; onClose
   );
 }
 
-function WaterChangeModal({ visible, onClose, onSaved }: { visible: boolean; onClose: () => void; onSaved: () => void }) {
+function WaterChangeModal({ visible, tankId, onClose, onSaved }: { visible: boolean; tankId: number; onClose: () => void; onSaved: () => void }) {
   const [percentage, setPercentage] = useState(10);
   const [saltBrand, setSaltBrand] = useState('');
   const [dilution, setDilution] = useState('');
@@ -146,7 +149,7 @@ function WaterChangeModal({ visible, onClose, onSaved }: { visible: boolean; onC
   // Load last values when modal opens
   useEffect(() => {
     if (visible) {
-      getLastWaterChange().then((last) => {
+      getLastWaterChange(tankId).then((last) => {
         if (last) {
           setPercentage(last.percentage);
           setSaltBrand(last.salt_brand ?? '');
@@ -158,7 +161,7 @@ function WaterChangeModal({ visible, onClose, onSaved }: { visible: boolean; onC
 
   const handleSave = async () => {
     await insertWaterChange(
-      percentage,
+      percentage, tankId,
       saltBrand || undefined,
       dilution ? parseFloat(dilution) : undefined
     );

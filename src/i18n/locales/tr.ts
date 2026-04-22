@@ -8,5 +8,14 @@ export default {
   chart: { noReadings: 'Ölçüm yok', noReadingsHint: 'Trendleri görmek için ilk %{param} ölçümünüzü kaydedin', current: 'Güncel', min: 'Min', max: 'Maks', avg: 'Ort' },
   settings: { parameters: 'Parametreler', thresholds: 'Uyarı Eşikleri', data: 'Veriler', dosingLog: 'Dozaj Günlüğü', exportCsv: 'CSV olarak dışa aktar', noDataExport: 'Veri yok', noDataExportMsg: 'Dışa aktarılacak ölçüm yok.', save: 'Kaydet', importCsv: 'CSV yedeğini içe aktar', importSuccess: 'İçe aktarma tamamlandı', importSuccessMsg: '%{count} ölçüm içe aktarıldı.', importError: 'İçe aktarma başarısız', warnLow: 'Uyarı alt', warnHigh: 'Uyarı üst', critLow: 'Kritik alt', critHigh: 'Kritik üst' },
   dosing: { title: 'Dozaj Günlüğü', add: 'Doz ekle', empty: 'Kayıtlı doz yok', emptyHint: 'Parametre değişiklikleriyle ilişkilendirmek için dozlarınızı kaydedin', product: 'Ürün', productPlaceholder: 'Veya ürün adı yazın...', amount: 'Miktar', notes: 'Notlar', notesPlaceholder: 'İsteğe bağlı...', cancel: 'İptal', save: 'Kaydet', products: { kalkwasser: 'Kalkwasser', allForReef: 'All-for-Reef', caBalling: 'Ca (balling)', alkBalling: 'Alk (balling)', mgSupplement: 'Mg takviyesi', aminoAcids: 'Amino asitler', coralFood: 'Mercan yemi' } },
+  tanks: {
+    title: 'Akvaryumlar',
+    add: 'Akvaryum ekle',
+    rename: 'Yeniden adlandır',
+    delete: 'Sil',
+    deleteConfirm: '"%{name}" ve tüm verileri silinsin mi?',
+    cantDeleteLast: 'Tek akvaryum silinemez',
+    namePrompt: 'Akvaryum adı',
+  },
   ratios: { po4Undetectable: 'Yüksek NO3 ile PO4 tespit edilemiyor — siyanobakteri/dino riski', no3Undetectable: 'Yüksek PO4 ile NO3 tespit edilemiyor — besin dengesizliği', insufficientData: 'Yetersiz veri', ratioLow: 'NO3:PO4 oranı düşük (%{ratio}:1) — fosfat fazlası', ratioHigh: 'NO3:PO4 oranı yüksek (%{ratio}:1) — nitrat fazlası', ratioOk: 'NO3:PO4 oranı %{ratio}:1', mgLow: "Ca'ya göre Mg çok düşük — önce Mg'yi yükseltin", mgHigh: "Ca'ya göre Mg çok yüksek", mgInstability: 'Düşük Mg Ca/Alk kararsızlığına neden olabilir', ionicOk: 'Ca/Alk/Mg dengesi OK' },
 };

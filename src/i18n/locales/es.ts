@@ -8,5 +8,14 @@ export default {
   chart: { noReadings: 'Sin lecturas', noReadingsHint: 'Registra tu primera lectura de %{param} para ver tendencias', current: 'Actual', min: 'Mín', max: 'Máx', avg: 'Prom' },
   settings: { parameters: 'Parámetros', thresholds: 'Umbrales de alerta', data: 'Datos', dosingLog: 'Registro de dosis', exportCsv: 'Exportar como CSV', noDataExport: 'Sin datos', noDataExportMsg: 'No hay lecturas para exportar.', save: 'Guardar', importCsv: 'Importar copia de seguridad CSV', importSuccess: 'Importación completa', importSuccessMsg: '%{count} lecturas importadas.', importError: 'Error de importación', warnLow: 'Alerta baja', warnHigh: 'Alerta alta', critLow: 'Crít baja', critHigh: 'Crít alta' },
   dosing: { title: 'Registro de dosis', add: 'Añadir dosis', empty: 'Sin dosis registradas', emptyHint: 'Registra tus dosis para correlacionarlas con los cambios de parámetros', product: 'Producto', productPlaceholder: 'O escribe el nombre del producto...', amount: 'Cantidad', notes: 'Notas', notesPlaceholder: 'Opcional...', cancel: 'Cancelar', save: 'Guardar', products: { kalkwasser: 'Kalkwasser', allForReef: 'All-for-Reef', caBalling: 'Ca (balling)', alkBalling: 'Alk (balling)', mgSupplement: 'Suplemento Mg', aminoAcids: 'Aminoácidos', coralFood: 'Alimento coral' } },
+  tanks: {
+    title: 'Acuarios',
+    add: 'Añadir acuario',
+    rename: 'Renombrar',
+    delete: 'Eliminar',
+    deleteConfirm: '¿Eliminar "%{name}" y todos sus datos?',
+    cantDeleteLast: 'No se puede eliminar el único acuario',
+    namePrompt: 'Nombre del acuario',
+  },
   ratios: { po4Undetectable: 'PO4 indetectable con NO3 elevado — riesgo de ciano/dinos', no3Undetectable: 'NO3 indetectable con PO4 elevado — desequilibrio de nutrientes', insufficientData: 'Datos insuficientes', ratioLow: 'Ratio NO3:PO4 bajo (%{ratio}:1) — exceso de fosfatos', ratioHigh: 'Ratio NO3:PO4 alto (%{ratio}:1) — exceso de nitratos', ratioOk: 'Ratio NO3:PO4 %{ratio}:1', mgLow: 'Mg demasiado bajo respecto al Ca — subir Mg primero', mgHigh: 'Mg demasiado alto respecto al Ca', mgInstability: 'Mg bajo puede causar inestabilidad Ca/Alk', ionicOk: 'Equilibrio Ca/Alk/Mg OK' },
 };
