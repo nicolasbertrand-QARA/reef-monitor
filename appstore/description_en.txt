@@ -2,12 +2,18 @@ Reef Monitor — Track your reef aquarium water parameters
 
 Monitor your nano reef parameters with precision and peace of mind. Built for dedicated reef keepers, Reef Monitor lets you log readings, visualize trends, and catch parameter drift before it becomes a problem.
 
+MULTI-TANK
+• Manage multiple aquariums from a single app
+• Switch tanks with one tap from any screen
+• Each tank has its own readings, thresholds, and corrections
+
 QUICK LOGGING
 • Large touch targets designed for wet hands
 • +/- steppers tuned per parameter (0.1 dKH, 5 ppm Ca...)
 • Haptic feedback on every save
 • Built-in Salifert test timers (30 sec, 3 min)
 • Last recorded value pre-filled
+• Mini trend sparklines on every card
 
 UP TO 15 PARAMETERS
 • Water chemistry: temperature, specific gravity, pH, alkalinity, calcium, magnesium, potassium, strontium, iodine, boron
@@ -16,6 +22,7 @@ UP TO 15 PARAMETERS
 
 TRENDS & ALERTS
 • Charts per parameter over 7d, 30d, 90d, or all history
+• Overlay multiple parameters on the same chart
 • Alkalinity consumption rate (dKH/day) — key SPS health indicator
 • Configurable alert thresholds (warning and critical)
 • Automatic NO3:PO4 ratio and Ca/Alk/Mg ionic balance detection
@@ -25,7 +32,6 @@ CORRECTIONS
 • Dosing log: Kalkwasser, 2-part, All-for-Reef, and custom products
 • Water changes: percentage, salt brand, dilution in g/L
 • Dosing and water changes displayed on trend charts
-• Doses appear on relevant parameters, water changes on all charts
 
 YOUR DATA STAYS YOURS
 • 100% local storage on your device
@@ -33,4 +39,4 @@ YOUR DATA STAYS YOURS
 • CSV export and import for backup and restore
 • Zero personal data collection
 
-Available in 15 languages: English, French, Spanish, Portuguese, German, Italian, Dutch, Russian, Japanese, Korean, Chinese, Arabic, Hindi, Turkish, Polish.
+Available in 15 languages.

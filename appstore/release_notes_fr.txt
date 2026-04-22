@@ -1,0 +1,10 @@
+Nouveautés de la version 1.2.0 :
+
+• Multi-bacs : gérez plusieurs aquariums, chacun avec ses propres données
+• Changez de bac en un tap depuis n'importe quel écran
+• Mini courbes de tendance sur les cartes du tableau de bord
+• Superposition de plusieurs paramètres sur les graphiques
+• 7 nouveaux paramètres : potassium, strontium, iode, bore, silicates, ammoniac, nitrites
+• Changements d'eau : pourcentage, marque de sel, dilution
+• Import CSV pour restaurer vos sauvegardes
+• Courbes lissées en bézier

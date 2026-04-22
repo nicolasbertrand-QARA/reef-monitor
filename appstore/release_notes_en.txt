@@ -1,0 +1,10 @@
+What's new in version 1.2.0:
+
+• Multi-tank: manage multiple aquariums, each with its own data
+• Switch tanks with one tap from any screen
+• Mini trend sparklines on dashboard cards
+• Overlay multiple parameters on trend charts
+• 7 new parameters: potassium, strontium, iodine, boron, silicate, ammonia, nitrite
+• Water changes: percentage, salt brand, dilution
+• CSV import for backup restore
+• Smooth bezier curve rendering

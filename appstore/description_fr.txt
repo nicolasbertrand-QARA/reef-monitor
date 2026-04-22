@@ -2,12 +2,18 @@ Reef Monitor — Suivi des paramètres de votre aquarium récifal
 
 Suivez les paramètres de votre nano récifal avec précision et sérénité. Conçu pour les récifalistes exigeants, Reef Monitor vous permet d'enregistrer vos mesures, visualiser les tendances et détecter les dérives avant qu'elles ne deviennent un problème.
 
+MULTI-BACS
+• Gérez plusieurs aquariums depuis une seule app
+• Changez de bac en un tap depuis n'importe quel écran
+• Chaque bac a ses propres mesures, seuils et corrections
+
 ENREGISTREMENT RAPIDE
 • Interface tactile grand format, utilisable les mains mouillées
 • Boutons +/- avec pas configuré par paramètre (0.1 dKH, 5 ppm Ca...)
 • Retour haptique à chaque enregistrement
 • Minuteurs intégrés pour les tests Salifert (30 sec, 3 min)
 • La dernière valeur enregistrée est pré-remplie
+• Mini courbes de tendance sur chaque carte
 
 JUSQU'À 15 PARAMÈTRES
 • Chimie de l'eau : température, densité, pH, alcalinité, calcium, magnésium, potassium, strontium, iode, bore
@@ -16,6 +22,7 @@ JUSQU'À 15 PARAMÈTRES
 
 TENDANCES ET ALERTES
 • Graphiques par paramètre sur 7j, 30j, 90j ou tout l'historique
+• Superposition de plusieurs paramètres sur le même graphique
 • Taux de consommation d'alcalinité (dKH/jour) — indicateur clé pour les SPS
 • Seuils d'alerte configurables (avertissement et critique)
 • Détection automatique du ratio NO3:PO4 et de l'équilibre ionique Ca/Alk/Mg
@@ -25,7 +32,6 @@ CORRECTIONS
 • Journal de dosage : Kalkwasser, balling, All-for-Reef et produits personnalisés
 • Changements d'eau : pourcentage, marque de sel, dilution en g/L
 • Dosages et changements d'eau affichés sur les graphiques de tendances
-• Les dosages apparaissent sur les paramètres concernés, les changements d'eau sur tous
 
 VOS DONNÉES RESTENT LES VÔTRES
 • Stockage 100% local sur votre appareil
@@ -33,4 +39,4 @@ VOS DONNÉES RESTENT LES VÔTRES
 • Export et import CSV pour sauvegarder ou restaurer vos données
 • Aucune collecte de données personnelles
 
-Disponible en 15 langues : français, anglais, espagnol, portugais, allemand, italien, néerlandais, russe, japonais, coréen, chinois, arabe, hindi, turc, polonais.
+Disponible en 15 langues.
