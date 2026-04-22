@@ -27,7 +27,8 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.nicolasbertrand.reefmonitor"
     },
     "web": {
       "bundler": "metro",
