@@ -1,6 +1,14 @@
-Reef Monitor — Track your reef aquarium water parameters
+Reef Monitor — Track your saltwater aquarium water parameters
 
-Monitor your nano reef parameters with precision and peace of mind. Built for dedicated reef keepers, Reef Monitor lets you log readings, visualize trends, and catch parameter drift before it becomes a problem.
+Monitor your reef tank parameters with precision and peace of mind. Built for dedicated reef keepers of every tank size, Reef Monitor lets you log readings, visualize trends, and catch parameter drift before it becomes a problem.
+
+UNIT FLEXIBILITY
+• Choose your preferred units per parameter
+• Temperature in °C or °F
+• Salinity as specific gravity or ppt
+• Alkalinity in dKH, meq/L, or ppm CaCO₃
+• Nitrate as NO3 or NO₃-N, phosphate as ppm or ppb
+• Defaults, steppers, and thresholds adapt automatically
 
 MULTI-TANK
 • Manage multiple aquariums from a single app
@@ -9,14 +17,14 @@ MULTI-TANK
 
 QUICK LOGGING
 • Large touch targets designed for wet hands
-• +/- steppers tuned per parameter (0.1 dKH, 5 ppm Ca...)
+• +/- steppers tuned per parameter
 • Haptic feedback on every save
 • Built-in Salifert test timers (30 sec, 3 min)
 • Last recorded value pre-filled
 • Mini trend sparklines on every card
 
 UP TO 15 PARAMETERS
-• Water chemistry: temperature, specific gravity, pH, alkalinity, calcium, magnesium, potassium, strontium, iodine, boron
+• Water chemistry: temperature, salinity, pH, alkalinity, calcium, magnesium, potassium, strontium, iodine, boron
 • Nutrients: nitrate, phosphate, ammonia, nitrite, silicate
 • Enable only the parameters you track
 

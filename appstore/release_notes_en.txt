@@ -1,10 +1,10 @@
-What's new in version 1.2.0:
+What's new in version 1.3.0:
 
-• Multi-tank: manage multiple aquariums, each with its own data
-• Switch tanks with one tap from any screen
-• Mini trend sparklines on dashboard cards
-• Overlay multiple parameters on trend charts
-• 7 new parameters: potassium, strontium, iodine, boron, silicate, ammonia, nitrite
-• Water changes: percentage, salt brand, dilution
-• CSV import for backup restore
-• Smooth bezier curve rendering
+• Choose your preferred units per parameter
+• Temperature in °C or °F
+• Salinity as specific gravity or ppt
+• Alkalinity in dKH, meq/L, or ppm CaCO₃
+• Nitrate as ppm NO3 or ppm NO₃-N
+• Phosphate as ppm or ppb (Hanna ULR)
+• Defaults, steppers, thresholds, charts, and history all adapt to your chosen units
+• Stored values stay canonical so CSV backups remain portable

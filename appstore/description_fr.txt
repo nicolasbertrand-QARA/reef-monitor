@@ -1,6 +1,14 @@
-Reef Monitor — Suivi des paramètres de votre aquarium récifal
+Reef Monitor — Suivi des paramètres de votre aquarium d'eau de mer
 
-Suivez les paramètres de votre nano récifal avec précision et sérénité. Conçu pour les récifalistes exigeants, Reef Monitor vous permet d'enregistrer vos mesures, visualiser les tendances et détecter les dérives avant qu'elles ne deviennent un problème.
+Suivez les paramètres de votre bac récifal avec précision et sérénité, quelle que soit sa taille. Conçu pour tous les récifalistes, Reef Monitor vous permet d'enregistrer vos mesures, visualiser les tendances et détecter les dérives avant qu'elles ne deviennent un problème.
+
+CHOIX DES UNITÉS
+• Choisissez vos unités préférées par paramètre
+• Température en °C ou °F
+• Salinité en densité ou en ppt
+• Alcalinité en dKH, meq/L ou ppm CaCO₃
+• Nitrates en NO3 ou NO₃-N, phosphates en ppm ou ppb
+• Valeurs par défaut, pas et seuils s'adaptent automatiquement
 
 MULTI-BACS
 • Gérez plusieurs aquariums depuis une seule app
@@ -9,14 +17,14 @@ MULTI-BACS
 
 ENREGISTREMENT RAPIDE
 • Interface tactile grand format, utilisable les mains mouillées
-• Boutons +/- avec pas configuré par paramètre (0.1 dKH, 5 ppm Ca...)
+• Boutons +/- avec pas configuré par paramètre
 • Retour haptique à chaque enregistrement
 • Minuteurs intégrés pour les tests Salifert (30 sec, 3 min)
 • La dernière valeur enregistrée est pré-remplie
 • Mini courbes de tendance sur chaque carte
 
 JUSQU'À 15 PARAMÈTRES
-• Chimie de l'eau : température, densité, pH, alcalinité, calcium, magnésium, potassium, strontium, iode, bore
+• Chimie de l'eau : température, salinité, pH, alcalinité, calcium, magnésium, potassium, strontium, iode, bore
 • Nutriments : nitrates, phosphates, ammoniac, nitrites, silicates
 • Activez uniquement les paramètres que vous suivez
 
