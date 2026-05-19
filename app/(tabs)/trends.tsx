@@ -14,6 +14,8 @@ import { evaluateStatus } from '@/src/utils/thresholds';
 import { isDoseRelevant } from '@/src/constants/dosingMap';
 import { useVisibleParams } from '@/src/hooks/useVisibility';
 import { useTank } from '@/src/hooks/useTank';
+import { useUnitPrefs } from '@/src/hooks/useUnitPrefs';
+import { getDisplayUnit } from '@/src/utils/units';
 import i18n, { getDateLocale } from '@/src/i18n';
 
 export default function TrendsScreen() {
@@ -27,6 +29,7 @@ export default function TrendsScreen() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editValue, setEditValue] = useState('');
   const { visible: visibleParams } = useVisibleParams(tankId);
+  const { prefs: unitPrefs } = useUnitPrefs();
 
   // Data for all selected params
   const [allReadings, setAllReadings] = useState<Map<ParameterKey, Reading[]>>(new Map());
@@ -104,28 +107,39 @@ export default function TrendsScreen() {
     setSelectedSet((prev) => new Set(prev));
   }, []);
 
+  // Display unit for the primary parameter (history list)
+  const primaryDisplayUnit = isSingle ? getDisplayUnit(primaryDef, unitPrefs) : null;
+
   const handleDelete = useCallback((reading: Reading) => {
+    const u = primaryDisplayUnit;
+    const displayVal = u ? u.fromCanonical(reading.value).toFixed(u.decimals) : reading.value.toFixed(primaryDef.decimals);
+    const displayUnit = u?.unit ?? primaryDef.unit;
     Alert.alert(
       i18n.t('trends.deleteTitle'),
-      i18n.t('trends.deleteMessage', { value: reading.value.toFixed(primaryDef.decimals), unit: primaryDef.unit, date: format(new Date(reading.recorded_at), 'd MMM, HH:mm', { locale: getDateLocale() }) }),
+      i18n.t('trends.deleteMessage', { value: displayVal, unit: displayUnit, date: format(new Date(reading.recorded_at), 'd MMM, HH:mm', { locale: getDateLocale() }) }),
       [{ text: i18n.t('log.cancel'), style: 'cancel' }, { text: i18n.t('trends.deleteConfirm'), style: 'destructive', onPress: async () => { await deleteReading(reading.id); refresh(); } }]
     );
-  }, [primaryDef, refresh]);
+  }, [primaryDef, primaryDisplayUnit, refresh]);
 
   const scrollRef = useRef<ScrollView>(null);
 
   const handleEditStart = useCallback((reading: Reading) => {
     setEditingId(reading.id);
-    setEditValue(reading.value.toFixed(primaryDef.decimals));
+    // Show value in display unit for editing
+    const u = primaryDisplayUnit;
+    const displayVal = u ? u.fromCanonical(reading.value).toFixed(u.decimals) : reading.value.toFixed(primaryDef.decimals);
+    setEditValue(displayVal);
     setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 300);
-  }, [primaryDef]);
+  }, [primaryDef, primaryDisplayUnit]);
 
   const handleEditSave = useCallback(async () => {
     if (editingId === null) return;
     const parsed = parseFloat(editValue);
     if (isNaN(parsed)) return;
-    await updateReading(editingId, parsed); setEditingId(null); refresh();
-  }, [editingId, editValue, refresh]);
+    // Convert display value → canonical before storing
+    const canonical = primaryDisplayUnit ? primaryDisplayUnit.toCanonical(parsed) : parsed;
+    await updateReading(editingId, canonical); setEditingId(null); refresh();
+  }, [editingId, editValue, primaryDisplayUnit, refresh]);
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={90}>
@@ -150,7 +164,7 @@ export default function TrendsScreen() {
 
       <TimeRangeSelector selected={timeRange} onSelect={setTimeRange} />
 
-      <MultiTrendChart datasets={datasets} doses={doses} waterChanges={waterChanges} />
+      <MultiTrendChart datasets={datasets} doses={doses} waterChanges={waterChanges} unitPrefs={unitPrefs} />
 
       {/* Alk consumption (single only) */}
       {consumptionRate !== null && (
@@ -185,12 +199,17 @@ export default function TrendsScreen() {
                       {isEditing ? (
                         <View style={styles.editRow}>
                           <TextInput style={styles.editInput} value={editValue} onChangeText={setEditValue} keyboardType="decimal-pad" autoFocus selectTextOnFocus />
-                          <Text style={styles.editUnit}>{primaryDef.unit}</Text>
+                          <Text style={styles.editUnit}>{primaryDisplayUnit?.unit ?? primaryDef.unit}</Text>
                           <TouchableOpacity onPress={handleEditSave} style={styles.editBtn}><FontAwesome name="check" size={14} color={THEME.accent} /></TouchableOpacity>
                           <TouchableOpacity onPress={() => setEditingId(null)} style={styles.editBtn}><FontAwesome name="times" size={14} color={THEME.textSecondary} /></TouchableOpacity>
                         </View>
                       ) : (
-                        <Text style={styles.logValue}>{reading.value.toFixed(primaryDef.decimals)}<Text style={styles.logUnit}> {primaryDef.unit}</Text></Text>
+                        <Text style={styles.logValue}>
+                          {primaryDisplayUnit
+                            ? primaryDisplayUnit.fromCanonical(reading.value).toFixed(primaryDisplayUnit.decimals)
+                            : reading.value.toFixed(primaryDef.decimals)}
+                          <Text style={styles.logUnit}> {primaryDisplayUnit?.unit ?? primaryDef.unit}</Text>
+                        </Text>
                       )}
                     </View>
                     {!isEditing && (

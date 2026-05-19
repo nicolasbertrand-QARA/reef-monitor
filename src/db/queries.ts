@@ -50,6 +50,26 @@ export async function setActiveTankId(id: number): Promise<void> {
   );
 }
 
+// --- Unit Preferences (global, stored in app_settings as unit_<paramKey>) ---
+
+export async function getUnitPreferences(): Promise<Record<string, string>> {
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<{ key: string; value: string }>(
+    "SELECT key, value FROM app_settings WHERE key LIKE 'unit_%'"
+  );
+  const result: Record<string, string> = {};
+  rows.forEach((r) => { result[r.key.replace('unit_', '')] = r.value; });
+  return result;
+}
+
+export async function setUnitPreference(parameter: ParameterKey, unit: string): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync(
+    "INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)",
+    `unit_${parameter}`, unit
+  );
+}
+
 // --- Parameter Visibility (tank-scoped) ---
 
 export async function getVisibleParams(tankId: number): Promise<Set<ParameterKey>> {

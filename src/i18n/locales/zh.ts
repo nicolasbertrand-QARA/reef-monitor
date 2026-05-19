@@ -6,7 +6,7 @@ export default {
   timers: { title: 'Salifert计时器', shake: '摇晃30秒', wait: '等待3分钟', start: '开始', cancel: '取消', done: '完成' },
   trends: { consumptionRate: '消耗速率', consumptionHigh: '高消耗 — 珊瑚正在活跃生长', consumptionNormal: '正常 — 稳定吸收', consumptionStable: '稳定 — 无净变化', consumptionRising: '上升中 — 检查添加量', history: '历史记录', noReadings: '该期间无测量值', deleteTitle: '删除测量值', deleteMessage: '%{date}的%{value} %{unit}？', deleteConfirm: '删除' },
   chart: { noReadings: '无测量值', noReadingsHint: '记录您的第一个%{param}测量值以查看趋势', current: '当前', min: '最小', max: '最大', avg: '平均' },
-  settings: { parameters: '参数', thresholds: '警报阈值', data: '数据', dosingLog: '添加记录', exportCsv: '导出CSV', noDataExport: '无数据', noDataExportMsg: '没有可导出的测量值。', save: '保存', importCsv: '导入CSV备份', importSuccess: '导入完成', importSuccessMsg: '已导入%{count}条测量值。', importError: '导入失败', warnLow: '警告下限', warnHigh: '警告上限', critLow: '危急下限', critHigh: '危急上限' },
+  settings: { parameters: '参数', unit: '单位', thresholds: '警报阈值', data: '数据', dosingLog: '添加记录', exportCsv: '导出CSV', noDataExport: '无数据', noDataExportMsg: '没有可导出的测量值。', save: '保存', importCsv: '导入CSV备份', importSuccess: '导入完成', importSuccessMsg: '已导入%{count}条测量值。', importError: '导入失败', warnLow: '警告下限', warnHigh: '警告上限', critLow: '危急下限', critHigh: '危急上限' },
   dosing: { title: '添加记录', add: '添加剂量', empty: '无添加记录', emptyHint: '记录添加量以关联参数变化', product: '产品', productPlaceholder: '或输入产品名称...', amount: '数量', notes: '备注', notesPlaceholder: '可选...', cancel: '取消', save: '保存', products: { kalkwasser: 'Kalkwasser', allForReef: 'All-for-Reef', caBalling: 'Ca（三要素）', alkBalling: 'Alk（三要素）', mgSupplement: 'Mg补充剂', aminoAcids: '氨基酸', coralFood: '珊瑚粮' } },
   tanks: {
     title: '鱼缸',

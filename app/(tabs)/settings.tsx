@@ -6,23 +6,24 @@ import * as DocumentPicker from 'expo-document-picker';
 import { Paths, File } from 'expo-file-system/next';
 import { getParameterList } from '@/src/constants/parameters';
 import { THEME } from '@/src/constants/colors';
-import { Thresholds, ParameterKey, Tank } from '@/src/models/types';
+import { Thresholds, ParameterKey, Tank, ParameterDef, UnitOption } from '@/src/models/types';
 import {
   getThresholds, updateThreshold, getAllReadingsForExport, importReadingsFromCSV,
   getAllParamVisibility, setParamVisibility,
   createTank, renameTank, deleteTank,
 } from '@/src/db/queries';
 import { useTank } from '@/src/hooks/useTank';
+import { useUnitPrefs } from '@/src/hooks/useUnitPrefs';
+import { getDisplayUnit, thresholdsToDisplay, thresholdsToCanonical } from '@/src/utils/units';
 import i18n from '@/src/i18n';
 
 export default function SettingsScreen() {
   const { tanks, activeTank, refreshTanks } = useTank();
   const tankId = activeTank?.id ?? 1;
+  const { prefs: unitPrefs, setPref: setUnitPref } = useUnitPrefs();
   const [thresholds, setThresholds] = useState<Thresholds[]>([]);
   const [editing, setEditing] = useState<ParameterKey | null>(null);
   const [visibility, setVisibility] = useState<Record<string, boolean>>({});
-  const [editingTankId, setEditingTankId] = useState<number | null>(null);
-  const [tankName, setTankName] = useState('');
   const paramList = getParameterList();
 
   useEffect(() => {
@@ -130,6 +131,10 @@ export default function SettingsScreen() {
           const isEditing = editing === paramDef.key;
           const isLast = idx === paramList.length - 1;
           const isVisible = visibility[paramDef.key] ?? true;
+          const displayUnit = getDisplayUnit(paramDef, unitPrefs);
+          // Preview shows thresholds in display unit
+          const previewLow = t?.warning_low != null ? displayUnit.fromCanonical(t.warning_low).toFixed(displayUnit.decimals) : '—';
+          const previewHigh = t?.warning_high != null ? displayUnit.fromCanonical(t.warning_high).toFixed(displayUnit.decimals) : '—';
           return (
             <View key={paramDef.key}>
               <View style={[styles.row, !isLast && styles.rowBorder]}>
@@ -137,16 +142,25 @@ export default function SettingsScreen() {
                   trackColor={{ false: THEME.surface, true: THEME.accent }} thumbColor={THEME.surfaceElevated} style={styles.toggle} />
                 <TouchableOpacity style={styles.rowContent} onPress={() => setEditing(isEditing ? null : paramDef.key)}>
                   <Text style={[styles.rowLabel, !isVisible && styles.rowLabelDisabled]}>{paramDef.label}</Text>
-                  <Text style={styles.rowValue}>{t ? `${t.warning_low ?? '—'} – ${t.warning_high ?? '—'} ${paramDef.unit}` : '—'}</Text>
+                  <Text style={styles.rowValue}>{t ? `${previewLow} – ${previewHigh} ${displayUnit.unit}` : '—'}</Text>
                   <FontAwesome name={isEditing ? 'chevron-up' : 'chevron-down'} size={12} color={THEME.textSecondary} />
                 </TouchableOpacity>
               </View>
               {isEditing && t && (
-                <ThresholdEditor threshold={{ ...t, tank_id: tankId }} onSave={async (updated) => {
-                  await updateThreshold(updated);
-                  setThresholds(await getThresholds(tankId));
-                  setEditing(null);
-                }} />
+                <ParamEditor
+                  paramDef={paramDef}
+                  threshold={t}
+                  tankId={tankId}
+                  unitPrefs={unitPrefs}
+                  onUnitChange={async (unit) => {
+                    await setUnitPref(paramDef.key, unit);
+                  }}
+                  onSave={async (updated) => {
+                    await updateThreshold(updated);
+                    setThresholds(await getThresholds(tankId));
+                    setEditing(null);
+                  }}
+                />
               )}
             </View>
           );
@@ -172,13 +186,59 @@ export default function SettingsScreen() {
   );
 }
 
-function ThresholdEditor({ threshold, onSave }: { threshold: Thresholds & { tank_id: number }; onSave: (t: Thresholds & { tank_id: number }) => void }) {
-  const [wl, setWl] = useState(String(threshold.warning_low ?? ''));
-  const [wh, setWh] = useState(String(threshold.warning_high ?? ''));
-  const [cl, setCl] = useState(String(threshold.critical_low ?? ''));
-  const [ch, setCh] = useState(String(threshold.critical_high ?? ''));
+interface ParamEditorProps {
+  paramDef: ParameterDef;
+  threshold: Thresholds;
+  tankId: number;
+  unitPrefs: Record<string, string>;
+  onUnitChange: (unit: string) => Promise<void>;
+  onSave: (t: Thresholds & { tank_id: number }) => void;
+}
+
+function ParamEditor({ paramDef, threshold, tankId, unitPrefs, onUnitChange, onSave }: ParamEditorProps) {
+  const displayUnit = getDisplayUnit(paramDef, unitPrefs);
+  // Convert canonical thresholds → display values for editing
+  const displayThresholds = thresholdsToDisplay(threshold, paramDef, unitPrefs);
+  const fmt = (v: number | null) => v == null ? '' : v.toFixed(displayUnit.decimals);
+  const [wl, setWl] = useState(fmt(displayThresholds.warning_low));
+  const [wh, setWh] = useState(fmt(displayThresholds.warning_high));
+  const [cl, setCl] = useState(fmt(displayThresholds.critical_low));
+  const [ch, setCh] = useState(fmt(displayThresholds.critical_high));
+
+  // Re-init values when display unit changes
+  useEffect(() => {
+    const t = thresholdsToDisplay(threshold, paramDef, unitPrefs);
+    setWl(fmt(t.warning_low));
+    setWh(fmt(t.warning_high));
+    setCl(fmt(t.critical_low));
+    setCh(fmt(t.critical_high));
+  }, [displayUnit.unit]);
+
+  const hasMultipleUnits = (paramDef.units?.length ?? 0) > 1;
+
   return (
     <View style={editorStyles.container}>
+      {hasMultipleUnits && (
+        <>
+          <Text style={editorStyles.unitLabel}>{i18n.t('settings.unit')}</Text>
+          <View style={editorStyles.unitRow}>
+            {paramDef.units!.map((u) => {
+              const isActive = u.unit === displayUnit.unit;
+              return (
+                <TouchableOpacity
+                  key={u.unit || '_'}
+                  style={[editorStyles.unitChip, isActive && editorStyles.unitChipActive]}
+                  onPress={() => onUnitChange(u.unit)}
+                >
+                  <Text style={[editorStyles.unitChipText, isActive && editorStyles.unitChipTextActive]}>
+                    {u.unit || '—'}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </>
+      )}
       <View style={editorStyles.row}>
         <Field label={i18n.t('settings.warnLow')} value={wl} onChange={setWl} />
         <Field label={i18n.t('settings.warnHigh')} value={wh} onChange={setWh} />
@@ -187,10 +247,18 @@ function ThresholdEditor({ threshold, onSave }: { threshold: Thresholds & { tank
         <Field label={i18n.t('settings.critLow')} value={cl} onChange={setCl} />
         <Field label={i18n.t('settings.critHigh')} value={ch} onChange={setCh} />
       </View>
-      <TouchableOpacity style={editorStyles.saveBtn} onPress={() => onSave({
-        ...threshold, warning_low: wl ? parseFloat(wl) : null, warning_high: wh ? parseFloat(wh) : null,
-        critical_low: cl ? parseFloat(cl) : null, critical_high: ch ? parseFloat(ch) : null,
-      })}>
+      <TouchableOpacity style={editorStyles.saveBtn} onPress={() => {
+        // Build display thresholds object, then convert to canonical
+        const displayT: Thresholds = {
+          parameter: paramDef.key,
+          warning_low: wl ? parseFloat(wl) : null,
+          warning_high: wh ? parseFloat(wh) : null,
+          critical_low: cl ? parseFloat(cl) : null,
+          critical_high: ch ? parseFloat(ch) : null,
+        };
+        const canonical = thresholdsToCanonical(displayT, paramDef, unitPrefs);
+        onSave({ ...canonical, tank_id: tankId });
+      }}>
         <Text style={editorStyles.saveBtnText}>{i18n.t('settings.save')}</Text>
       </TouchableOpacity>
     </View>
@@ -210,14 +278,12 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: THEME.background },
   sectionTitle: { color: THEME.textSecondary, fontSize: 12, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1, paddingHorizontal: 20, paddingTop: 28, paddingBottom: 10 },
   section: { backgroundColor: THEME.surfaceElevated, marginHorizontal: 20, borderRadius: 14, overflow: 'hidden' },
-  // Tank rows
   tankRow: { paddingHorizontal: 16, paddingVertical: 14, flexDirection: 'row', alignItems: 'center', gap: 10 },
   tankName: { flex: 1, color: THEME.text, fontSize: 15 },
   tankNameActive: { fontWeight: '600', color: THEME.accent },
   tankAction: { padding: 4 },
   addTankRow: { paddingHorizontal: 16, paddingVertical: 14, flexDirection: 'row', alignItems: 'center', gap: 10, borderTopWidth: 0.5, borderTopColor: THEME.border },
   addTankText: { color: THEME.accent, fontSize: 15, fontWeight: '500' },
-  // Param rows
   toggle: { marginRight: 12, transform: [{ scale: 0.85 }] },
   rowContent: { flex: 1, flexDirection: 'row', alignItems: 'center' },
   rowLabelDisabled: { opacity: 0.4 },
@@ -231,6 +297,12 @@ const styles = StyleSheet.create({
 
 const editorStyles = StyleSheet.create({
   container: { paddingHorizontal: 16, paddingBottom: 16, backgroundColor: THEME.surfaceElevated },
+  unitLabel: { color: THEME.textSecondary, fontSize: 11, marginBottom: 6, fontWeight: '500' },
+  unitRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginBottom: 14 },
+  unitChip: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 14, backgroundColor: THEME.background },
+  unitChipActive: { backgroundColor: THEME.accent },
+  unitChipText: { color: THEME.textSecondary, fontSize: 13, fontWeight: '500' },
+  unitChipTextActive: { color: THEME.surfaceElevated },
   row: { flexDirection: 'row', gap: 12, marginBottom: 8 },
   field: { flex: 1 },
   fieldLabel: { color: THEME.textSecondary, fontSize: 11, marginBottom: 4, fontWeight: '500' },

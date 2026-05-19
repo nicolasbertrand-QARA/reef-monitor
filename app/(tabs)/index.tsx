@@ -12,6 +12,7 @@ import { RatioIndicator } from '@/src/components/RatioIndicator';
 import { Reading, Thresholds, ParameterKey, ParameterDef } from '@/src/models/types';
 import { useVisibleParams } from '@/src/hooks/useVisibility';
 import { useTank } from '@/src/hooks/useTank';
+import { useUnitPrefs } from '@/src/hooks/useUnitPrefs';
 import { getReadingHistory } from '@/src/db/queries';
 import i18n from '@/src/i18n';
 
@@ -20,6 +21,7 @@ export default function DashboardScreen() {
   const tankId = activeTank?.id ?? 1;
   const { readings, thresholds, loading, refresh } = useLatestReadings(tankId);
   const { visible, refresh: refreshVisibility } = useVisibleParams(tankId);
+  const { prefs: unitPrefs, refresh: refreshUnits } = useUnitPrefs();
   const [selectedParam, setSelectedParam] = useState<ParameterDef | null>(null);
   const [historyMap, setHistoryMap] = useState<Map<ParameterKey, Reading[]>>(new Map());
 
@@ -31,7 +33,7 @@ export default function DashboardScreen() {
     setHistoryMap(map);
   }, [tankId]);
 
-  useFocusEffect(useCallback(() => { refresh(); refreshVisibility(); loadHistory(); }, [refresh, refreshVisibility, loadHistory]));
+  useFocusEffect(useCallback(() => { refresh(); refreshVisibility(); refreshUnits(); loadHistory(); }, [refresh, refreshVisibility, refreshUnits, loadHistory]));
 
   const readingMap = new Map<ParameterKey, Reading>();
   readings.forEach((r) => readingMap.set(r.parameter as ParameterKey, r));
@@ -49,7 +51,7 @@ export default function DashboardScreen() {
     const status = reading && threshold ? evaluateStatus(reading.value, threshold) : 'unknown';
     return (
       <ParamCard key={paramDef.key} paramDef={paramDef} reading={reading} status={status}
-        history={historyMap.get(paramDef.key)} thresholds={threshold}
+        history={historyMap.get(paramDef.key)} thresholds={threshold} unitPrefs={unitPrefs}
         onPress={() => setSelectedParam(PARAMETERS[paramDef.key])} />
     );
   };
@@ -67,7 +69,7 @@ export default function DashboardScreen() {
       <Text style={styles.sectionLabel}>{i18n.t('dashboard.nutrients')}</Text>
       <View style={styles.grid}>{getNutrientParams().filter((p) => visible.has(p.key)).map(renderCard)}</View>
       {selectedParam && (
-        <ParamInput paramDef={selectedParam} visible={true} tankId={tankId}
+        <ParamInput paramDef={selectedParam} visible={true} tankId={tankId} unitPrefs={unitPrefs}
           onClose={() => setSelectedParam(null)}
           onSaved={() => { setSelectedParam(null); refresh(); loadHistory(); }} />
       )}

@@ -242,10 +242,32 @@ Parameters are defined in `src/constants/parameters.ts`. Labels come from i18n.
 ### Settings (`app/(tabs)/settings.tsx`)
 - **Tank management** (top section): list tanks with rename/delete, add new tank button
 - **Parameter toggles + thresholds**: expandable per-parameter editor with visibility toggle
-- Export as CSV (via `expo-sharing`) — exports active tank only
+- **Unit picker**: when a parameter has multiple unit options, chips show in the expanded row to switch display unit
+- Threshold editor displays/edits in chosen display unit; values are converted to canonical for storage
+- Export as CSV (via `expo-sharing`) — exports active tank only, canonical units
 - Import CSV backup (via `expo-document-picker`) — imports into active tank
 
 ---
+
+## Unit System (Display vs Canonical)
+
+Each parameter has a **canonical unit** (used for SQLite storage) and may have **multiple display units** the user can choose. All conversion happens at render and at save:
+
+- **Storage**: always canonical (e.g. °C, SG, dKH, ppm NO3)
+- **Display**: per-user choice, stored as `app_settings.unit_<paramKey>` (global, not per-tank)
+- **Convert**: `getDisplayUnit(paramDef, prefs)` returns a `UnitOption` with `toCanonical` / `fromCanonical` functions, `step`, `decimals`, and `unit` label
+- **`useUnitPrefs` hook**: load/refresh/set unit preferences; pass `prefs` to display components
+
+Parameters with multiple units:
+| Parameter | Canonical | Alternatives |
+|-----------|-----------|--------------|
+| temperature | °C | °F |
+| salinity | SG (e.g. 1.025) | ppt (e.g. 35) |
+| alkalinity | dKH | meq/L, ppm CaCO₃ |
+| nitrate | ppm NO3 | ppm NO₃-N |
+| phosphate | ppm | ppb |
+
+CSV exports always use canonical units to remain importable across unit preference changes.
 
 ## Multi-Tank Architecture
 

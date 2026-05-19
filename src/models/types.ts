@@ -64,13 +64,21 @@ export interface ReminderSchedule {
   last_notified_at: string | null;
 }
 
+export interface UnitOption {
+  unit: string;             // display label, e.g. "°F"
+  step: number;             // step size in this unit
+  decimals: number;         // decimals to display
+  toCanonical: (v: number) => number;   // convert display value → canonical storage value
+  fromCanonical: (v: number) => number; // convert canonical storage value → display value
+}
+
 export interface ParameterDef {
   key: ParameterKey;
   label: string;
-  unit: string;
-  step: number;
-  decimals: number;
-  defaultValue: number;
+  unit: string;              // canonical unit (used for storage)
+  step: number;              // canonical step
+  decimals: number;          // canonical decimals
+  defaultValue: number;      // canonical default
   icon: string;
   group: 'core' | 'nutrients';
   defaultThresholds: {
@@ -80,4 +88,5 @@ export interface ParameterDef {
     criticalHigh: number | null;
   };
   reminderIntervalHours: number;
+  units?: UnitOption[];      // available display units (first must be canonical)
 }

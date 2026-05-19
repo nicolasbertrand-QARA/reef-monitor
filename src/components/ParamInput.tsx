@@ -4,44 +4,58 @@ import * as Haptics from 'expo-haptics';
 import { ParameterDef } from '@/src/models/types';
 import { THEME } from '@/src/constants/colors';
 import { insertReading, getReadingHistory } from '@/src/db/queries';
+import { getDisplayUnit } from '@/src/utils/units';
 import { TestTimer } from './TestTimer';
 import i18n from '@/src/i18n';
 
-interface Props { paramDef: ParameterDef; visible: boolean; tankId: number; onClose: () => void; onSaved: () => void; }
+interface Props {
+  paramDef: ParameterDef;
+  visible: boolean;
+  tankId: number;
+  unitPrefs?: Record<string, string>;
+  onClose: () => void;
+  onSaved: () => void;
+}
 
-export function ParamInput({ paramDef, visible, tankId, onClose, onSaved }: Props) {
-  const [value, setValue] = useState(paramDef.defaultValue);
+export function ParamInput({ paramDef, visible, tankId, unitPrefs, onClose, onSaved }: Props) {
+  // All state here is in DISPLAY units; canonical is only used at save time
+  const displayUnit = getDisplayUnit(paramDef, unitPrefs ?? {});
+  const defaultDisplay = displayUnit.fromCanonical(paramDef.defaultValue);
+  const [value, setValue] = useState(defaultDisplay);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (visible) {
       getReadingHistory(paramDef.key, tankId).then((readings) => {
         if (readings.length > 0) {
-          setValue(readings[readings.length - 1].value);
+          // readings are stored canonical, convert to display
+          setValue(displayUnit.fromCanonical(readings[readings.length - 1].value));
         } else {
-          setValue(paramDef.defaultValue);
+          setValue(defaultDisplay);
         }
       });
     }
-  }, [visible, paramDef.key]);
+  }, [visible, paramDef.key, displayUnit.unit]);
 
   const adjust = (direction: 1 | -1) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    setValue((v) => Math.round((v + direction * paramDef.step) * (10 ** paramDef.decimals)) / (10 ** paramDef.decimals));
+    setValue((v) => Math.round((v + direction * displayUnit.step) * (10 ** displayUnit.decimals)) / (10 ** displayUnit.decimals));
   };
   const adjustBig = (direction: 1 | -1) => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    const bigStep = paramDef.step * 10;
-    setValue((v) => Math.round((v + direction * bigStep) * (10 ** paramDef.decimals)) / (10 ** paramDef.decimals));
+    const bigStep = displayUnit.step * 10;
+    setValue((v) => Math.round((v + direction * bigStep) * (10 ** displayUnit.decimals)) / (10 ** displayUnit.decimals));
   };
   const handleSave = async () => {
     setSaving(true);
-    await insertReading(paramDef.key, value, paramDef.unit, tankId);
+    // Convert display → canonical before storing
+    const canonical = displayUnit.toCanonical(value);
+    await insertReading(paramDef.key, canonical, paramDef.unit, tankId);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     setSaving(false); onSaved(); onClose();
   };
 
-  const bigStep = paramDef.step * 10;
+  const bigStep = Math.round(displayUnit.step * 10 * (10 ** displayUnit.decimals)) / (10 ** displayUnit.decimals);
   const isNitrate = paramDef.key === 'nitrate';
   const isPhosphate = paramDef.key === 'phosphate';
 
@@ -54,8 +68,8 @@ export function ParamInput({ paramDef, visible, tankId, onClose, onSaved }: Prop
           <View style={{ width: 60 }} />
         </View>
         <View style={styles.valueContainer}>
-          <Text style={styles.valueText}>{value.toFixed(paramDef.decimals)}</Text>
-          {paramDef.unit ? <Text style={styles.unitText}>{paramDef.unit}</Text> : null}
+          <Text style={styles.valueText}>{value.toFixed(displayUnit.decimals)}</Text>
+          {displayUnit.unit ? <Text style={styles.unitText}>{displayUnit.unit}</Text> : null}
         </View>
         <View style={styles.steppers}>
           <TouchableOpacity style={styles.stepBtn} onPress={() => adjustBig(-1)}><Text style={styles.stepLabel}>-{bigStep}</Text></TouchableOpacity>
@@ -63,7 +77,7 @@ export function ParamInput({ paramDef, visible, tankId, onClose, onSaved }: Prop
           <TouchableOpacity style={styles.stepBtnMain} onPress={() => adjust(1)}><Text style={styles.stepMainLabel}>+</Text></TouchableOpacity>
           <TouchableOpacity style={styles.stepBtn} onPress={() => adjustBig(1)}><Text style={styles.stepLabel}>+{bigStep}</Text></TouchableOpacity>
         </View>
-        <Text style={styles.stepHint}>{i18n.t('log.step')} : {paramDef.step}{paramDef.unit ? ` ${paramDef.unit}` : ''}</Text>
+        <Text style={styles.stepHint}>{i18n.t('log.step')} : {displayUnit.step}{displayUnit.unit ? ` ${displayUnit.unit}` : ''}</Text>
         <TouchableOpacity style={[styles.saveBtn, saving && { opacity: 0.5 }]} onPress={handleSave} disabled={saving}>
           <Text style={styles.saveBtnText}>{saving ? i18n.t('log.saving') : i18n.t('log.save')}</Text>
         </TouchableOpacity>

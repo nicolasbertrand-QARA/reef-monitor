@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { formatDistanceToNow } from 'date-fns';
-import { Reading, Status, Thresholds } from '@/src/models/types';
-import { ParameterDef } from '@/src/models/types';
+import { Reading, Status, Thresholds, ParameterDef } from '@/src/models/types';
 import { StatusBadge } from './StatusBadge';
 import { MiniSparkline } from './MiniSparkline';
 import { THEME } from '@/src/constants/colors';
+import { getDisplayUnit } from '@/src/utils/units';
 import i18n, { getDateLocale } from '@/src/i18n';
 
 interface Props {
@@ -14,6 +14,7 @@ interface Props {
   status: Status;
   history?: Reading[];
   thresholds?: Thresholds | null;
+  unitPrefs?: Record<string, string>;
   onPress?: () => void;
 }
 
@@ -21,10 +22,12 @@ const STATUS_BG: Record<Status, string> = {
   ok: THEME.surfaceElevated, warning: THEME.statusWarnBg, critical: THEME.statusCritBg, unknown: THEME.surface,
 };
 
-export function ParamCard({ paramDef, reading, status, history, thresholds, onPress }: Props) {
+export function ParamCard({ paramDef, reading, status, history, thresholds, unitPrefs, onPress }: Props) {
   const timeAgo = reading
     ? formatDistanceToNow(new Date(reading.recorded_at), { addSuffix: true, locale: getDateLocale() })
     : i18n.t('dashboard.noData');
+
+  const u = getDisplayUnit(paramDef, unitPrefs ?? {});
 
   return (
     <TouchableOpacity style={[styles.card, { backgroundColor: STATUS_BG[status] }]} onPress={onPress} activeOpacity={0.7}>
@@ -33,8 +36,8 @@ export function ParamCard({ paramDef, reading, status, history, thresholds, onPr
         <StatusBadge status={status} />
       </View>
       <Text style={styles.value}>
-        {reading ? reading.value.toFixed(paramDef.decimals) : '—'}
-        {paramDef.unit ? <Text style={styles.unit}> {paramDef.unit}</Text> : null}
+        {reading ? u.fromCanonical(reading.value).toFixed(u.decimals) : '—'}
+        {u.unit ? <Text style={styles.unit}> {u.unit}</Text> : null}
       </Text>
       <Text style={styles.timeAgo}>{timeAgo}</Text>
       {history && history.length >= 2 && (

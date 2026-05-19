@@ -75,6 +75,7 @@ export default {
   // Settings
   settings: {
     parameters: 'Parameters',
+    unit: 'Unit',
     thresholds: 'Alert Thresholds',
     data: 'Data',
     dosingLog: 'Dosing Log',

@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-import { Reading, Thresholds, DosingEntry, WaterChange } from '@/src/models/types';
-import { ParameterDef } from '@/src/models/types';
+import { Reading, Thresholds, DosingEntry, WaterChange, ParameterDef } from '@/src/models/types';
 import { THEME } from '@/src/constants/colors';
 import { format } from 'date-fns';
+import { getDisplayUnit } from '@/src/utils/units';
 import i18n, { getDateLocale } from '@/src/i18n';
 
 const CHART_HEIGHT = 200;
@@ -12,16 +12,9 @@ const CHART_PADDING = 16;
 const DOSE_COLOR = '#c4943e';
 const WC_COLOR = '#5a8fb8';
 
-// Distinct colors for multi-param overlay
 const LINE_COLORS = [
-  '#5a8f8b', // teal (accent)
-  '#c4644a', // coral
-  '#c4943e', // amber
-  '#6b9e7a', // sage
-  '#8b6b9e', // purple
-  '#5a7fb8', // blue
-  '#b88a5a', // bronze
-  '#9e6b7a', // mauve
+  '#5a8f8b', '#c4644a', '#c4943e', '#6b9e7a',
+  '#8b6b9e', '#5a7fb8', '#b88a5a', '#9e6b7a',
 ];
 
 interface ParamData {
@@ -35,6 +28,7 @@ interface Props {
   datasets: ParamData[];
   doses?: DosingEntry[];
   waterChanges?: WaterChange[];
+  unitPrefs?: Record<string, string>;
 }
 
 function smoothPath(points: { x: number; y: number }[]): string {
@@ -49,7 +43,8 @@ function smoothPath(points: { x: number; y: number }[]): string {
   return d;
 }
 
-export function MultiTrendChart({ datasets, doses, waterChanges }: Props) {
+export function MultiTrendChart({ datasets, doses, waterChanges, unitPrefs }: Props) {
+  const prefs = unitPrefs ?? {};
   const allReadings = datasets.flatMap((d) => d.readings);
   if (allReadings.length === 0) {
     return (
@@ -63,35 +58,37 @@ export function MultiTrendChart({ datasets, doses, waterChanges }: Props) {
   const chartWidth = screenWidth - CHART_PADDING * 2;
   const isSingle = datasets.length === 1;
 
-  // Global time range across all datasets
   const allTimes = allReadings.map((r) => new Date(r.recorded_at).getTime());
   const timeStart = Math.min(...allTimes);
   const timeEnd = Math.max(...allTimes);
   const timeRange = timeEnd - timeStart || 1;
 
-  // For single param: use actual values for y-axis. For multi: normalize 0-1.
-  let yMin = 0, yMax = 1, yRange = 1;
+  // For single-param mode: build y-axis in DISPLAY units
+  let yMinDisplay = 0, yMaxDisplay = 1, yRangeDisplay = 1;
+  let singleUnit = null as ReturnType<typeof getDisplayUnit> | null;
   if (isSingle) {
-    const values = datasets[0].readings.map((r) => r.value);
-    const min = Math.min(...values), max = Math.max(...values);
+    singleUnit = getDisplayUnit(datasets[0].paramDef, prefs);
+    const displayVals = datasets[0].readings.map((r) => singleUnit!.fromCanonical(r.value));
+    const min = Math.min(...displayVals), max = Math.max(...displayVals);
     const range = max - min || 1;
-    yMin = min - range * 0.15;
-    yMax = max + range * 0.15;
-    yRange = yMax - yMin;
+    yMinDisplay = min - range * 0.15;
+    yMaxDisplay = max + range * 0.15;
+    yRangeDisplay = yMaxDisplay - yMinDisplay;
   }
 
-  // Build SVG paths for each dataset
+  // Build SVG paths
   const paths = datasets.map((ds) => {
-    const values = ds.readings.map((r) => r.value);
-    const dsMin = Math.min(...values), dsMax = Math.max(...values);
+    const u = getDisplayUnit(ds.paramDef, prefs);
+    const displayVals = ds.readings.map((r) => u.fromCanonical(r.value));
+    const dsMin = Math.min(...displayVals), dsMax = Math.max(...displayVals);
     const dsRange = dsMax - dsMin || 1;
 
-    const points = ds.readings.map((r) => {
+    const points = ds.readings.map((r, i) => {
       const t = new Date(r.recorded_at).getTime();
       const x = CHART_PADDING + ((t - timeStart) / timeRange) * chartWidth;
       const normalizedY = isSingle
-        ? (r.value - yMin) / yRange
-        : (r.value - dsMin) / dsRange;
+        ? (displayVals[i] - yMinDisplay) / yRangeDisplay
+        : (displayVals[i] - dsMin) / dsRange;
       const y = CHART_HEIGHT - normalizedY * CHART_HEIGHT;
       return { x, y };
     });
@@ -99,42 +96,45 @@ export function MultiTrendChart({ datasets, doses, waterChanges }: Props) {
     return { path: smoothPath(points), color: ds.color };
   });
 
-  // Dosing markers
   const doseMarkers = (doses ?? []).map((d) => {
     const t = new Date(d.dosed_at).getTime();
     if (t < timeStart || t > timeEnd) return null;
     return CHART_PADDING + ((t - timeStart) / timeRange) * chartWidth;
   }).filter(Boolean) as number[];
 
-  // Water change markers
   const wcMarkers = (waterChanges ?? []).map((w) => {
     const t = new Date(w.changed_at).getTime();
     if (t < timeStart || t > timeEnd) return null;
     return CHART_PADDING + ((t - timeStart) / timeRange) * chartWidth;
   }).filter(Boolean) as number[];
 
-  // X-axis dates
   const earliest = new Date(timeStart);
   const latest = new Date(timeEnd);
 
-  // Stats (single param only)
+  // Stats (single param, in display units)
   const singleDS = isSingle ? datasets[0] : null;
-  const singleValues = singleDS ? singleDS.readings.map((r) => r.value) : [];
+  const singleDisplayValues = singleDS && singleUnit ? singleDS.readings.map((r) => singleUnit!.fromCanonical(r.value)) : [];
   const singleLatest = singleDS ? singleDS.readings[singleDS.readings.length - 1] : null;
+
+  // Threshold band (single mode, in display units)
+  let thresholdLowDisplay: number | null = null;
+  let thresholdHighDisplay: number | null = null;
+  if (isSingle && singleDS?.thresholds && singleUnit) {
+    if (singleDS.thresholds.warning_low != null) thresholdLowDisplay = singleUnit.fromCanonical(singleDS.thresholds.warning_low);
+    if (singleDS.thresholds.warning_high != null) thresholdHighDisplay = singleUnit.fromCanonical(singleDS.thresholds.warning_high);
+  }
 
   return (
     <View style={styles.container}>
       <View style={[styles.chartArea, { width: screenWidth, height: CHART_HEIGHT + 30 }]}>
-        {/* Target range band (single only) */}
-        {isSingle && singleDS?.thresholds?.warning_low != null && singleDS?.thresholds?.warning_high != null && (
+        {isSingle && thresholdLowDisplay != null && thresholdHighDisplay != null && (
           <View style={[styles.rangeBand, {
-            top: Math.max(0, CHART_HEIGHT - ((singleDS.thresholds.warning_high - yMin) / yRange) * CHART_HEIGHT),
-            height: Math.abs(((singleDS.thresholds.warning_high - singleDS.thresholds.warning_low) / yRange) * CHART_HEIGHT),
+            top: Math.max(0, CHART_HEIGHT - ((thresholdHighDisplay - yMinDisplay) / yRangeDisplay) * CHART_HEIGHT),
+            height: Math.abs(((thresholdHighDisplay - thresholdLowDisplay) / yRangeDisplay) * CHART_HEIGHT),
             left: CHART_PADDING, width: chartWidth,
           }]} />
         )}
 
-        {/* Dose markers */}
         {doseMarkers.map((x, i) => (
           <View key={`dose-${i}`} style={[styles.markerLine, { left: x }]}>
             <View style={[styles.markerLineInner, { backgroundColor: DOSE_COLOR }]} />
@@ -142,7 +142,6 @@ export function MultiTrendChart({ datasets, doses, waterChanges }: Props) {
           </View>
         ))}
 
-        {/* Water change markers */}
         {wcMarkers.map((x, i) => (
           <View key={`wc-${i}`} style={[styles.markerLine, { left: x }]}>
             <View style={[styles.markerLineInner, { backgroundColor: WC_COLOR }]} />
@@ -150,22 +149,19 @@ export function MultiTrendChart({ datasets, doses, waterChanges }: Props) {
           </View>
         ))}
 
-        {/* SVG curves */}
         <Svg width={screenWidth} height={CHART_HEIGHT} style={{ position: 'absolute', top: 0 }}>
           {paths.map((p, i) => (
             <Path key={i} d={p.path} stroke={p.color} strokeWidth={2} fill="none" strokeLinecap="round" />
           ))}
         </Svg>
 
-        {/* Y-axis (single only) */}
-        {isSingle && (
+        {isSingle && singleUnit && (
           <>
-            <Text style={[styles.yLabel, { top: 0 }]}>{yMax.toFixed(singleDS!.paramDef.decimals)}</Text>
-            <Text style={[styles.yLabel, { top: CHART_HEIGHT - 14 }]}>{yMin.toFixed(singleDS!.paramDef.decimals)}</Text>
+            <Text style={[styles.yLabel, { top: 0 }]}>{yMaxDisplay.toFixed(singleUnit.decimals)}</Text>
+            <Text style={[styles.yLabel, { top: CHART_HEIGHT - 14 }]}>{yMinDisplay.toFixed(singleUnit.decimals)}</Text>
           </>
         )}
 
-        {/* X-axis */}
         {allReadings.length > 1 && (
           <>
             <Text style={[styles.xLabel, { left: CHART_PADDING }]}>{format(earliest, 'MMM d', { locale: getDateLocale() })}</Text>
@@ -174,24 +170,22 @@ export function MultiTrendChart({ datasets, doses, waterChanges }: Props) {
         )}
       </View>
 
-      {/* Stats (single param only) */}
-      {isSingle && singleLatest && (
+      {isSingle && singleLatest && singleUnit && (
         <View style={styles.stats}>
           {[
-            { label: i18n.t('chart.current'), val: singleLatest.value },
-            { label: i18n.t('chart.min'), val: Math.min(...singleValues) },
-            { label: i18n.t('chart.max'), val: Math.max(...singleValues) },
-            { label: i18n.t('chart.avg'), val: singleValues.reduce((s, v) => s + v, 0) / singleValues.length },
+            { label: i18n.t('chart.current'), val: singleUnit.fromCanonical(singleLatest.value) },
+            { label: i18n.t('chart.min'), val: Math.min(...singleDisplayValues) },
+            { label: i18n.t('chart.max'), val: Math.max(...singleDisplayValues) },
+            { label: i18n.t('chart.avg'), val: singleDisplayValues.reduce((s, v) => s + v, 0) / singleDisplayValues.length },
           ].map((s) => (
             <View key={s.label} style={styles.stat}>
               <Text style={styles.statLabel}>{s.label}</Text>
-              <Text style={styles.statValue}>{s.val.toFixed(singleDS!.paramDef.decimals)}</Text>
+              <Text style={styles.statValue}>{s.val.toFixed(singleUnit.decimals)}</Text>
             </View>
           ))}
         </View>
       )}
 
-      {/* Legend (multi only) */}
       {!isSingle && (
         <View style={styles.legend}>
           {datasets.map((ds) => (

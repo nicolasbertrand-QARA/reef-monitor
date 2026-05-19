@@ -67,6 +67,7 @@ export default {
   },
   settings: {
     parameters: 'Paramètres',
+    unit: 'Unité',
     thresholds: "Seuils d'alerte",
     data: 'Données',
     dosingLog: 'Journal de dosage',
