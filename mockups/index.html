@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Reef Monitor — Trends Mockups</title>
+<style>
+  :root {
+    --bg: #efeae0;
+    --surface: #ffffff;
+    --text: #2d2a26;
+    --text2: #7a7468;
+    --accent: #5a8f8b;
+    --border: #ddd8d0;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    padding: 24px 32px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 10;
+  }
+  header h1 {
+    margin: 0; font-size: 20px; font-weight: 700;
+  }
+  header p {
+    margin: 6px 0 0; font-size: 14px; color: var(--text2);
+  }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 20px;
+    margin: 14px 0 0; padding: 0; list-style: none;
+    font-size: 13px;
+  }
+  .legend li { display: flex; align-items: baseline; gap: 6px; }
+  .legend li b { font-weight: 700; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    padding: 24px 32px 64px;
+  }
+  @media (max-width: 1700px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 900px)  { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface);
+    border-radius: 16px;
+    padding: 20px 20px 12px;
+    border: 1px solid var(--border);
+  }
+  .card .title {
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .card .title .letter {
+    width: 26px; height: 26px; border-radius: 8px;
+    background: var(--accent); color: white;
+    font-weight: 700; font-size: 14px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .card .title h2 { margin: 0; font-size: 17px; font-weight: 700; }
+  .card .desc {
+    font-size: 13px; color: var(--text2); line-height: 1.45;
+    margin: 8px 0 14px;
+  }
+  .card .links {
+    font-size: 12px; margin-bottom: 14px;
+  }
+  .card .links a {
+    color: var(--accent); text-decoration: none;
+    margin-right: 14px; font-weight: 600;
+  }
+  .card .links a:hover { text-decoration: underline; }
+  .frame-wrap {
+    background: #d8d1c5;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 760px;
+  }
+  iframe {
+    width: 100%; height: 100%;
+    border: 0;
+    transform-origin: top left;
+  }
+  .pros, .cons {
+    margin: 12px 0 0; padding-left: 18px;
+    font-size: 12px; line-height: 1.45;
+  }
+  .pros li { color: #4a6f4f; }
+  .cons li { color: #8a6121; }
+  .pros, .cons { padding: 0; list-style: none; }
+  .pros li::before { content: "+ "; color: #6b9e7a; font-weight: 700; }
+  .cons li::before { content: "− "; color: #c4943e; font-weight: 700; }
+  .pillrow { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0 0; }
+  .pill {
+    background: #f1ece2;
+    color: var(--text2);
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>Reef Monitor — Maquettes écran Tendances</h1>
+    <p>Quatre directions de design pour repenser l'écran Tendances. Données identiques : alcalinité, 30 derniers jours, 13 mesures, 1 changement d'eau, 1 dosage.</p>
+    <ul class="legend">
+      <li><b>Données</b> 7,5 dKH actuel · cible 7,5–9,0 · min 7,2 · max 8,4 · Δ −0,9 sur 30 j</li>
+      <li><b>Format</b> iPhone 14 (390 × 844)</li>
+      <li><b>Conseil</b> ouvrir chaque maquette en plein écran pour voir la version "réelle"</li>
+    </ul>
+  </header>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="title"><span class="letter">A</span><h2>Classique raffinée</h2></div>
+      <div class="desc">Inspirée d'Apple Santé. Grand graphique avec grille Y et axe X, points discrets, segments droits entre mesures. Zones colorées subtiles, marqueurs d'évènement compactés en haut.</div>
+      <div class="links">
+        <a href="A_refined_classical.html" target="_blank">Ouvrir en plein écran ↗</a>
+      </div>
+      <div class="pillrow">
+        <span class="pill">grand graphique</span>
+        <span class="pill">axes lisibles</span>
+        <span class="pill">données + zones</span>
+      </div>
+      <ul class="pros">
+        <li>Lecture précise possible à n'importe quel point</li>
+        <li>Familier, pas d'apprentissage</li>
+      </ul>
+      <ul class="cons">
+        <li>Hiérarchie visuelle moins forte</li>
+      </ul>
+      <div class="frame-wrap"><iframe src="A_refined_classical.html" loading="lazy"></iframe></div>
+    </div>
+
+    <div class="card">
+      <div class="title"><span class="letter">B</span><h2>Statut d'abord</h2></div>
+      <div class="desc">Le graphique est peint en zones colorées (critique / hors cible / cible). La courbe se lit contre ces bandes. La question "tout va bien ?" prime sur "quelle valeur exactement ?".</div>
+      <div class="links">
+        <a href="B_status_first.html" target="_blank">Ouvrir en plein écran ↗</a>
+      </div>
+      <div class="pillrow">
+        <span class="pill">zones peintes</span>
+        <span class="pill">phrase d'accroche</span>
+        <span class="pill">marqueurs étiquetés</span>
+      </div>
+      <ul class="pros">
+        <li>Statut immédiat sans réfléchir</li>
+        <li>Distingue "ok mais bas" de "ok"</li>
+      </ul>
+      <ul class="cons">
+        <li>Moins lisible pour comparer 2 valeurs proches</li>
+        <li>Plus chargé visuellement</li>
+      </ul>
+      <div class="frame-wrap"><iframe src="B_status_first.html" loading="lazy"></iframe></div>
+    </div>
+
+    <div class="card">
+      <div class="title"><span class="letter">C</span><h2>Sparklines empilés</h2></div>
+      <div class="desc">Tous les paramètres visibles d'un coup, une ligne chacun. Mini-courbe colorée selon le statut, tap pour déployer en grand. Pas de sélecteur de paramètre.</div>
+      <div class="links">
+        <a href="C_stacked_sparklines.html" target="_blank">Ouvrir en plein écran ↗</a>
+      </div>
+      <div class="pillrow">
+        <span class="pill">vue globale</span>
+        <span class="pill">expand au tap</span>
+        <span class="pill">scan rapide</span>
+      </div>
+      <ul class="pros">
+        <li>Vue d'ensemble du bac en un coup d'œil</li>
+        <li>Pas besoin de jongler entre paramètres</li>
+      </ul>
+      <ul class="cons">
+        <li>Sparklines courts, moins de détail par défaut</li>
+        <li>Marqueurs (CE, dosage) difficiles à montrer dans le condensé</li>
+      </ul>
+      <div class="frame-wrap"><iframe src="C_stacked_sparklines.html" loading="lazy"></iframe></div>
+    </div>
+
+    <div class="card">
+      <div class="title"><span class="letter">D</span><h2>Insight d'abord</h2></div>
+      <div class="desc">Une carte narrative en haut résume ce qui se passe, avec le delta comme métrique principale. Le graphique vient en deuxième, avec marqueurs étiquetés (CE 15 %, Kalkwasser 3 ml).</div>
+      <div class="links">
+        <a href="D_insight_first.html" target="_blank">Ouvrir en plein écran ↗</a>
+      </div>
+      <div class="pillrow">
+        <span class="pill">narratif</span>
+        <span class="pill">suggestion d'action</span>
+        <span class="pill">marqueurs nommés</span>
+      </div>
+      <ul class="pros">
+        <li>Répond directement à "qu'est-ce qui se passe ?"</li>
+        <li>Donne un conseil actionnable</li>
+      </ul>
+      <ul class="cons">
+        <li>Texte généré : risque de banaliser ou se tromper</li>
+        <li>Pertinent surtout pour alc / nutriments, moins pour temp/sal</li>
+      </ul>
+      <div class="frame-wrap"><iframe src="D_insight_first.html" loading="lazy"></iframe></div>
+    </div>
+
+  </div>
+</body>
+</html>

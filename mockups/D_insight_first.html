@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Trends — D — Insight First</title>
+<style>
+  :root {
+    --bg: #f5f2ed;
+    --surface: #ece8e1;
+    --elev: #ffffff;
+    --text: #2d2a26;
+    --text2: #8a8478;
+    --accent: #5a8f8b;
+    --accent-soft: #e8f0ef;
+    --accent-dark: #3d6b67;
+    --border: #ddd8d0;
+    --ok: #6b9e7a;
+    --warn: #c4943e;
+    --crit: #c4644a;
+    --ok-bg: #edf5ef;
+    --warn-bg: #f8f1e4;
+    --crit-bg: #f8ebe7;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    background: #d8d1c5;
+  }
+  body { display: flex; justify-content: center; padding: 24px; }
+  .phone {
+    width: 390px; min-height: 844px;
+    background: var(--bg);
+    border-radius: 44px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.15);
+    position: relative;
+  }
+  .statusbar {
+    height: 44px; padding: 0 28px;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    font-size: 15px; font-weight: 600;
+  }
+  .header {
+    padding: 4px 16px 8px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .tank-pill {
+    background: var(--surface);
+    border-radius: 14px; padding: 6px 12px;
+    font-size: 13px; font-weight: 600; color: var(--text2);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .tank-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .title { font-size: 17px; font-weight: 700; }
+  .header .edit { font-size: 13px; color: var(--accent); font-weight: 600; }
+
+  .chips {
+    padding: 12px 16px 4px;
+    display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    background: var(--surface); border-radius: 16px; padding: 8px 12px;
+    font-size: 13px; font-weight: 500; color: var(--text2);
+    white-space: nowrap;
+  }
+  .chip.active { background: var(--accent); color: white; }
+
+  .insight {
+    margin: 12px 16px;
+    background: linear-gradient(135deg, #f0ebe1 0%, #ece8e1 100%);
+    border-radius: 18px;
+    padding: 18px 18px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .insight::before {
+    content: ""; position: absolute; right: -40px; top: -40px;
+    width: 140px; height: 140px; border-radius: 50%;
+    background: rgba(196,148,62,0.10);
+  }
+  .insight .row1 {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px;
+  }
+  .insight .row1 .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--warn);
+    box-shadow: 0 0 0 3px rgba(196,148,62,0.2);
+  }
+  .insight .row1 .k {
+    font-size: 11px; color: var(--text2);
+    text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700;
+  }
+  .insight .delta {
+    font-size: 36px; font-weight: 700; line-height: 1; letter-spacing: -1px;
+    color: var(--warn);
+    display: flex; align-items: baseline; gap: 6px;
+  }
+  .insight .delta .unit { font-size: 14px; color: var(--text2); font-weight: 500; }
+  .insight .delta .arrow { font-size: 28px; color: var(--warn); }
+  .insight .narrative {
+    font-size: 15px; line-height: 1.45; color: var(--text);
+    margin-top: 12px;
+    position: relative; z-index: 1;
+  }
+  .insight .narrative strong {
+    color: var(--text); font-weight: 700;
+  }
+  .insight .why {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 10px; align-items: flex-start;
+  }
+  .insight .why .icon {
+    width: 24px; height: 24px; border-radius: 8px;
+    background: var(--accent-soft);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent-dark); font-size: 13px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .insight .why .txt {
+    font-size: 13px; color: var(--text2); line-height: 1.4;
+  }
+  .insight .why .txt strong { color: var(--text); font-weight: 600; }
+
+  .range {
+    margin: 8px 16px;
+    display: flex; gap: 6px; justify-content: flex-end;
+  }
+  .range .seg {
+    padding: 5px 11px; font-size: 12px; font-weight: 600;
+    color: var(--text2); border-radius: 12px; background: var(--surface);
+  }
+  .range .seg.active { background: var(--text); color: white; }
+
+  .chart-card {
+    margin: 0 16px 12px;
+    background: var(--elev);
+    border-radius: 16px;
+    padding: 14px 10px 4px;
+  }
+  .chart-card .head {
+    padding: 0 8px 6px;
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .chart-card .head .current {
+    font-size: 18px; font-weight: 700;
+  }
+  .chart-card .head .current .unit { font-size: 12px; color: var(--text2); font-weight: 500; margin-left: 3px; }
+  .chart-card .head .meta {
+    font-size: 11px; color: var(--text2);
+  }
+
+  .events {
+    margin: 0 16px 14px;
+    background: var(--elev);
+    border-radius: 16px;
+    padding: 8px 0;
+  }
+  .events .ev {
+    display: grid; grid-template-columns: 36px 1fr 70px;
+    align-items: center;
+    padding: 10px 16px;
+    gap: 10px;
+  }
+  .events .ev + .ev { border-top: 0.5px solid var(--border); }
+  .events .ev .ico {
+    width: 28px; height: 28px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px;
+  }
+  .events .ev.wc .ico { background: var(--accent-soft); color: var(--accent-dark); }
+  .events .ev.dose .ico { background: var(--warn-bg); color: #8a6121; }
+  .events .ev.meas .ico { background: var(--ok-bg); color: var(--ok); }
+  .events .ev .body .t {
+    font-size: 13px; font-weight: 600;
+  }
+  .events .ev .body .s {
+    font-size: 11px; color: var(--text2); margin-top: 1px;
+  }
+  .events .ev .ago {
+    font-size: 11px; color: var(--text2); text-align: right;
+  }
+
+  .tabbar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 78px;
+    background: rgba(245,242,237,0.92);
+    backdrop-filter: blur(20px);
+    border-top: 0.5px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-around;
+    padding-top: 8px;
+  }
+  .tab { text-align: center; flex: 1; font-size: 10px; color: var(--text2); font-weight: 500; }
+  .tab .ico { display: block; font-size: 22px; margin-bottom: 2px; }
+  .tab.active { color: var(--accent); }
+  .scroll-padding { padding-bottom: 96px; }
+</style>
+</head>
+<body>
+  <div class="phone">
+    <div class="statusbar">
+      <span>9:41</span>
+      <span>●●●●● 100%</span>
+    </div>
+
+    <div class="header">
+      <span class="tank-pill"><span class="dot"></span>Bac principal</span>
+      <span class="title">Tendances</span>
+      <span class="edit">Modifier</span>
+    </div>
+
+    <div class="chips">
+      <div class="chip">Temp.</div>
+      <div class="chip">Salinité</div>
+      <div class="chip">pH</div>
+      <div class="chip active">Alcalinité</div>
+      <div class="chip">Calcium</div>
+      <div class="chip">Magnésium</div>
+      <div class="chip">Nitrates</div>
+    </div>
+
+    <div class="scroll-padding">
+
+      <div class="insight">
+        <div class="row1">
+          <span class="dot"></span>
+          <span class="k">Alcalinité · 30 derniers jours</span>
+        </div>
+        <div class="delta">
+          <span class="arrow">▼</span>
+          <span>0,9</span>
+          <span class="unit">dKH en 30 jours</span>
+        </div>
+        <div class="narrative">
+          Votre alc a chuté de <strong>8,4 à 7,2 dKH</strong> avant le changement d’eau du 8 mai, puis remontée à <strong>8,0</strong>. Elle redescend depuis et touche le seuil bas.
+        </div>
+        <div class="why">
+          <div class="icon">→</div>
+          <div class="txt">
+            <strong>Suggestion :</strong> dosage régulier (≈ 3 ml Kalkwasser tous les 2 jours) ou prochain changement d’eau d’ici 4 à 5 jours pour rester dans la cible.
+          </div>
+        </div>
+      </div>
+
+      <div class="range">
+        <div class="seg">7 j</div>
+        <div class="seg active">30 j</div>
+        <div class="seg">90 j</div>
+        <div class="seg">Tout</div>
+      </div>
+
+      <div class="chart-card">
+        <div class="head">
+          <div class="current">7,5<span class="unit">dKH actuel</span></div>
+          <div class="meta">Cible 7,5 – 9,0 dKH</div>
+        </div>
+        <svg viewBox="0 0 358 220" width="100%" preserveAspectRatio="xMinYMin meet">
+          <!-- Bands -->
+          <!-- y(v) = 16 + (10 - v) * 36
+               6→160, 7.5→106, 8→88, 9→52, 10→16 -->
+          <rect x="36" y="106" width="312" height="54" fill="#f8f1e4" opacity="0.5"/>
+          <rect x="36" y="52"  width="312" height="54" fill="#edf5ef" opacity="0.6"/>
+          <rect x="36" y="16"  width="312" height="36" fill="#f8f1e4" opacity="0.5"/>
+
+          <!-- threshold dashed lines -->
+          <line x1="36" y1="106" x2="348" y2="106" stroke="#c4943e" stroke-width="0.7" stroke-dasharray="3 3" opacity="0.6"/>
+          <line x1="36" y1="52"  x2="348" y2="52"  stroke="#c4943e" stroke-width="0.7" stroke-dasharray="3 3" opacity="0.6"/>
+
+          <!-- Y labels: threshold values only, inside chart -->
+          <g fill="#8a8478" font-size="9" text-anchor="end">
+            <text x="32" y="55">9,0</text>
+            <text x="32" y="109">7,5</text>
+          </g>
+
+          <!-- Subtle gridline for current value -->
+          <line x1="36" y1="124" x2="348" y2="124" stroke="#c4943e" stroke-width="0.5" stroke-dasharray="1 2" opacity="0.4"/>
+
+          <!-- Event vertical lines + labels -->
+          <!-- WC at day 16 → x = 36 + 15/29 * 312 = 197.4 -->
+          <line x1="197.4" y1="16" x2="197.4" y2="170" stroke="#5a8f8b" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/>
+          <g transform="translate(197.4,178)">
+            <rect x="-32" y="0" width="64" height="16" rx="8" fill="#e8f0ef"/>
+            <text x="0" y="11" font-size="9" font-weight="700" fill="#3d6b67" text-anchor="middle">↺ CE 15 %</text>
+          </g>
+          <!-- Dose at day 27 → x = 36 + 26/29 * 312 = 315.7 -->
+          <line x1="315.7" y1="16" x2="315.7" y2="170" stroke="#c4943e" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/>
+          <g transform="translate(315.7,178)">
+            <rect x="-36" y="0" width="72" height="16" rx="8" fill="#f8f1e4"/>
+            <text x="0" y="11" font-size="9" font-weight="700" fill="#8a6121" text-anchor="middle">⊕ Kalkw. 3 ml</text>
+          </g>
+
+          <!-- Data: line + dots -->
+          <!-- (d, v) → x = 36 + (d-1)/29 * 312; y = 16 + (10-v)*36 -->
+          <!-- (1, 8.4): x=36, y=73.6
+               (3, 8.3): x=57.5, y=77.2
+               (5, 8.1): x=78.9, y=84.4
+               (8, 7.9): x=111.2, y=91.6
+               (10, 7.7): x=132.7, y=98.8
+               (13, 7.4): x=165, y=109.6
+               (15, 7.2): x=186.5, y=116.8
+               (17, 7.6): x=208, y=102.4
+               (19, 7.9): x=229.4, y=91.6
+               (22, 8.0): x=261.7, y=88
+               (25, 7.8): x=294, y=95.2
+               (28, 7.6): x=326.3, y=102.4
+               (30, 7.5): x=347.7, y=106 -->
+
+          <polyline
+            points="36,73.6 57.5,77.2 78.9,84.4 111.2,91.6 132.7,98.8 165,109.6 186.5,116.8 208,102.4 229.4,91.6 261.7,88 294,95.2 326.3,102.4 347.7,106"
+            fill="none" stroke="#c4943e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <g fill="#c4943e">
+            <circle cx="36" cy="73.6" r="2.4"/>
+            <circle cx="57.5" cy="77.2" r="2.4"/>
+            <circle cx="78.9" cy="84.4" r="2.4"/>
+            <circle cx="111.2" cy="91.6" r="2.4"/>
+            <circle cx="132.7" cy="98.8" r="2.4"/>
+            <circle cx="165" cy="109.6" r="2.4"/>
+            <circle cx="186.5" cy="116.8" r="2.4"/>
+            <circle cx="208" cy="102.4" r="2.4"/>
+            <circle cx="229.4" cy="91.6" r="2.4"/>
+            <circle cx="261.7" cy="88" r="2.4"/>
+            <circle cx="294" cy="95.2" r="2.4"/>
+            <circle cx="326.3" cy="102.4" r="2.4"/>
+            <circle cx="347.7" cy="106" r="3.6" fill="white" stroke="#c4943e" stroke-width="2.4"/>
+          </g>
+
+          <!-- X labels -->
+          <g fill="#8a8478" font-size="9" text-anchor="middle">
+            <text x="36"  y="208">22 avr</text>
+            <text x="111" y="208">29 avr</text>
+            <text x="187" y="208">6 mai</text>
+            <text x="262" y="208">13 mai</text>
+            <text x="340" y="208">20 mai</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="events">
+        <div class="ev meas">
+          <div class="ico">M</div>
+          <div class="body">
+            <div class="t">Mesure 7,5 dKH</div>
+            <div class="s">−0,1 depuis la précédente</div>
+          </div>
+          <div class="ago">il y a 18 h</div>
+        </div>
+        <div class="ev dose">
+          <div class="ico">⊕</div>
+          <div class="body">
+            <div class="t">Kalkwasser 3 ml</div>
+            <div class="s">Premier dosage depuis le CE</div>
+          </div>
+          <div class="ago">il y a 3 j</div>
+        </div>
+        <div class="ev wc">
+          <div class="ico">↺</div>
+          <div class="body">
+            <div class="t">Changement d’eau 15 %</div>
+            <div class="s">Red Sea Coral Pro · alc remontée à 8,0</div>
+          </div>
+          <div class="ago">14 jours</div>
+        </div>
+      </div>
+
+    </div>
+
+    <nav class="tabbar">
+      <div class="tab"><span class="ico">◯</span>Mesures</div>
+      <div class="tab active"><span class="ico">◢</span>Tendances</div>
+      <div class="tab"><span class="ico">◇</span>Corrections</div>
+      <div class="tab"><span class="ico">◐</span>Réglages</div>
+    </nav>
+  </div>
+</body>
+</html>

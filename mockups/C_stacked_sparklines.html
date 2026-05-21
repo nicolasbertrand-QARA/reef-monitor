@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Trends — C — Stacked Sparklines</title>
+<style>
+  :root {
+    --bg: #f5f2ed;
+    --surface: #ece8e1;
+    --elev: #ffffff;
+    --text: #2d2a26;
+    --text2: #8a8478;
+    --accent: #5a8f8b;
+    --border: #ddd8d0;
+    --ok: #6b9e7a;
+    --warn: #c4943e;
+    --crit: #c4644a;
+    --ok-bg: #edf5ef;
+    --warn-bg: #f8f1e4;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    background: #d8d1c5;
+  }
+  body { display: flex; justify-content: center; padding: 24px; }
+  .phone {
+    width: 390px; min-height: 844px;
+    background: var(--bg);
+    border-radius: 44px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.15);
+    position: relative;
+  }
+  .statusbar {
+    height: 44px; padding: 0 28px;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    font-size: 15px; font-weight: 600;
+  }
+  .header {
+    padding: 4px 16px 8px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .tank-pill {
+    background: var(--surface);
+    border-radius: 14px; padding: 6px 12px;
+    font-size: 13px; font-weight: 600; color: var(--text2);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .tank-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .title { font-size: 17px; font-weight: 700; }
+  .header .edit { font-size: 13px; color: var(--accent); font-weight: 600; }
+
+  .range {
+    margin: 12px 16px 4px;
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 4px;
+    display: flex;
+  }
+  .range .seg {
+    flex: 1; text-align: center; padding: 7px 0;
+    font-size: 13px; font-weight: 600; color: var(--text2);
+    border-radius: 8px;
+  }
+  .range .seg.active {
+    background: var(--elev); color: var(--text);
+    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  }
+
+  .section-label {
+    margin: 16px 20px 6px;
+    font-size: 11px; color: var(--text2); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.7px;
+  }
+
+  .list {
+    margin: 4px 16px;
+    background: var(--elev);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 110px 1fr 56px;
+    align-items: center;
+    padding: 14px 14px;
+    gap: 10px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .row:last-child { border-bottom: none; }
+  .row .name {
+    font-size: 13px; font-weight: 600; color: var(--text);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .row .name .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+  .row .name .dot.warn { background: var(--warn); }
+  .row .name .dot.crit { background: var(--crit); }
+  .row .val {
+    font-size: 17px; font-weight: 700; margin-top: 1px;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.3px;
+  }
+  .row .val .unit { font-size: 11px; color: var(--text2); font-weight: 500; margin-left: 2px; }
+  .row .spark { display: block; }
+  .row .meta {
+    text-align: right; font-size: 11px; color: var(--text2);
+  }
+  .row .meta .ago { font-weight: 500; }
+  .row .meta .chev { color: var(--text2); font-size: 13px; margin-top: 2px; display: block; }
+
+  /* Expanded row */
+  .row.expanded {
+    background: var(--ok-bg);
+  }
+  .row.expanded.warn { background: var(--warn-bg); }
+  .row.expanded .name .chev-down { color: var(--text2); font-size: 12px; }
+
+  .expanded-pane {
+    background: var(--bg);
+    padding: 14px 14px 18px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .expanded-pane .stats {
+    display: flex; justify-content: space-around;
+    padding: 4px 0 12px;
+  }
+  .expanded-pane .stats .s { text-align: center; }
+  .expanded-pane .stats .s .v { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .expanded-pane .stats .s .k { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-top: 2px; }
+
+  .tabbar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 78px;
+    background: rgba(245,242,237,0.92);
+    backdrop-filter: blur(20px);
+    border-top: 0.5px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-around;
+    padding-top: 8px;
+  }
+  .tab { text-align: center; flex: 1; font-size: 10px; color: var(--text2); font-weight: 500; }
+  .tab .ico { display: block; font-size: 22px; margin-bottom: 2px; }
+  .tab.active { color: var(--accent); }
+  .scroll-padding { padding-bottom: 96px; }
+</style>
+</head>
+<body>
+  <div class="phone">
+    <div class="statusbar">
+      <span>9:41</span>
+      <span>●●●●● 100%</span>
+    </div>
+
+    <div class="header">
+      <span class="tank-pill"><span class="dot"></span>Bac principal</span>
+      <span class="title">Tendances</span>
+      <span class="edit">Modifier</span>
+    </div>
+
+    <div class="range">
+      <div class="seg">7 j</div>
+      <div class="seg active">30 j</div>
+      <div class="seg">90 j</div>
+      <div class="seg">Tout</div>
+    </div>
+
+    <div class="scroll-padding">
+
+      <div class="section-label">Chimie de l’eau</div>
+      <div class="list">
+
+        <div class="row">
+          <div>
+            <div class="name"><span class="dot"></span>Température</div>
+            <div class="val">26,0<span class="unit">°C</span></div>
+          </div>
+          <svg class="spark" viewBox="0 0 150 36" width="100%" height="36">
+            <path d="M2,18 L15,16 L28,14 L41,14 L54,12 L67,14 L80,16 L93,14 L106,12 L119,14 L132,16 L148,18"
+                  fill="none" stroke="#6b9e7a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="148" cy="18" r="2.6" fill="#6b9e7a"/>
+          </svg>
+          <div class="meta"><div class="ago">il y a 2 h</div><span class="chev">›</span></div>
+        </div>
+
+        <div class="row">
+          <div>
+            <div class="name"><span class="dot"></span>Salinité</div>
+            <div class="val">1,025<span class="unit">SG</span></div>
+          </div>
+          <svg class="spark" viewBox="0 0 150 36" width="100%" height="36">
+            <path d="M2,18 L15,18 L28,20 L41,18 L54,14 L67,18 L80,18 L93,20 L106,18 L119,18 L132,16 L148,18"
+                  fill="none" stroke="#6b9e7a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="148" cy="18" r="2.6" fill="#6b9e7a"/>
+          </svg>
+          <div class="meta"><div class="ago">il y a 4 h</div><span class="chev">›</span></div>
+        </div>
+
+        <div class="row">
+          <div>
+            <div class="name"><span class="dot"></span>pH</div>
+            <div class="val">8,10<span class="unit"></span></div>
+          </div>
+          <svg class="spark" viewBox="0 0 150 36" width="100%" height="36">
+            <path d="M2,12 L15,10 L28,12 L41,16 L54,22 L67,22 L80,18 L93,16 L106,14 L119,16 L132,18 L148,20"
+                  fill="none" stroke="#6b9e7a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="148" cy="20" r="2.6" fill="#6b9e7a"/>
+          </svg>
+          <div class="meta"><div class="ago">il y a 1 j</div><span class="chev">›</span></div>
+        </div>
+
+        <!-- EXPANDED row: Alcalinité -->
+        <div class="row expanded warn">
+          <div>
+            <div class="name"><span class="dot warn"></span>Alcalinité <span class="chev-down">▾</span></div>
+            <div class="val">7,5<span class="unit">dKH</span></div>
+          </div>
+          <svg class="spark" viewBox="0 0 150 36" width="100%" height="36">
+            <path d="M2,8 L13,10 L23,14 L36,18 L46,22 L60,28 L70,32 L80,20 L91,18 L106,14 L119,18 L134,22 L148,24"
+                  fill="none" stroke="#c4943e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="148" cy="24" r="2.6" fill="#c4943e"/>
+          </svg>
+          <div class="meta"><div class="ago">il y a 18 h</div><span class="chev">▾</span></div>
+        </div>
+        <div class="expanded-pane">
+          <div class="stats">
+            <div class="s"><div class="v">7,5</div><div class="k">Actuel</div></div>
+            <div class="s"><div class="v">7,2</div><div class="k">Min</div></div>
+            <div class="s"><div class="v">7,8</div><div class="k">Moy</div></div>
+            <div class="s"><div class="v">8,4</div><div class="k">Max</div></div>
+            <div class="s"><div class="v" style="color:var(--warn)">−0,9</div><div class="k">Δ 30 j</div></div>
+          </div>
+          <svg viewBox="0 0 320 170" width="100%" preserveAspectRatio="xMinYMin meet">
+            <!-- background zones -->
+            <rect x="30" y="100" width="280" height="40" fill="#f8f1e4" opacity="0.7"/>
+            <rect x="30" y="50"  width="280" height="50" fill="#edf5ef" opacity="0.7"/>
+            <rect x="30" y="20"  width="280" height="30" fill="#f8f1e4" opacity="0.7"/>
+            <!-- threshold lines -->
+            <line x1="30" y1="100" x2="310" y2="100" stroke="#c4943e" stroke-width="0.7" stroke-dasharray="3 3" opacity="0.55"/>
+            <line x1="30" y1="50"  x2="310" y2="50"  stroke="#c4943e" stroke-width="0.7" stroke-dasharray="3 3" opacity="0.55"/>
+            <!-- Y labels (just thresholds) -->
+            <g fill="#8a8478" font-size="9" text-anchor="end">
+              <text x="26" y="53">9,0</text>
+              <text x="26" y="103">7,5</text>
+            </g>
+            <!-- WC marker -->
+            <line x1="175" y1="20" x2="175" y2="140" stroke="#5a8f8b" stroke-width="1" stroke-dasharray="2 4" opacity="0.6"/>
+            <!-- Data -->
+            <polyline
+              points="32,72 51.4,76 70.9,84 100.1,92 119.5,100 148.7,114 168.2,122 187.6,106 207,92 236.2,88 265.4,98 294.7,106 308,110"
+              fill="none" stroke="#c4943e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="#c4943e">
+              <circle cx="32" cy="72" r="2.4"/>
+              <circle cx="51.4" cy="76" r="2.4"/>
+              <circle cx="70.9" cy="84" r="2.4"/>
+              <circle cx="100.1" cy="92" r="2.4"/>
+              <circle cx="119.5" cy="100" r="2.4"/>
+              <circle cx="148.7" cy="114" r="2.4"/>
+              <circle cx="168.2" cy="122" r="2.4"/>
+              <circle cx="187.6" cy="106" r="2.4"/>
+              <circle cx="207" cy="92" r="2.4"/>
+              <circle cx="236.2" cy="88" r="2.4"/>
+              <circle cx="265.4" cy="98" r="2.4"/>
+              <circle cx="294.7" cy="106" r="2.4"/>
+              <circle cx="308" cy="110" r="3.2" fill="white" stroke="#c4943e" stroke-width="2"/>
+            </g>
+            <!-- X labels -->
+            <g fill="#8a8478" font-size="9" text-anchor="middle">
+              <text x="32" y="157">22 avr</text>
+              <text x="100" y="157">29 avr</text>
+              <text x="170" y="157">6 mai</text>
+              <text x="238" y="157">13 mai</text>
+              <text x="308" y="157">20 mai</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="row">
+          <div>
+            <div class="name"><span class="dot"></span>Calcium</div>
+            <div class="val">418<span class="unit">ppm</span></div>
+          </div>
+          <svg class="spark" viewBox="0 0 150 36" width="100%" height="36">
+            <path d="M2,12 L18,14 L34,16 L50,18 L66,20 L82,18 L98,16 L114,16 L130,18 L148,20"
+                  fill="none" stroke="#6b9e7a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="148" cy="20" r="2.6" fill="#6b9e7a"/>
+          </svg>
+          <div class="meta"><div class="ago">il y a 1 j</div><span class="chev">›</span></div>
+        </div>
+
+        <div class="row">
+          <div>
+            <div class="name"><span class="dot"></span>Magnésium</div>
+            <div class="val">1340<span class="unit">ppm</span></div>
+          </div>
+          <svg class="spark" viewBox="0 0 150 36" width="100%" height="36">
+            <path d="M2,16 L18,14 L34,16 L50,18 L66,16 L82,14 L98,16 L114,14 L130,16 L148,18"
+                  fill="none" stroke="#6b9e7a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="148" cy="18" r="2.6" fill="#6b9e7a"/>
+          </svg>
+          <div class="meta"><div class="ago">il y a 2 j</div><span class="chev">›</span></div>
+        </div>
+
+      </div>
+
+      <div class="section-label">Nutriments</div>
+      <div class="list">
+
+        <div class="row">
+          <div>
+            <div class="name"><span class="dot"></span>Nitrates</div>
+            <div class="val">5,0<span class="unit">ppm</span></div>
+          </div>
+          <svg class="spark" viewBox="0 0 150 36" width="100%" height="36">
+            <path d="M2,24 L18,20 L34,14 L50,10 L66,14 L82,16 L98,18 L114,22 L130,22 L148,20"
+                  fill="none" stroke="#6b9e7a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="148" cy="20" r="2.6" fill="#6b9e7a"/>
+          </svg>
+          <div class="meta"><div class="ago">il y a 6 h</div><span class="chev">›</span></div>
+        </div>
+
+        <div class="row">
+          <div>
+            <div class="name"><span class="dot"></span>Phosphates</div>
+            <div class="val">0,05<span class="unit">ppm</span></div>
+          </div>
+          <svg class="spark" viewBox="0 0 150 36" width="100%" height="36">
+            <path d="M2,24 L18,22 L34,18 L50,14 L66,12 L82,14 L98,16 L114,18 L130,20 L148,20"
+                  fill="none" stroke="#6b9e7a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="148" cy="20" r="2.6" fill="#6b9e7a"/>
+          </svg>
+          <div class="meta"><div class="ago">il y a 1 j</div><span class="chev">›</span></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <nav class="tabbar">
+      <div class="tab"><span class="ico">◯</span>Mesures</div>
+      <div class="tab active"><span class="ico">◢</span>Tendances</div>
+      <div class="tab"><span class="ico">◇</span>Corrections</div>
+      <div class="tab"><span class="ico">◐</span>Réglages</div>
+    </nav>
+  </div>
+</body>
+</html>
