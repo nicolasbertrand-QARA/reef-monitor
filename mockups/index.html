@@ -210,7 +210,7 @@
     </div>
 
     <div class="card">
-      <div class="title"><span class="letter">D+</span><h2>D en mode multi-param</h2></div>
+      <div class="title"><span class="letter">D+</span><h2>D multi — empilé</h2></div>
       <div class="desc">Quand 2+ paramètres sont sélectionnés, on quitte le narratif mono-param et on bascule sur une vue type C : une mini-carte par paramètre, sparkline + valeur + delta. Synthèse courte au-dessus, tap = retour au détail D.</div>
       <div class="links">
         <a href="D_multi.html" target="_blank">Ouvrir en plein écran ↗</a>
@@ -229,6 +229,30 @@
         <li>Plus de scroll que A si beaucoup de params sélectionnés</li>
       </ul>
       <div class="frame-wrap"><iframe src="D_multi.html" loading="lazy"></iframe></div>
+    </div>
+
+    <div class="card">
+      <div class="title"><span class="letter">D±</span><h2>D multi — overlay (% cible)</h2></div>
+      <div class="desc">Variante overlay du multi-param. Toutes les courbes sur le même graphique, mais l'axe Y n'est pas une valeur arbitraire : c'est la position dans la cible. 0 % = seuil bas, 100 % = seuil haut, 50 % = idéal. Les valeurs absolues restent visibles via des tags colorés à droite de chaque courbe.</div>
+      <div class="links">
+        <a href="D_multi_overlay.html" target="_blank">Ouvrir en plein écran ↗</a>
+      </div>
+      <div class="pillrow">
+        <span class="pill">superposition</span>
+        <span class="pill">% dans la cible</span>
+        <span class="pill">tags valeurs à droite</span>
+      </div>
+      <ul class="pros">
+        <li>Voir si plusieurs params dérivent en même temps (corrélation visuelle)</li>
+        <li>Normalisation qui veut dire quelque chose (position cible) au lieu d'arbitraire (0-1)</li>
+        <li>Marqueur CE partagé visible une seule fois</li>
+      </ul>
+      <ul class="cons">
+        <li>3 courbes proches du centre se chevauchent vite</li>
+        <li>L'amplitude visuelle dépend de la largeur de la cible, pas de la vraie variation</li>
+        <li>Pas de zoom sur un param isolé sans changer de vue</li>
+      </ul>
+      <div class="frame-wrap"><iframe src="D_multi_overlay.html" loading="lazy"></iframe></div>
     </div>
 
   </div>

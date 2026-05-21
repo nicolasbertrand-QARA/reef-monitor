@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Trends — D multi overlay — superposition % cible</title>
+<style>
+  :root {
+    --bg: #f5f2ed;
+    --surface: #ece8e1;
+    --elev: #ffffff;
+    --text: #2d2a26;
+    --text2: #8a8478;
+    --accent: #5a8f8b;
+    --accent-soft: #e8f0ef;
+    --accent-dark: #3d6b67;
+    --border: #ddd8d0;
+    --ok: #6b9e7a;
+    --warn: #c4943e;
+    --crit: #c4644a;
+    --ok-bg: #edf5ef;
+    --warn-bg: #f8f1e4;
+    --crit-bg: #f8ebe7;
+
+    /* distinct param colors (not status colors) */
+    --p-ph:  #4a7d99;
+    --p-alk: #5a8f8b;
+    --p-ca:  #a06c4a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    background: #d8d1c5;
+  }
+  body { display: flex; justify-content: center; padding: 24px; }
+  .phone {
+    width: 390px; min-height: 844px;
+    background: var(--bg);
+    border-radius: 44px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.15);
+    position: relative;
+  }
+  .statusbar {
+    height: 44px; padding: 0 28px;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    font-size: 15px; font-weight: 600;
+  }
+  .header {
+    padding: 4px 16px 8px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .tank-pill {
+    background: var(--surface);
+    border-radius: 14px; padding: 6px 12px;
+    font-size: 13px; font-weight: 600; color: var(--text2);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .tank-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .title { font-size: 17px; font-weight: 700; }
+  .header .edit { font-size: 13px; color: var(--accent); font-weight: 600; }
+
+  .chips {
+    padding: 12px 16px 4px;
+    display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    background: var(--surface); border-radius: 16px; padding: 8px 12px;
+    font-size: 13px; font-weight: 500; color: var(--text2);
+    white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  .chip.active { background: var(--accent); color: white; }
+  .chip.active .x { opacity: 0.7; margin-left: 2px; font-size: 11px; }
+
+  .range {
+    margin: 8px 16px;
+    background: var(--surface);
+    border-radius: 12px; padding: 4px;
+    display: flex;
+  }
+  .range .seg {
+    flex: 1; text-align: center; padding: 7px 0;
+    font-size: 13px; font-weight: 600; color: var(--text2);
+    border-radius: 8px;
+  }
+  .range .seg.active {
+    background: var(--elev); color: var(--text);
+    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  }
+
+  .compare-banner {
+    margin: 12px 16px 8px;
+    background: var(--accent-soft);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px;
+  }
+  .compare-banner .left { color: var(--accent-dark); font-weight: 600; }
+  .compare-banner .right { color: var(--accent); font-weight: 600; font-size: 11px; }
+
+  .synth {
+    margin: 4px 16px 12px;
+    background: var(--elev);
+    border-radius: 14px;
+    padding: 12px 14px;
+  }
+  .synth .row { display: flex; align-items: center; gap: 8px; }
+  .synth .row .dots { display: inline-flex; gap: 3px; }
+  .synth .row .dots span { width: 8px; height: 8px; border-radius: 50%; }
+  .synth .row .dots .ok { background: var(--ok); }
+  .synth .row .dots .warn { background: var(--warn); }
+  .synth .row .k {
+    font-size: 12px; color: var(--text2);
+    text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;
+  }
+  .synth .txt { font-size: 14px; line-height: 1.45; margin-top: 8px; }
+  .synth .txt strong { font-weight: 700; }
+
+  .chart-card {
+    margin: 0 16px 12px;
+    background: var(--elev);
+    border-radius: 16px;
+    padding: 12px 8px 6px;
+  }
+  .chart-card .head {
+    padding: 0 8px 6px;
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .chart-card .head .axis-label {
+    font-size: 11px; color: var(--text2); font-weight: 600;
+  }
+  .chart-card .head .legend {
+    display: flex; gap: 10px; font-size: 11px; color: var(--text2);
+  }
+  .chart-card .head .legend .item { display: inline-flex; align-items: center; gap: 4px; }
+  .chart-card .head .legend .sw { width: 10px; height: 2px; }
+
+  .value-rows {
+    margin: 4px 16px 8px;
+    background: var(--elev);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .vrow {
+    display: grid;
+    grid-template-columns: 4px 1fr 80px 90px;
+    align-items: center;
+    padding: 12px 14px 12px 0;
+    gap: 12px;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .vrow:last-child { border-bottom: none; }
+  .vrow .stripe {
+    width: 4px; height: 28px; border-radius: 0 2px 2px 0;
+  }
+  .vrow .name {
+    font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .vrow .name .sdot {
+    width: 7px; height: 7px; border-radius: 50%;
+  }
+  .vrow .name .sdot.ok { background: var(--ok); }
+  .vrow .name .sdot.warn { background: var(--warn); }
+  .vrow .val {
+    font-size: 16px; font-weight: 700;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.3px;
+    text-align: right;
+  }
+  .vrow .val .unit { font-size: 11px; color: var(--text2); font-weight: 500; margin-left: 2px; }
+  .vrow .delta {
+    text-align: right;
+    font-size: 11px; color: var(--text2); font-weight: 600;
+  }
+  .vrow .delta.warn { color: var(--warn); }
+  .vrow .delta.ok { color: var(--ok); }
+
+  .footer-hint {
+    margin: 4px 24px 16px;
+    font-size: 11px; color: var(--text2); text-align: center;
+  }
+
+  .tabbar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 78px;
+    background: rgba(245,242,237,0.92);
+    backdrop-filter: blur(20px);
+    border-top: 0.5px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-around;
+    padding-top: 8px;
+  }
+  .tab { text-align: center; flex: 1; font-size: 10px; color: var(--text2); font-weight: 500; }
+  .tab .ico { display: block; font-size: 22px; margin-bottom: 2px; }
+  .tab.active { color: var(--accent); }
+  .scroll-padding { padding-bottom: 96px; }
+</style>
+</head>
+<body>
+  <div class="phone">
+    <div class="statusbar">
+      <span>9:41</span>
+      <span>●●●●● 100%</span>
+    </div>
+
+    <div class="header">
+      <span class="tank-pill"><span class="dot"></span>Bac principal</span>
+      <span class="title">Tendances</span>
+      <span class="edit">Modifier</span>
+    </div>
+
+    <div class="chips">
+      <div class="chip">Temp.</div>
+      <div class="chip">Salinité</div>
+      <div class="chip active">pH<span class="x">×</span></div>
+      <div class="chip active">Alcalinité<span class="x">×</span></div>
+      <div class="chip active">Calcium<span class="x">×</span></div>
+      <div class="chip">Magnésium</div>
+      <div class="chip">Nitrates</div>
+    </div>
+
+    <div class="range">
+      <div class="seg">7 j</div>
+      <div class="seg active">30 j</div>
+      <div class="seg">90 j</div>
+      <div class="seg">Tout</div>
+    </div>
+
+    <div class="scroll-padding">
+
+      <div class="compare-banner">
+        <span class="left">⊞  3 paramètres comparés</span>
+        <span class="right">Vider</span>
+      </div>
+
+      <div class="synth">
+        <div class="row">
+          <div class="dots"><span class="ok"></span><span class="warn"></span><span class="ok"></span></div>
+          <div class="k">Sur 30 jours</div>
+        </div>
+        <div class="txt">pH et Ca dans la cible, <strong>alc tombée au seuil bas</strong> après deux semaines de baisse.</div>
+      </div>
+
+      <div class="chart-card">
+        <div class="head">
+          <div class="axis-label">% dans la cible</div>
+          <div class="legend">
+            <span class="item"><span class="sw" style="background:var(--p-ph)"></span>pH</span>
+            <span class="item"><span class="sw" style="background:var(--p-alk)"></span>Alc</span>
+            <span class="item"><span class="sw" style="background:var(--p-ca)"></span>Ca</span>
+          </div>
+        </div>
+
+        <svg viewBox="0 0 358 280" width="100%" preserveAspectRatio="xMinYMin meet">
+          <!-- Y mapping: -25% (y=240) to 125% (y=20). 150% over 220px = 1.467 px/%
+               valToY(pct) = 20 + (125 - pct) * 1.467
+               100% → 56.7
+               50%  → 130
+               0%   → 203.4
+          -->
+
+          <!-- Warning bands -->
+          <rect x="30" y="20"    width="320" height="36.7" fill="#f8f1e4" opacity="0.5"/>
+          <rect x="30" y="203.4" width="320" height="36.6" fill="#f8f1e4" opacity="0.5"/>
+          <!-- OK band -->
+          <rect x="30" y="56.7"  width="320" height="146.7" fill="#edf5ef" opacity="0.55"/>
+
+          <!-- Threshold lines -->
+          <line x1="30" y1="56.7"  x2="350" y2="56.7"  stroke="#c4943e" stroke-width="0.7" stroke-dasharray="3 3" opacity="0.5"/>
+          <line x1="30" y1="203.4" x2="350" y2="203.4" stroke="#c4943e" stroke-width="0.7" stroke-dasharray="3 3" opacity="0.5"/>
+          <!-- Center reference (50% = middle of target) -->
+          <line x1="30" y1="130" x2="350" y2="130" stroke="#ddd8d0" stroke-width="0.5" stroke-dasharray="1 3"/>
+
+          <!-- Y labels -->
+          <g fill="#8a8478" font-size="9" text-anchor="end">
+            <text x="28" y="60">100 %</text>
+            <text x="28" y="133">50 %</text>
+            <text x="28" y="207">0 %</text>
+          </g>
+          <g fill="#8a6121" font-size="8" text-anchor="start" font-weight="600">
+            <text x="33" y="35">au-dessus du seuil haut</text>
+            <text x="33" y="232">sous le seuil bas</text>
+          </g>
+
+          <!-- WC marker at day 16 -->
+          <line x1="195.5" y1="20" x2="195.5" y2="240" stroke="#5a8f8b" stroke-width="1" stroke-dasharray="2 4" opacity="0.55"/>
+          <g transform="translate(195.5,250)">
+            <rect x="-22" y="0" width="44" height="14" rx="3" fill="#e8f0ef"/>
+            <text x="0" y="10" font-size="9" font-weight="600" fill="#3d6b67" text-anchor="middle">CE 15 %</text>
+          </g>
+
+          <!-- pH curve: blue
+               (1,57)(5,54)(9,50)(13,43)(17,36)(21,43)(25,47)(30,43)
+          -->
+          <polyline
+            points="30,120 74.1,124.2 118.3,130 162.4,140.3 206.6,150.6 250.7,140.3 294.8,134.4 350,140.3"
+            fill="none" stroke="#4a7d99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+          <g fill="#4a7d99">
+            <circle cx="30" cy="120" r="2.2"/>
+            <circle cx="74.1" cy="124.2" r="2.2"/>
+            <circle cx="118.3" cy="130" r="2.2"/>
+            <circle cx="162.4" cy="140.3" r="2.2"/>
+            <circle cx="206.6" cy="150.6" r="2.2"/>
+            <circle cx="250.7" cy="140.3" r="2.2"/>
+            <circle cx="294.8" cy="134.4" r="2.2"/>
+            <circle cx="350" cy="140.3" r="3.4" fill="white" stroke="#4a7d99" stroke-width="2"/>
+          </g>
+          <!-- pH right-edge tag -->
+          <g transform="translate(354,140.3)">
+            <rect x="0" y="-8" width="34" height="16" rx="3" fill="#4a7d99"/>
+            <text x="17" y="3" fill="white" font-size="9" font-weight="700" text-anchor="middle">8,10</text>
+          </g>
+
+          <!-- Alc curve: teal
+               (1,60)(3,53)(5,40)(8,27)(10,13)(13,-7)(15,-20)(17,7)(19,27)(22,33)(25,20)(28,7)(30,0)
+          -->
+          <polyline
+            points="30,115.4 52.1,125.6 74.1,144.7 107.2,163.8 129.3,184.3 162.4,213.6 184.5,232.7 206.6,193.1 228.6,163.8 261.7,155 294.8,174 327.9,193.1 350,203.4"
+            fill="none" stroke="#5a8f8b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+          <g fill="#5a8f8b">
+            <circle cx="30" cy="115.4" r="2.2"/>
+            <circle cx="52.1" cy="125.6" r="2.2"/>
+            <circle cx="74.1" cy="144.7" r="2.2"/>
+            <circle cx="107.2" cy="163.8" r="2.2"/>
+            <circle cx="129.3" cy="184.3" r="2.2"/>
+            <circle cx="162.4" cy="213.6" r="2.6"/>
+            <circle cx="184.5" cy="232.7" r="2.6"/>
+            <circle cx="206.6" cy="193.1" r="2.2"/>
+            <circle cx="228.6" cy="163.8" r="2.2"/>
+            <circle cx="261.7" cy="155" r="2.2"/>
+            <circle cx="294.8" cy="174" r="2.2"/>
+            <circle cx="327.9" cy="193.1" r="2.2"/>
+            <circle cx="350" cy="203.4" r="3.4" fill="white" stroke="#5a8f8b" stroke-width="2"/>
+          </g>
+          <!-- Alc right-edge tag (offset to avoid overlap with pH if needed) -->
+          <g transform="translate(354,203.4)">
+            <rect x="0" y="-8" width="44" height="16" rx="3" fill="#5a8f8b"/>
+            <text x="22" y="3" fill="white" font-size="9" font-weight="700" text-anchor="middle">7,5 dKH</text>
+          </g>
+
+          <!-- Ca curve: rust
+               (1,45)(4,42)(7,40)(10,38)(13,35)(16,32)(19,38)(22,42)(25,40)(30,38)
+          -->
+          <polyline
+            points="30,137.4 63.1,141.8 96.2,144.7 129.3,147.6 162.4,152 195.5,156.4 228.6,147.6 261.7,141.8 294.8,144.7 350,147.6"
+            fill="none" stroke="#a06c4a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+          <g fill="#a06c4a">
+            <circle cx="30" cy="137.4" r="2.2"/>
+            <circle cx="63.1" cy="141.8" r="2.2"/>
+            <circle cx="96.2" cy="144.7" r="2.2"/>
+            <circle cx="129.3" cy="147.6" r="2.2"/>
+            <circle cx="162.4" cy="152" r="2.2"/>
+            <circle cx="195.5" cy="156.4" r="2.2"/>
+            <circle cx="228.6" cy="147.6" r="2.2"/>
+            <circle cx="261.7" cy="141.8" r="2.2"/>
+            <circle cx="294.8" cy="144.7" r="2.2"/>
+            <circle cx="350" cy="147.6" r="3.4" fill="white" stroke="#a06c4a" stroke-width="2"/>
+          </g>
+          <!-- Ca right-edge tag -->
+          <g transform="translate(354,147.6)">
+            <rect x="0" y="-8" width="46" height="16" rx="3" fill="#a06c4a"/>
+            <text x="23" y="3" fill="white" font-size="9" font-weight="700" text-anchor="middle">418 ppm</text>
+          </g>
+
+          <!-- X labels -->
+          <g fill="#8a8478" font-size="9" text-anchor="middle">
+            <text x="30"  y="270">22 avr</text>
+            <text x="107" y="270">29 avr</text>
+            <text x="185" y="270">6 mai</text>
+            <text x="262" y="270">13 mai</text>
+            <text x="340" y="270">20 mai</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="value-rows">
+        <div class="vrow">
+          <div class="stripe" style="background:var(--p-ph)"></div>
+          <div class="name"><span class="sdot ok"></span>pH</div>
+          <div class="val">8,10</div>
+          <div class="delta ok">▼ 0,10</div>
+        </div>
+        <div class="vrow">
+          <div class="stripe" style="background:var(--p-alk)"></div>
+          <div class="name"><span class="sdot warn"></span>Alcalinité</div>
+          <div class="val">7,5<span class="unit"> dKH</span></div>
+          <div class="delta warn">▼ 0,9</div>
+        </div>
+        <div class="vrow">
+          <div class="stripe" style="background:var(--p-ca)"></div>
+          <div class="name"><span class="sdot ok"></span>Calcium</div>
+          <div class="val">418<span class="unit"> ppm</span></div>
+          <div class="delta warn">▼ 7</div>
+        </div>
+      </div>
+
+      <div class="footer-hint">Y normalisé : 0 % = seuil bas, 100 % = seuil haut, 50 % = idéal.</div>
+
+    </div>
+
+    <nav class="tabbar">
+      <div class="tab"><span class="ico">◯</span>Mesures</div>
+      <div class="tab active"><span class="ico">◢</span>Tendances</div>
+      <div class="tab"><span class="ico">◇</span>Corrections</div>
+      <div class="tab"><span class="ico">◐</span>Réglages</div>
+    </nav>
+  </div>
+</body>
+</html>
