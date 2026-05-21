@@ -7,9 +7,8 @@ import { getParameterList, PARAMETERS } from '@/src/constants/parameters';
 import { THEME, STATUS_COLORS } from '@/src/constants/colors';
 import { ParameterKey, Reading, DosingEntry, WaterChange, Thresholds } from '@/src/models/types';
 import { getReadingHistory, getThresholdForParam, deleteReading, updateReading, getDosingHistory, getWaterChanges } from '@/src/db/queries';
-import { MultiTrendChart, LINE_COLORS } from '@/src/components/MultiTrendChart';
+import { TrendChartHybrid } from '@/src/components/TrendChartHybrid';
 import { TimeRangeSelector, TimeRange } from '@/src/components/TimeRangeSelector';
-import { calculateConsumptionRate } from '@/src/utils/consumption';
 import { evaluateStatus } from '@/src/utils/thresholds';
 import { isDoseRelevant } from '@/src/constants/dosingMap';
 import { useVisibleParams } from '@/src/hooks/useVisibility';
@@ -86,17 +85,11 @@ export default function TrendsScreen() {
   };
 
   // Build datasets for chart
-  const datasets = selectedArray.map((key, i) => ({
+  const datasets = selectedArray.map((key) => ({
     paramDef: PARAMETERS[key],
     readings: allReadings.get(key) ?? [],
     thresholds: allThresholds.get(key) ?? null,
-    color: LINE_COLORS[i % LINE_COLORS.length],
   }));
-
-  // Consumption rate (single alkalinity only)
-  const consumptionRate = isSingle && primaryKey === 'alkalinity'
-    ? calculateConsumptionRate(allReadings.get('alkalinity') ?? [])
-    : null;
 
   // History list (single param only)
   const primaryReadings = isSingle ? [...(allReadings.get(primaryKey) ?? [])].reverse() : [];
@@ -146,14 +139,12 @@ export default function TrendsScreen() {
     <ScrollView ref={scrollRef} style={styles.container} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
       {/* Parameter chips */}
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
-        {getParameterList().filter((p) => visibleParams.has(p.key)).map((p, i) => {
+        {getParameterList().filter((p) => visibleParams.has(p.key)).map((p) => {
           const isActive = selectedSet.has(p.key);
-          const colorIdx = isActive ? selectedArray.indexOf(p.key) : -1;
-          const chipColor = isActive && !isSingle ? LINE_COLORS[colorIdx % LINE_COLORS.length] : undefined;
           return (
             <TouchableOpacity
               key={p.key}
-              style={[styles.chip, isActive && (chipColor ? { backgroundColor: chipColor } : styles.chipActive)]}
+              style={[styles.chip, isActive && styles.chipActive]}
               onPress={() => handleChipTap(p.key)}
             >
               <Text style={[styles.chipText, isActive && styles.chipTextActive]}>{p.label}</Text>
@@ -164,21 +155,15 @@ export default function TrendsScreen() {
 
       <TimeRangeSelector selected={timeRange} onSelect={setTimeRange} />
 
-      <MultiTrendChart datasets={datasets} doses={doses} waterChanges={waterChanges} unitPrefs={unitPrefs} />
-
-      {/* Alk consumption (single only) */}
-      {consumptionRate !== null && (
-        <View style={styles.consumptionCard}>
-          <Text style={styles.consumptionLabel}>{i18n.t('trends.consumptionRate')}</Text>
-          <Text style={styles.consumptionValue}>
-            {consumptionRate > 0 ? '+' : ''}{consumptionRate}
-            <Text style={styles.consumptionUnit}> dKH/{i18n.locale === 'en' ? 'day' : 'jour'}</Text>
-          </Text>
-          <Text style={styles.consumptionHint}>
-            {consumptionRate < -1 ? i18n.t('trends.consumptionHigh') : consumptionRate < 0 ? i18n.t('trends.consumptionNormal') : consumptionRate === 0 ? i18n.t('trends.consumptionStable') : i18n.t('trends.consumptionRising')}
-          </Text>
-        </View>
-      )}
+      <TrendChartHybrid
+        datasets={datasets}
+        doses={doses}
+        waterChanges={waterChanges}
+        unitPrefs={unitPrefs}
+        timeRangeDays={timeRange}
+        onSelectSingle={(key) => setSelectedSet(new Set([key]))}
+        onClearMulti={() => setSelectedSet(new Set([selectedArray[0]]))}
+      />
 
       {/* History list (single param only) */}
       {isSingle && (
@@ -239,11 +224,6 @@ const styles = StyleSheet.create({
   chipActive: { backgroundColor: THEME.accent },
   chipText: { color: THEME.textSecondary, fontSize: 13, fontWeight: '600' },
   chipTextActive: { color: THEME.surfaceElevated },
-  consumptionCard: { backgroundColor: THEME.surfaceElevated, borderRadius: 14, padding: 18, marginHorizontal: 20, marginTop: 12 },
-  consumptionLabel: { color: THEME.textSecondary, fontSize: 12, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 6 },
-  consumptionValue: { color: THEME.text, fontSize: 28, fontWeight: '700', fontVariant: ['tabular-nums'] },
-  consumptionUnit: { fontSize: 14, fontWeight: '400', color: THEME.textSecondary },
-  consumptionHint: { color: THEME.textSecondary, fontSize: 12, marginTop: 8, lineHeight: 17 },
   logSectionLabel: { color: THEME.textSecondary, fontSize: 12, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1, paddingHorizontal: 20, marginTop: 28, marginBottom: 10 },
   logEmpty: { color: THEME.textSecondary, fontSize: 14, paddingHorizontal: 20 },
   logSection: { backgroundColor: THEME.surfaceElevated, marginHorizontal: 20, borderRadius: 14, overflow: 'hidden' },

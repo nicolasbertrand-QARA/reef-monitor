@@ -1,10 +1,8 @@
-What's new in version 1.3.0:
+What's new in version 1.4.0:
 
-• Choose your preferred units per parameter
-• Temperature in °C or °F
-• Salinity as specific gravity or ppt
-• Alkalinity in dKH, meq/L, or ppm CaCO₃
-• Nitrate as ppm NO3 or ppm NO₃-N
-• Phosphate as ppm or ppb (Hanna ULR)
-• Defaults, steppers, thresholds, charts, and history all adapt to your chosen units
-• Stored values stay canonical so CSV backups remain portable
+• Redesigned Trends screen
+• Narrative card at the top: delta over the period, status, and observed range
+• For alkalinity, the consumption rate is folded into the narrative
+• Chart with status zones (target, out of range), dashed thresholds, and labelled event markers
+• Compare parameters: stacked compact view with one mini-chart per parameter, each with its own scale and target band
+• Tap a parameter in compare mode to open its detail view

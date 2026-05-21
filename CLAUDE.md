@@ -59,7 +59,7 @@ reef-monitor/
 │   │   ├── TestTimer.tsx         # Countdown timer for Salifert kits
 │   │   ├── TimeRangeSelector.tsx # 7d/30d/90d/All toggle chips
 │   │   ├── TrendChart.tsx         # Line chart with range bands + dosing markers
-│   │   ├── MultiTrendChart.tsx   # Multi-parameter overlay chart (SVG bezier)
+│   │   ├── TrendChartHybrid.tsx  # Trends chart: mono (narrative + chart + stats) / multi (stacked sparklines, tap to focus)
 │   │   ├── MiniSparkline.tsx     # Mini sparkline for dashboard cards (SVG)
 │   │   └── TankSwitcher.tsx      # Header dropdown to switch active tank
 │   ├── constants/
@@ -224,12 +224,12 @@ Parameters are defined in `src/constants/parameters.ts`. Labels come from i18n.
 - After saving, dashboard refreshes automatically
 
 ### Trends (`app/(tabs)/trends.tsx`)
-- Horizontal parameter selector chips
+- Horizontal parameter selector chips (tap to add/remove; multiselect enters compare mode)
 - Time range toggle (7d / 30d / 90d / All)
-- TrendChart with: data points, target range band (green), dosing markers (amber vertical lines)
-- Stats row: current, min, max, avg
-- Alkalinity-specific: consumption rate card (dKH/day via linear regression)
-- History list: all readings reverse-chronological with inline edit (pencil) and delete (trash)
+- **TrendChartHybrid** (`src/components/TrendChartHybrid.tsx`):
+  - **Mono mode** (1 param): narrative card (delta + status sentence + observed range; alk gets consumption rate folded into the narrative inline) + chart (painted status zones, dashed warning thresholds, polyline with no intermediate dots, current-value marker, vertical dashed lines + colored dots at top for water changes / doses, 3 X-axis date labels) + stats row (current / min / avg / max)
+  - **Multi mode** (2+ params): compare banner (count + Clear action) + status synthesis line (e.g. "2 on target, 1 at threshold") + stacked mini-cards per param (status dot, current value, full-width sparkline with own scale and target band, water-change vertical hairlines, delta over the range, "Detail ›" affordance — tap whole card to switch to mono for that param)
+- History list (single param only): all readings reverse-chronological with inline edit (pencil) and delete (trash)
 - KeyboardAvoidingView for inline editing
 
 ### Corrections (`app/(tabs)/dosing.tsx`)
