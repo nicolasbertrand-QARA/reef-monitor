@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Allow all major search engines and AI crawlers (we want the visibility)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+Sitemap: https://nicolasbertrand-qara.github.io/reef-monitor/sitemap.xml

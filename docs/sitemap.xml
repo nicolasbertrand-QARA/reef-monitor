@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://nicolasbertrand-qara.github.io/reef-monitor/</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://nicolasbertrand-qara.github.io/reef-monitor/"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://nicolasbertrand-qara.github.io/reef-monitor/fr/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://nicolasbertrand-qara.github.io/reef-monitor/de/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://nicolasbertrand-qara.github.io/reef-monitor/es/"/>
+    <xhtml:link rel="alternate" hreflang="it" href="https://nicolasbertrand-qara.github.io/reef-monitor/it/"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://nicolasbertrand-qara.github.io/reef-monitor/nl/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://nicolasbertrand-qara.github.io/reef-monitor/pt/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://nicolasbertrand-qara.github.io/reef-monitor/ja/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nicolasbertrand-qara.github.io/reef-monitor/"/>
+  </url>
+  <url>
+    <loc>https://nicolasbertrand-qara.github.io/reef-monitor/privacy.html</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://nicolasbertrand-qara.github.io/reef-monitor/press.html</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nicolasbertrand-qara.github.io/reef-monitor/blog/</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
