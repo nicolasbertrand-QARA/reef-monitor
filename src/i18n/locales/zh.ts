@@ -1,13 +1,13 @@
 export default {
-  tabs: { dashboard: '仪表盘', log: '记录', trends: '趋势', dosing: '校正', settings: '设置' },
+  tabs: { log: '记录', trends: '趋势', dosing: '校正', settings: '设置' },
   params: { temperature: '温度', salinity: '盐度', ph: 'pH', alkalinity: '碱度', calcium: '钙', magnesium: '镁', nitrate: '硝酸盐', phosphate: '磷酸盐', ammonia: '氨', nitrite: '亚硝酸盐', potassium: '钾', strontium: '锶', iodine: '碘', boron: '硼', silicate: '硅酸盐' },
-  dashboard: { waterChemistry: '水质化学', nutrients: '营养盐', ratioNO3PO4: 'NO3:PO4比值', ionicBalance: '离子平衡', noData: '无数据', alkSwing: 'KH 波动' },
-  log: { subtitle: '点击参数进行记录', cancel: '取消', save: '保存', saving: '保存中...', step: '步进' },
+  dashboard: { waterChemistry: '水质化学', nutrients: '营养盐', ratioNO3PO4: 'NO3:PO4比值', ionicBalance: '离子平衡', noData: '无数据', alkSwing: 'KH 波动', low: '低', high: '高', },
+  log: { subtitle: '点击参数进行记录', cancel: '取消', save: '保存', saving: '保存中...', step: '步进：', lastReading: '上次：%{value} · %{time}', noHistory: '该参数的首次测量', targetRange: '目标：%{range}', targetBelowMax: '目标：低于 %{value}', targetAboveMin: '目标：高于 %{value}', previewOk: '在目标范围内', previewLow: '低于目标范围', previewHigh: '高于目标范围', previewCritical: '危险区', },
   timers: { title: 'Salifert计时器', shake: '摇晃30秒', wait: '等待3分钟', start: '开始', cancel: '取消', done: '完成' },
-  trends: { consumptionRate: '消耗速率', consumptionHigh: '高消耗 — 珊瑚正在活跃生长', consumptionNormal: '正常 — 稳定吸收', consumptionStable: '稳定 — 无净变化', consumptionRising: '上升中 — 检查添加量', history: '历史记录', noReadings: '该期间无测量值', deleteTitle: '删除测量值', deleteMessage: '%{date}的%{value} %{unit}？', deleteConfirm: '删除', consumptionInlineRising: '每天约上升 %{rate} %{unit}。请检查滴定。' },
+  trends: { history: '历史记录', noReadings: '该期间无测量值', deleteTitle: '删除测量值', deleteMessage: '%{date}的%{value} %{unit}？', deleteConfirm: '删除', consumptionInlineRising: '每天约上升 %{rate} %{unit}。请检查滴定。' },
   chart: { noReadings: '无测量值', noReadingsHint: '记录您的第一个%{param}测量值以查看趋势', current: '当前', min: '最小', max: '最大', avg: '平均' },
-  settings: { parameters: '参数', unit: '单位', thresholds: '警报阈值', data: '数据', dosingLog: '添加记录', exportCsv: '导出CSV', noDataExport: '无数据', noDataExportMsg: '没有可导出的测量值。', save: '保存', importCsv: '导入CSV备份', importSuccess: '导入完成', importSuccessMsg: '已导入%{count}条测量值。', importError: '导入失败', warnLow: '警告下限', warnHigh: '警告上限', critLow: '危急下限', critHigh: '危急上限', importPreviewTitle: '导入备份', importPreviewMsg: '将 %{readings} 条测量、%{doses} 条滴定和 %{wc} 次换水导入“%{tank}”？', importConfirm: '导入', importResultMsg: '已导入 %{imported} 条，跳过 %{skipped} 条。' },
-  dosing: { title: '添加记录', add: '添加剂量', empty: '无添加记录', emptyHint: '记录添加量以关联参数变化', product: '产品', productPlaceholder: '或输入产品名称...', amount: '数量', notes: '备注', notesPlaceholder: '可选...', cancel: '取消', save: '保存', products: { kalkwasser: 'Kalkwasser', allForReef: 'All-for-Reef', caBalling: 'Ca（三要素）', alkBalling: 'Alk（三要素）', mgSupplement: 'Mg补充剂', aminoAcids: '氨基酸', coralFood: '珊瑚粮' }, deleteTitle: '删除记录', deleteMessage: '删除 %{label}？' },
+  settings: { parameters: '参数', unit: '单位', data: '数据', exportCsv: '导出CSV', noDataExport: '无数据', noDataExportMsg: '没有可导出的测量值。', save: '保存', importCsv: '导入CSV备份', importSuccess: '导入完成', importError: '导入失败', warnLow: '警告下限', warnHigh: '警告上限', critLow: '危急下限', critHigh: '危急上限', importPreviewTitle: '导入备份', importPreviewMsg: '将 %{readings} 条测量、%{doses} 条滴定和 %{wc} 次换水导入“%{tank}”？', importConfirm: '导入', importResultMsg: '已导入 %{imported} 条，跳过 %{skipped} 条。' },
+  dosing: { title: '添加记录', add: '添加剂量', empty: '无添加记录', emptyHint: '记录添加量以关联参数变化', product: '产品', productPlaceholder: '或输入产品名称...', amount: '数量', notes: '备注', notesPlaceholder: '可选...', cancel: '取消', save: '保存', products: { kalkwasser: 'Kalkwasser', allForReef: 'All-for-Reef', caBalling: 'Ca（三要素）', alkBalling: 'Alk（三要素）', mgSupplement: 'Mg补充剂', aminoAcids: '氨基酸', coralFood: '珊瑚粮' }, deleteTitle: '删除记录', deleteMessage: '删除 %{label}？', drops: '滴', },
   tanks: {
     title: '鱼缸',
     add: '添加鱼缸',
@@ -18,5 +18,6 @@ export default {
     namePrompt: '鱼缸名称',
     exportFirst: '先导出 CSV',
   },
-  ratios: { po4Undetectable: 'NO3升高时PO4未检出 — 蓝藻/甲藻风险', no3Undetectable: 'PO4升高时NO3未检出 — 营养盐失衡', insufficientData: '数据不足', ratioLow: 'NO3:PO4比值偏低（%{ratio}:1）— 磷酸盐过量', ratioHigh: 'NO3:PO4比值偏高（%{ratio}:1）— 硝酸盐过量', ratioOk: 'NO3:PO4比值 %{ratio}:1', mgLow: 'Mg相对Ca过低 — 先提高Mg', mgHigh: 'Mg相对Ca过高', mgInstability: '低Mg可能导致Ca/Alk不稳定', ionicOk: 'Ca/Alk/Mg平衡正常', alkSwing: '碱度在 24 小时内变动 %{swing} %{unit}。请稳定滴定。' },
+  ratios: { po4Undetectable: 'NO3 偏高但检测不到 PO4。有蓝藻/甲藻风险；通过喂食或滴定谨慎提升 PO4。', no3Undetectable: '可测到 PO4 但检测不到 NO3。考虑通过喂食或滴定提升 NO3，避免珊瑚营养不足。', insufficientData: '数据不足', ratioLow: 'NO3:PO4 比值偏低（%{ratio}:1）。磷酸盐相对偏高；去除 PO4 或提升 NO3。', ratioHigh: 'NO3:PO4 比值偏高（%{ratio}:1）。硝酸盐相对偏高；考虑碳源滴定或换水。', ratioOk: 'NO3:PO4比值 %{ratio}:1', mgLow: 'Mg相对Ca过低 — 先提高Mg', mgHigh: 'Mg 相对 Ca 过高；暂停补充 Mg。', mgInstability: '低Mg可能导致Ca/Alk不稳定', ionicOk: 'Ca/Alk/Mg平衡正常', alkSwing: '碱度在 24 小时内变动 %{swing} %{unit}。请稳定滴定。' },
+  a11y: { statusOk: '在目标内', statusWarning: '处于阈值', statusCritical: '危险', statusUnknown: '无数据', edit: '编辑', delete: '删除', switchTank: '切换水族箱', logReading: '记录新测量' },
 };

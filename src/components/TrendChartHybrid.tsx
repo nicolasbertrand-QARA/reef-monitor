@@ -33,6 +33,9 @@ export function TrendChartHybrid(props: Props) {
     return (
       <View style={styles.empty}>
         <Text style={styles.emptyTitle}>{i18n.t('chart.noReadings')}</Text>
+        {props.datasets.length === 1 && (
+          <Text style={styles.emptyHint}>{i18n.t('chart.noReadingsHint', { param: props.datasets[0].paramDef.label })}</Text>
+        )}
       </View>
     );
   }
@@ -471,6 +474,7 @@ const styles = StyleSheet.create({
   container: { paddingHorizontal: 0 },
   empty: { height: 200, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 40 },
   emptyTitle: { color: THEME.text, fontSize: 16, fontWeight: '600', marginBottom: 6 },
+  emptyHint: { color: THEME.textSecondary, fontSize: 13, textAlign: 'center', lineHeight: 19 },
 
   // Narrative card
   narrativeCard: {

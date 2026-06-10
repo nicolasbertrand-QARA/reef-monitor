@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { formatDistanceToNow } from 'date-fns';
 import { Reading, Status, Thresholds, ParameterDef } from '@/src/models/types';
 import { StatusBadge } from './StatusBadge';
@@ -35,10 +36,17 @@ export function ParamCard({ paramDef, reading, status, history, thresholds, unit
         <Text style={styles.label}>{paramDef.label}</Text>
         <StatusBadge status={status} />
       </View>
-      <Text style={styles.value}>
-        {reading ? u.fromCanonical(reading.value).toFixed(u.decimals) : '—'}
-        {u.unit ? <Text style={styles.unit}> {u.unit}</Text> : null}
-      </Text>
+      {reading ? (
+        <Text style={styles.value}>
+          {u.fromCanonical(reading.value).toFixed(u.decimals)}
+          {u.unit ? <Text style={styles.unit}> {u.unit}</Text> : null}
+        </Text>
+      ) : (
+        <View style={styles.emptyValueRow}>
+          <Text style={styles.value}>—</Text>
+          <FontAwesome name="plus-circle" size={18} color={THEME.accent} />
+        </View>
+      )}
       <Text style={styles.timeAgo}>{timeAgo}</Text>
       {history && history.length >= 2 && (
         <View style={styles.sparklineContainer}>
@@ -56,5 +64,6 @@ const styles = StyleSheet.create({
   value: { color: THEME.text, fontSize: 30, fontWeight: '700', letterSpacing: -0.5, fontVariant: ['tabular-nums'] },
   unit: { color: THEME.textSecondary, fontSize: 14, fontWeight: '400' },
   timeAgo: { color: THEME.textSecondary, fontSize: 11, marginTop: 2, fontWeight: '400' },
+  emptyValueRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   sparklineContainer: { marginTop: 8, marginHorizontal: -6 },
 });

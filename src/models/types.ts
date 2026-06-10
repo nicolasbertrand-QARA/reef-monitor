@@ -84,6 +84,8 @@ export interface ParameterDef {
   defaultValue: number;      // canonical default
   icon: string;
   group: 'core' | 'nutrients';
+  min?: number;              // physical lower bound (canonical), clamps the stepper
+  max?: number;              // physical upper bound (canonical), clamps the stepper
   defaultThresholds: {
     warningLow: number | null;
     warningHigh: number | null;

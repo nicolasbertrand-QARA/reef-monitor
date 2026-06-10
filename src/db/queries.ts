@@ -129,6 +129,14 @@ export async function getLatestReadings(tankId: number): Promise<Reading[]> {
   );
 }
 
+export async function getLastReading(parameter: ParameterKey, tankId: number): Promise<Reading | null> {
+  const db = await getDatabase();
+  return db.getFirstAsync<Reading>(
+    'SELECT * FROM readings WHERE parameter = ? AND tank_id = ? ORDER BY recorded_at DESC, id DESC LIMIT 1',
+    parameter, tankId
+  );
+}
+
 export async function getReadingHistory(
   parameter: ParameterKey, tankId: number, days?: number
 ): Promise<Reading[]> {

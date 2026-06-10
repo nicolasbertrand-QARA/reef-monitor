@@ -1,13 +1,13 @@
 export default {
-  tabs: { dashboard: 'ダッシュボード', log: '記録', trends: 'トレンド', dosing: '補正', settings: '設定' },
+  tabs: { log: '記録', trends: 'トレンド', dosing: '補正', settings: '設定' },
   params: { temperature: '水温', salinity: '塩分濃度', ph: 'pH', alkalinity: 'アルカリ度', calcium: 'カルシウム', magnesium: 'マグネシウム', nitrate: '硝酸塩', phosphate: 'リン酸塩', ammonia: 'アンモニア', nitrite: '亜硝酸塩', potassium: 'カリウム', strontium: 'ストロンチウム', iodine: 'ヨウ素', boron: 'ホウ素', silicate: 'ケイ酸塩' },
-  dashboard: { waterChemistry: '水質', nutrients: '栄養塩', ratioNO3PO4: 'NO3:PO4比', ionicBalance: 'イオンバランス', noData: 'データなし', alkSwing: 'KH変動' },
-  log: { subtitle: 'パラメータをタップして記録', cancel: 'キャンセル', save: '保存', saving: '保存中...', step: 'ステップ' },
+  dashboard: { waterChemistry: '水質', nutrients: '栄養塩', ratioNO3PO4: 'NO3:PO4比', ionicBalance: 'イオンバランス', noData: 'データなし', alkSwing: 'KH変動', low: '低', high: '高', },
+  log: { subtitle: 'パラメータをタップして記録', cancel: 'キャンセル', save: '保存', saving: '保存中...', step: 'ステップ：', lastReading: '前回: %{value} · %{time}', noHistory: 'このパラメータの初回測定', targetRange: '目標: %{range}', targetBelowMax: '目標: %{value}未満', targetAboveMin: '目標: %{value}超', previewOk: '目標範囲内', previewLow: '目標範囲を下回っています', previewHigh: '目標範囲を上回っています', previewCritical: '危険域', },
   timers: { title: 'Salifertタイマー', shake: '30秒振る', wait: '3分待つ', start: '開始', cancel: 'キャンセル', done: '完了' },
-  trends: { consumptionRate: '消費速度', consumptionHigh: '高消費 — サンゴが活発に成長中', consumptionNormal: '正常 — 安定した吸収', consumptionStable: '安定 — 変化なし', consumptionRising: '上昇中 — 添加量を確認', history: '履歴', noReadings: 'この期間の測定値なし', deleteTitle: '測定値を削除', deleteMessage: '%{date}の%{value} %{unit}?', deleteConfirm: '削除', consumptionInlineRising: '1日あたり約%{rate} %{unit}上昇中。添加量を確認してください。' },
+  trends: { history: '履歴', noReadings: 'この期間の測定値なし', deleteTitle: '測定値を削除', deleteMessage: '%{date}の%{value} %{unit}?', deleteConfirm: '削除', consumptionInlineRising: '1日あたり約%{rate} %{unit}上昇中。添加量を確認してください。' },
   chart: { noReadings: '測定値なし', noReadingsHint: '%{param}の最初の測定値を記録してトレンドを表示', current: '現在', min: '最小', max: '最大', avg: '平均' },
-  settings: { parameters: 'パラメータ', unit: '単位', thresholds: 'アラートしきい値', data: 'データ', dosingLog: '添加記録', exportCsv: 'CSVエクスポート', noDataExport: 'データなし', noDataExportMsg: 'エクスポートする測定値がありません。', save: '保存', importCsv: 'CSVバックアップをインポート', importSuccess: 'インポート完了', importSuccessMsg: '%{count}件の測定値をインポートしました。', importError: 'インポート失敗', warnLow: '警告下限', warnHigh: '警告上限', critLow: '危険下限', critHigh: '危険上限', importPreviewTitle: 'バックアップをインポート', importPreviewMsg: '%{readings}件の測定、%{doses}件の添加、%{wc}件の換水を「%{tank}」にインポートしますか？', importConfirm: 'インポート', importResultMsg: '%{imported}件をインポート、%{skipped}件をスキップしました。' },
-  dosing: { title: '添加記録', add: '添加を記録', empty: '添加記録なし', emptyHint: '添加を記録してパラメータの変化と関連付けましょう', product: '製品', productPlaceholder: '製品名を入力...', amount: '量', notes: 'メモ', notesPlaceholder: '任意...', cancel: 'キャンセル', save: '保存', products: { kalkwasser: 'カルクワッサー', allForReef: 'All-for-Reef', caBalling: 'Ca（バリング）', alkBalling: 'Alk（バリング）', mgSupplement: 'Mg添加剤', aminoAcids: 'アミノ酸', coralFood: 'サンゴフード' }, deleteTitle: '記録を削除', deleteMessage: '%{label}を削除しますか？' },
+  settings: { parameters: 'パラメータ', unit: '単位', data: 'データ', exportCsv: 'CSVエクスポート', noDataExport: 'データなし', noDataExportMsg: 'エクスポートする測定値がありません。', save: '保存', importCsv: 'CSVバックアップをインポート', importSuccess: 'インポート完了', importError: 'インポート失敗', warnLow: '警告下限', warnHigh: '警告上限', critLow: '危険下限', critHigh: '危険上限', importPreviewTitle: 'バックアップをインポート', importPreviewMsg: '%{readings}件の測定、%{doses}件の添加、%{wc}件の換水を「%{tank}」にインポートしますか？', importConfirm: 'インポート', importResultMsg: '%{imported}件をインポート、%{skipped}件をスキップしました。' },
+  dosing: { title: '添加記録', add: '添加を記録', empty: '添加記録なし', emptyHint: '添加を記録してパラメータの変化と関連付けましょう', product: '製品', productPlaceholder: '製品名を入力...', amount: '量', notes: 'メモ', notesPlaceholder: '任意...', cancel: 'キャンセル', save: '保存', products: { kalkwasser: 'カルクワッサー', allForReef: 'All-for-Reef', caBalling: 'Ca（バリング）', alkBalling: 'Alk（バリング）', mgSupplement: 'Mg添加剤', aminoAcids: 'アミノ酸', coralFood: 'サンゴフード' }, deleteTitle: '記録を削除', deleteMessage: '%{label}を削除しますか？', drops: '滴', },
   tanks: {
     title: '水槽',
     add: '水槽を追加',
@@ -18,5 +18,6 @@ export default {
     namePrompt: '水槽名',
     exportFirst: '先にCSVをエクスポート',
   },
-  ratios: { po4Undetectable: 'NO3上昇時にPO4検出不可 — シアノ/ディノリスク', no3Undetectable: 'PO4上昇時にNO3検出不可 — 栄養塩バランス不良', insufficientData: 'データ不足', ratioLow: 'NO3:PO4比が低い（%{ratio}:1）— リン酸塩過剰', ratioHigh: 'NO3:PO4比が高い（%{ratio}:1）— 硝酸塩過剰', ratioOk: 'NO3:PO4比 %{ratio}:1', mgLow: 'Caに対してMgが低すぎる — まずMgを上げる', mgHigh: 'Caに対してMgが高すぎる', mgInstability: 'Mg低下がCa/Alk不安定の原因の可能性', ionicOk: 'Ca/Alk/Mgバランス OK', alkSwing: 'アルカリ度が24時間で%{swing} %{unit}変動しました。添加を安定させてください。' },
+  ratios: { po4Undetectable: 'NO3が高いのにPO4が検出されません。シアノ/ダイノのリスク。給餌や添加でPO4を慎重に上げてください。', no3Undetectable: 'PO4が測定できるのにNO3が検出されません。サンゴが飢えないよう、給餌や添加でNO3を上げることを検討してください。', insufficientData: 'データ不足', ratioLow: 'NO3:PO4比が低い（%{ratio}:1）。硝酸塩に対してリン酸塩が高め。PO4を除去するかNO3を上げてください。', ratioHigh: 'NO3:PO4比が高い（%{ratio}:1）。リン酸塩に対して硝酸塩が高め。炭素源添加や換水を検討してください。', ratioOk: 'NO3:PO4比 %{ratio}:1', mgLow: 'Caに対してMgが低すぎる — まずMgを上げる', mgHigh: 'Caに対してMgが高すぎます。Mgの添加を中止してください。', mgInstability: 'Mg低下がCa/Alk不安定の原因の可能性', ionicOk: 'Ca/Alk/Mgバランス OK', alkSwing: 'アルカリ度が24時間で%{swing} %{unit}変動しました。添加を安定させてください。' },
+  a11y: { statusOk: '目標範囲内', statusWarning: 'しきい値付近', statusCritical: '危険', statusUnknown: 'データなし', edit: '編集', delete: '削除', switchTank: '水槽を切り替え', logReading: '新しい測定を記録' },
 };

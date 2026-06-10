@@ -287,7 +287,7 @@ function ParamEditor({ paramDef, threshold, tankId, unitPrefs, onUnitChange, onS
                   onPress={() => onUnitChange(u.unit)}
                 >
                   <Text style={[editorStyles.unitChipText, isActive && editorStyles.unitChipTextActive]}>
-                    {u.unit || '—'}
+                    {u.unit || (paramDef.key === 'salinity' ? 'SG' : '—')}
                   </Text>
                 </TouchableOpacity>
               );

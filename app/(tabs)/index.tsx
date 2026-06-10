@@ -79,12 +79,16 @@ export default function DashboardScreen() {
           message={i18n.t('ratios.alkSwing', { swing: alkUnit.fromCanonical(alkSwing.swing).toFixed(alkUnit.decimals), unit: alkUnit.unit })}
           status={alkSwing.status} /></View>
       )}
+      {!loading && readings.length === 0 && (
+        <Text style={styles.firstRunHint}>{i18n.t('log.subtitle')}</Text>
+      )}
       <Text style={styles.sectionLabel}>{i18n.t('dashboard.waterChemistry')}</Text>
       <View style={styles.grid}>{getCoreParams().filter((p) => visible.has(p.key)).map(renderCard)}</View>
       <Text style={styles.sectionLabel}>{i18n.t('dashboard.nutrients')}</Text>
       <View style={styles.grid}>{getNutrientParams().filter((p) => visible.has(p.key)).map(renderCard)}</View>
       {selectedParam && (
         <ParamInput paramDef={selectedParam} visible={true} tankId={tankId} unitPrefs={unitPrefs}
+          threshold={thresholdMap.get(selectedParam.key) ?? null}
           onClose={() => setSelectedParam(null)}
           onSaved={() => { setSelectedParam(null); refresh(); loadHistory(); }} />
       )}
@@ -97,5 +101,6 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: 20, paddingTop: 12, paddingBottom: 32 },
   alertSection: { marginBottom: 4 },
   sectionLabel: { color: THEME.textSecondary, fontSize: 12, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 12, marginTop: 8 },
+  firstRunHint: { color: THEME.textSecondary, fontSize: 13, textAlign: 'center', marginTop: 4, marginBottom: 8 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: 12 },
 });

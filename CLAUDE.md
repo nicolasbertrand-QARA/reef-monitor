@@ -54,7 +54,7 @@ reef-monitor/
 ├── src/
 │   ├── components/
 │   │   ├── ParamCard.tsx         # Dashboard card (value, status color, time-ago)
-│   │   ├── ParamInput.tsx        # Log entry modal (stepper, timers for NO3/PO4)
+│   │   ├── ParamInput.tsx        # Log entry modal: timers first (physical test order), last-reading + target context, live status preview (value recolors past thresholds), stepper clamped to ParameterDef.min/max, status-graded save haptic (success/warning/error)
 │   │   ├── RatioIndicator.tsx    # Alert banner for ratio/ionic balance issues
 │   │   ├── StatusBadge.tsx       # Colored dot (ok/warning/critical)
 │   │   ├── TestTimer.tsx         # Countdown timer for Salifert kits
@@ -242,7 +242,8 @@ Parameters are defined in `src/constants/parameters.ts` (runtime key list: `PARA
 - Alert banners at top for NO3:PO4 ratio, Ca/Alk/Mg ionic balance, and alkalinity swing (>1 dKH within 24h = warning, >1.5 = critical, via `detectAlkSwing`)
 - Ratio/ionic banners only fire when the paired readings were taken within 72h of each other (stale pairings are noise)
 - "Latest" reading = most recent `recorded_at` (NOT max id — imported backups can insert older rows with higher ids)
-- **Tapping a card opens the ParamInput modal** to log a new reading
+- First-run hint (`log.subtitle`) renders until the tank has at least one reading; empty cards show a plus-circle affordance
+- **Tapping a card opens the ParamInput modal** to log a new reading (the card's threshold is passed in for live feedback)
 - After saving, dashboard refreshes automatically
 
 ### Trends (`app/(tabs)/trends.tsx`)
@@ -337,6 +338,8 @@ All data is scoped to the active tank via `tank_id`. A `TankContext` provider wr
 1. Add key + English value to `src/i18n/locales/en.ts`
 2. Add translated value to ALL 14 other locale files
 3. Use via `i18n.t('section.key')` or `i18n.t('section.key', { variable })` for interpolation
+
+Conventions: the `a11y` section holds VoiceOver labels. Ratio/alert messages always pair the observation with a recommended action, and never use em dashes. `log.step` values include their locale-appropriate trailing colon ("Step:", "Pas :", "步进：").
 
 ### Adding a new language
 1. Create `src/i18n/locales/{code}.ts` copying structure from `en.ts`

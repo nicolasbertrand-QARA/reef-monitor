@@ -1,13 +1,13 @@
 export default {
-  tabs: { dashboard: '대시보드', log: '기록', trends: '추세', dosing: '보정', settings: '설정' },
+  tabs: { log: '기록', trends: '추세', dosing: '보정', settings: '설정' },
   params: { temperature: '수온', salinity: '염도', ph: 'pH', alkalinity: '알칼리도', calcium: '칼슘', magnesium: '마그네슘', nitrate: '질산염', phosphate: '인산염', ammonia: '암모니아', nitrite: '아질산염', potassium: '칼륨', strontium: '스트론튬', iodine: '요오드', boron: '붕소', silicate: '규산염' },
-  dashboard: { waterChemistry: '수질', nutrients: '영양염', ratioNO3PO4: 'NO3:PO4 비율', ionicBalance: '이온 균형', noData: '데이터 없음', alkSwing: '알칼리니티 변동' },
-  log: { subtitle: '매개변수를 탭하여 기록', cancel: '취소', save: '저장', saving: '저장 중...', step: '단계' },
+  dashboard: { waterChemistry: '수질', nutrients: '영양염', ratioNO3PO4: 'NO3:PO4 비율', ionicBalance: '이온 균형', noData: '데이터 없음', alkSwing: '알칼리니티 변동', low: '낮음', high: '높음', },
+  log: { subtitle: '매개변수를 탭하여 기록', cancel: '취소', save: '저장', saving: '저장 중...', step: '단계:', lastReading: '최근: %{value} · %{time}', noHistory: '이 항목의 첫 측정', targetRange: '목표: %{range}', targetBelowMax: '목표: %{value} 미만', targetAboveMin: '목표: %{value} 초과', previewOk: '목표 범위 내', previewLow: '목표 범위 미만', previewHigh: '목표 범위 초과', previewCritical: '위험 구간', },
   timers: { title: 'Salifert 타이머', shake: '30초 흔들기', wait: '3분 대기', start: '시작', cancel: '취소', done: '완료' },
-  trends: { consumptionRate: '소비율', consumptionHigh: '높은 소비 — 산호가 활발히 성장 중', consumptionNormal: '정상 — 안정적인 흡수', consumptionStable: '안정 — 순변화 없음', consumptionRising: '상승 중 — 첨가량 확인', history: '기록', noReadings: '이 기간에 측정값 없음', deleteTitle: '측정값 삭제', deleteMessage: '%{date}의 %{value} %{unit}?', deleteConfirm: '삭제', consumptionInlineRising: '하루 약 %{rate} %{unit} 상승 중. 도징을 확인하세요.' },
+  trends: { history: '기록', noReadings: '이 기간에 측정값 없음', deleteTitle: '측정값 삭제', deleteMessage: '%{date}의 %{value} %{unit}?', deleteConfirm: '삭제', consumptionInlineRising: '하루 약 %{rate} %{unit} 상승 중. 도징을 확인하세요.' },
   chart: { noReadings: '측정값 없음', noReadingsHint: '%{param}의 첫 측정값을 기록하여 추세를 확인하세요', current: '현재', min: '최소', max: '최대', avg: '평균' },
-  settings: { parameters: '매개변수', unit: '단위', thresholds: '알림 임계값', data: '데이터', dosingLog: '첨가 기록', exportCsv: 'CSV 내보내기', noDataExport: '데이터 없음', noDataExportMsg: '내보낼 측정값이 없습니다.', save: '저장', importCsv: 'CSV 백업 가져오기', importSuccess: '가져오기 완료', importSuccessMsg: '%{count}개의 측정값을 가져왔습니다.', importError: '가져오기 실패', warnLow: '경고 하한', warnHigh: '경고 상한', critLow: '위험 하한', critHigh: '위험 상한', importPreviewTitle: '백업 가져오기', importPreviewMsg: '측정 %{readings}건, 도징 %{doses}건, 환수 %{wc}건을 "%{tank}"(으)로 가져올까요?', importConfirm: '가져오기', importResultMsg: '%{imported}건 가져옴, %{skipped}건 건너뜀.' },
-  dosing: { title: '첨가 기록', add: '첨가 추가', empty: '첨가 기록 없음', emptyHint: '첨가를 기록하여 매개변수 변화와 연관시키세요', product: '제품', productPlaceholder: '제품명 입력...', amount: '양', notes: '메모', notesPlaceholder: '선택사항...', cancel: '취소', save: '저장', products: { kalkwasser: 'Kalkwasser', allForReef: 'All-for-Reef', caBalling: 'Ca (발링)', alkBalling: 'Alk (발링)', mgSupplement: 'Mg 보충제', aminoAcids: '아미노산', coralFood: '산호 먹이' }, deleteTitle: '기록 삭제', deleteMessage: '%{label}을(를) 삭제할까요?' },
+  settings: { parameters: '매개변수', unit: '단위', data: '데이터', exportCsv: 'CSV 내보내기', noDataExport: '데이터 없음', noDataExportMsg: '내보낼 측정값이 없습니다.', save: '저장', importCsv: 'CSV 백업 가져오기', importSuccess: '가져오기 완료', importError: '가져오기 실패', warnLow: '경고 하한', warnHigh: '경고 상한', critLow: '위험 하한', critHigh: '위험 상한', importPreviewTitle: '백업 가져오기', importPreviewMsg: '측정 %{readings}건, 도징 %{doses}건, 환수 %{wc}건을 "%{tank}"(으)로 가져올까요?', importConfirm: '가져오기', importResultMsg: '%{imported}건 가져옴, %{skipped}건 건너뜀.' },
+  dosing: { title: '첨가 기록', add: '첨가 추가', empty: '첨가 기록 없음', emptyHint: '첨가를 기록하여 매개변수 변화와 연관시키세요', product: '제품', productPlaceholder: '제품명 입력...', amount: '양', notes: '메모', notesPlaceholder: '선택사항...', cancel: '취소', save: '저장', products: { kalkwasser: 'Kalkwasser', allForReef: 'All-for-Reef', caBalling: 'Ca (발링)', alkBalling: 'Alk (발링)', mgSupplement: 'Mg 보충제', aminoAcids: '아미노산', coralFood: '산호 먹이' }, deleteTitle: '기록 삭제', deleteMessage: '%{label}을(를) 삭제할까요?', drops: '방울', },
   tanks: {
     title: '수조',
     add: '수조 추가',
@@ -18,5 +18,6 @@ export default {
     namePrompt: '수조 이름',
     exportFirst: '먼저 CSV 내보내기',
   },
-  ratios: { po4Undetectable: 'NO3 상승 시 PO4 미검출 — 시아노/디노 위험', no3Undetectable: 'PO4 상승 시 NO3 미검출 — 영양염 불균형', insufficientData: '데이터 부족', ratioLow: 'NO3:PO4 비율 낮음 (%{ratio}:1) — 인산염 과잉', ratioHigh: 'NO3:PO4 비율 높음 (%{ratio}:1) — 질산염 과잉', ratioOk: 'NO3:PO4 비율 %{ratio}:1', mgLow: 'Ca 대비 Mg 너무 낮음 — Mg 먼저 올리기', mgHigh: 'Ca 대비 Mg 너무 높음', mgInstability: '낮은 Mg가 Ca/Alk 불안정을 유발할 수 있음', ionicOk: 'Ca/Alk/Mg 균형 OK', alkSwing: '알칼리니티가 24시간 동안 %{swing} %{unit} 변동했습니다. 도징을 안정시키세요.' },
+  ratios: { po4Undetectable: 'NO3가 높은데 PO4가 검출되지 않습니다. 시아노/디노 위험; 급여나 도징으로 PO4를 조심스럽게 올리세요.', no3Undetectable: 'PO4는 측정되는데 NO3가 검출되지 않습니다. 산호가 굶지 않도록 급여나 도징으로 NO3를 올리는 것을 고려하세요.', insufficientData: '데이터 부족', ratioLow: 'NO3:PO4 비율이 낮습니다 (%{ratio}:1). 질산염 대비 인산염이 높음; PO4를 제거하거나 NO3를 올리세요.', ratioHigh: 'NO3:PO4 비율이 높습니다 (%{ratio}:1). 인산염 대비 질산염이 높음; 탄소 도징이나 환수를 고려하세요.', ratioOk: 'NO3:PO4 비율 %{ratio}:1', mgLow: 'Ca 대비 Mg 너무 낮음 — Mg 먼저 올리기', mgHigh: 'Ca 대비 Mg가 너무 높습니다; Mg 보충을 중단하세요.', mgInstability: '낮은 Mg가 Ca/Alk 불안정을 유발할 수 있음', ionicOk: 'Ca/Alk/Mg 균형 OK', alkSwing: '알칼리니티가 24시간 동안 %{swing} %{unit} 변동했습니다. 도징을 안정시키세요.' },
+  a11y: { statusOk: '목표 범위 내', statusWarning: '임계값 부근', statusCritical: '위험', statusUnknown: '데이터 없음', edit: '편집', delete: '삭제', switchTank: '수조 전환', logReading: '새 측정 기록' },
 };

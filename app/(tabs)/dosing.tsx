@@ -146,7 +146,7 @@ function AddDoseModal({ visible, tankId, onClose, onSaved }: { visible: boolean;
         <View style={modalStyles.amountRow}>
           <TextInput style={[modalStyles.input, { flex: 1 }]} placeholder="0.0" placeholderTextColor={THEME.textSecondary} value={amount} onChangeText={setAmount} keyboardType="decimal-pad" />
           <View style={modalStyles.unitPicker}>
-            {['ml', 'g', 'gouttes'].map((u) => (
+            {['ml', 'g', i18n.t('dosing.drops')].map((u) => (
               <TouchableOpacity key={u} style={[modalStyles.chip, unit === u && modalStyles.chipActive]} onPress={() => setUnit(u)}>
                 <Text style={[modalStyles.chipText, unit === u && modalStyles.chipTextActive]}>{u}</Text>
               </TouchableOpacity>

@@ -1,10 +1,9 @@
 export default {
   // Tabs
   tabs: {
-    dashboard: 'Dashboard',
     log: 'Log',
     trends: 'Trends',
-    dosing: 'Corrections',
+    dosing: 'Dosing',
     settings: 'Settings',
   },
   // Parameters
@@ -33,6 +32,8 @@ export default {
     ionicBalance: 'Ionic Balance',
     alkSwing: 'Alkalinity Swing',
     noData: 'no data',
+    low: 'low',
+    high: 'high',
   },
   // Log
   log: {
@@ -40,7 +41,16 @@ export default {
     cancel: 'Cancel',
     save: 'Save Reading',
     saving: 'Saving...',
-    step: 'Step',
+    step: 'Step:',
+    lastReading: 'Last: %{value} · %{time}',
+    noHistory: 'First reading for this parameter',
+    targetRange: 'Target: %{range}',
+    targetBelowMax: 'Target: below %{value}',
+    targetAboveMin: 'Target: above %{value}',
+    previewOk: 'Within target range',
+    previewLow: 'Below target range',
+    previewHigh: 'Above target range',
+    previewCritical: 'Critical zone',
   },
   // Nitrate timers
   timers: {
@@ -53,11 +63,6 @@ export default {
   },
   // Trends
   trends: {
-    consumptionRate: 'Consumption Rate',
-    consumptionHigh: 'High consumption, corals growing actively',
-    consumptionNormal: 'Normal, steady uptake',
-    consumptionStable: 'Stable, no net change',
-    consumptionRising: 'Rising, check dosing',
     history: 'History',
     noReadings: 'No readings for this period',
     deleteTitle: 'Delete reading',
@@ -93,16 +98,13 @@ export default {
   settings: {
     parameters: 'Parameters',
     unit: 'Unit',
-    thresholds: 'Alert Thresholds',
     data: 'Data',
-    dosingLog: 'Dosing Log',
     exportCsv: 'Export as CSV',
     noDataExport: 'No data',
     noDataExportMsg: 'No readings to export yet.',
     save: 'Save',
     importCsv: 'Import CSV backup',
     importSuccess: 'Import complete',
-    importSuccessMsg: '%{count} readings imported.',
     importError: 'Import failed',
     importPreviewTitle: 'Import backup',
     importPreviewMsg: 'Import %{readings} readings, %{doses} doses and %{wc} water changes into "%{tank}"?',
@@ -126,6 +128,7 @@ export default {
     notesPlaceholder: 'Optional...',
     cancel: 'Cancel',
     save: 'Save',
+    drops: 'drops',
     deleteTitle: 'Delete entry',
     deleteMessage: 'Delete %{label}?',
     products: {
@@ -162,16 +165,27 @@ export default {
   },
   // Ratios
   ratios: {
-    po4Undetectable: 'PO4 undetectable with elevated NO3 — risk of cyano/dinos',
-    no3Undetectable: 'NO3 undetectable with elevated PO4 — nutrient imbalance',
+    po4Undetectable: 'PO4 undetectable while NO3 is elevated. Risk of cyano/dinos; raise PO4 gently (feeding or dosing).',
+    no3Undetectable: 'NO3 undetectable while PO4 is measurable. Consider raising NO3 (feeding or dosing) so corals are not starved.',
     insufficientData: 'Insufficient data',
-    ratioLow: 'NO3:PO4 ratio low (%{ratio}:1) — excess phosphate',
-    ratioHigh: 'NO3:PO4 ratio high (%{ratio}:1) — excess nitrate',
+    ratioLow: 'NO3:PO4 ratio low (%{ratio}:1). Phosphate is high relative to nitrate; export PO4 or raise NO3.',
+    ratioHigh: 'NO3:PO4 ratio high (%{ratio}:1). Nitrate is high relative to phosphate; consider carbon dosing or water changes.',
     ratioOk: 'NO3:PO4 ratio %{ratio}:1',
-    mgLow: 'Mg too low relative to Ca — raise Mg first',
-    mgHigh: 'Mg too high relative to Ca',
+    mgLow: 'Mg too low relative to Ca; raise Mg first.',
+    mgHigh: 'Mg too high relative to Ca; pause Mg supplementation.',
     mgInstability: 'Low Mg may be causing Ca/Alk instability',
     ionicOk: 'Ca/Alk/Mg balance OK',
     alkSwing: 'Alkalinity moved %{swing} %{unit} within 24h. Stabilize dosing.',
+  },
+  // Accessibility (VoiceOver labels)
+  a11y: {
+    statusOk: 'within target',
+    statusWarning: 'at threshold',
+    statusCritical: 'critical',
+    statusUnknown: 'no data',
+    edit: 'Edit',
+    delete: 'Delete',
+    switchTank: 'Switch tank',
+    logReading: 'Logs a new reading',
   },
 };
