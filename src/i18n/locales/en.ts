@@ -178,6 +178,13 @@ export default {
     ionicOk: 'Ca/Alk/Mg balance OK',
     alkSwing: 'Alkalinity moved %{swing} %{unit} within 24h. Stabilize dosing.',
   },
+  // Rating pre-prompt
+  review: {
+    title: 'Enjoying Reef Monitor?',
+    message: 'Your review helps other reef keepers find it. It takes a few seconds.',
+    notNow: 'Not now',
+    rate: 'Rate the app',
+  },
   // Accessibility (VoiceOver labels)
   a11y: {
     statusOk: 'within target',

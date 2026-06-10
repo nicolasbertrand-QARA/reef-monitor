@@ -19,5 +19,6 @@ export default {
     exportFirst: '먼저 CSV 내보내기',
   },
   ratios: { po4Undetectable: 'NO3가 높은데 PO4가 검출되지 않습니다. 시아노/디노 위험; 급여나 도징으로 PO4를 조심스럽게 올리세요.', no3Undetectable: 'PO4는 측정되는데 NO3가 검출되지 않습니다. 산호가 굶지 않도록 급여나 도징으로 NO3를 올리는 것을 고려하세요.', insufficientData: '데이터 부족', ratioLow: 'NO3:PO4 비율이 낮습니다 (%{ratio}:1). 질산염 대비 인산염이 높음; PO4를 제거하거나 NO3를 올리세요.', ratioHigh: 'NO3:PO4 비율이 높습니다 (%{ratio}:1). 인산염 대비 질산염이 높음; 탄소 도징이나 환수를 고려하세요.', ratioOk: 'NO3:PO4 비율 %{ratio}:1', mgLow: 'Ca 대비 Mg 너무 낮음 — Mg 먼저 올리기', mgHigh: 'Ca 대비 Mg가 너무 높습니다; Mg 보충을 중단하세요.', mgInstability: '낮은 Mg가 Ca/Alk 불안정을 유발할 수 있음', ionicOk: 'Ca/Alk/Mg 균형 OK', alkSwing: '알칼리니티가 24시간 동안 %{swing} %{unit} 변동했습니다. 도징을 안정시키세요.' },
+  review: { title: 'Reef Monitor가 마음에 드시나요?', message: '리뷰는 다른 리퍼들이 앱을 찾는 데 도움이 됩니다. 몇 초면 충분합니다.', notNow: '나중에', rate: '평가하기' },
   a11y: { statusOk: '목표 범위 내', statusWarning: '임계값 부근', statusCritical: '위험', statusUnknown: '데이터 없음', edit: '편집', delete: '삭제', switchTank: '수조 전환', logReading: '새 측정 기록' },
 };

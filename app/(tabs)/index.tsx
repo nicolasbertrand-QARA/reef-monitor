@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
-import { useFocusEffect } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { getCoreParams, getNutrientParams, PARAMETERS, getParameterList } from '@/src/constants/parameters';
 import { THEME } from '@/src/constants/colors';
 import { useLatestReadings } from '@/src/hooks/useParameters';
@@ -25,6 +25,15 @@ export default function DashboardScreen() {
   const { prefs: unitPrefs, refresh: refreshUnits } = useUnitPrefs();
   const [selectedParam, setSelectedParam] = useState<ParameterDef | null>(null);
   const [historyMap, setHistoryMap] = useState<Map<ParameterKey, Reading[]>>(new Map());
+
+  // Deep link: reefmonitor:///?log=<parameter> opens the log sheet directly
+  // (used by Shortcuts/widgets later, and by the screenshot pipeline today)
+  const { log: logParam } = useLocalSearchParams<{ log?: string }>();
+  useEffect(() => {
+    if (logParam && PARAMETERS[logParam as ParameterKey]) {
+      setSelectedParam(PARAMETERS[logParam as ParameterKey]);
+    }
+  }, [logParam]);
 
   const loadHistory = useCallback(async () => {
     const map = new Map<ParameterKey, Reading[]>();

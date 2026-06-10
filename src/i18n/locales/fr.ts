@@ -166,6 +166,13 @@ export default {
     ionicOk: 'Équilibre Ca/Alk/Mg OK',
     alkSwing: "L'alcalinité a varié de %{swing} %{unit} en 24 h. Stabiliser le dosage.",
   },
+  // Pré-invite de notation
+  review: {
+    title: 'Reef Monitor vous plaît ?',
+    message: "Votre avis aide d'autres récifalistes à la découvrir. Quelques secondes suffisent.",
+    notNow: 'Plus tard',
+    rate: "Noter l'app",
+  },
   // Accessibilité (libellés VoiceOver)
   a11y: {
     statusOk: 'dans la cible',

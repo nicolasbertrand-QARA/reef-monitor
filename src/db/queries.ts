@@ -51,6 +51,30 @@ export async function setActiveTankId(id: number): Promise<void> {
   );
 }
 
+// --- Generic app settings ---
+
+export async function getAppSetting(key: string): Promise<string | null> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ value: string }>(
+    'SELECT value FROM app_settings WHERE key = ?', key
+  );
+  return row?.value ?? null;
+}
+
+export async function setAppSetting(key: string, value: string): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync('INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)', key, value);
+}
+
+/** Distinct calendar days with at least one reading, across all tanks. */
+export async function getDistinctLoggingDays(): Promise<number> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ n: number }>(
+    "SELECT COUNT(DISTINCT date(recorded_at)) AS n FROM readings"
+  );
+  return row?.n ?? 0;
+}
+
 // --- Unit Preferences (global, stored in app_settings as unit_<paramKey>) ---
 
 export async function getUnitPreferences(): Promise<Record<string, string>> {

@@ -19,5 +19,6 @@ export default {
     exportFirst: 'पहले CSV निर्यात करें',
   },
   ratios: { po4Undetectable: 'NO3 अधिक होते हुए PO4 का पता नहीं चल रहा। सायनो/डिनो का जोखिम; भोजन या डोज़िंग से PO4 धीरे-धीरे बढ़ाएँ।', no3Undetectable: 'PO4 मापने योग्य है पर NO3 का पता नहीं चल रहा। कोरल भूखे न रहें, इसलिए NO3 बढ़ाने पर विचार करें।', insufficientData: 'अपर्याप्त डेटा', ratioLow: 'NO3:PO4 अनुपात कम (%{ratio}:1)। नाइट्रेट की तुलना में फॉस्फेट अधिक; PO4 हटाएँ या NO3 बढ़ाएँ।', ratioHigh: 'NO3:PO4 अनुपात अधिक (%{ratio}:1)। फॉस्फेट की तुलना में नाइट्रेट अधिक; कार्बन डोज़िंग या जल परिवर्तन पर विचार करें।', ratioOk: 'NO3:PO4 अनुपात %{ratio}:1', mgLow: 'Ca की तुलना में Mg बहुत कम — पहले Mg बढ़ाएं', mgHigh: 'Ca की तुलना में Mg बहुत अधिक; Mg सप्लीमेंट रोकें।', mgInstability: 'कम Mg Ca/Alk अस्थिरता का कारण बन सकता है', ionicOk: 'Ca/Alk/Mg संतुलन ठीक', alkSwing: 'क्षारीयता 24 घंटे में %{swing} %{unit} बदली। डोज़िंग स्थिर करें।' },
+  review: { title: 'Reef Monitor पसंद आया?', message: 'आपकी समीक्षा दूसरे रीफ़ रखने वालों को इसे खोजने में मदद करती है। बस कुछ सेकंड लगते हैं।', notNow: 'अभी नहीं', rate: 'रेट करें' },
   a11y: { statusOk: 'लक्ष्य के भीतर', statusWarning: 'सीमा पर', statusCritical: 'गंभीर', statusUnknown: 'कोई डेटा नहीं', edit: 'संपादित करें', delete: 'हटाएँ', switchTank: 'टैंक बदलें', logReading: 'नई रीडिंग दर्ज करें' },
 };

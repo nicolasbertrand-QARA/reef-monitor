@@ -19,5 +19,6 @@ export default {
     exportFirst: 'Önce CSV dışa aktar',
   },
   ratios: { po4Undetectable: 'NO3 yüksekken PO4 tespit edilemiyor. Siyano/dino riski; PO4ü dikkatlice yükseltin (besleme veya dozaj).', no3Undetectable: 'PO4 ölçülebilirken NO3 tespit edilemiyor. Mercanlar aç kalmasın diye NO3ü yükseltmeyi düşünün (besleme veya dozaj).', insufficientData: 'Yetersiz veri', ratioLow: 'NO3:PO4 oranı düşük (%{ratio}:1). Nitrata göre fosfat yüksek; PO4ü uzaklaştırın veya NO3ü yükseltin.', ratioHigh: 'NO3:PO4 oranı yüksek (%{ratio}:1). Fosfata göre nitrat yüksek; karbon dozajı veya su değişimi düşünün.', ratioOk: 'NO3:PO4 oranı %{ratio}:1', mgLow: "Ca'ya göre Mg çok düşük — önce Mg'yi yükseltin", mgHigh: 'Ca-ya göre Mg çok yüksek; Mg takviyesine ara verin.', mgInstability: 'Düşük Mg Ca/Alk kararsızlığına neden olabilir', ionicOk: 'Ca/Alk/Mg dengesi OK', alkSwing: 'Alkalinite 24 saatte %{swing} %{unit} değişti. Dozajı dengeleyin.' },
+  review: { title: 'Reef Monitor hoşunuza gitti mi?', message: 'Yorumunuz diğer resifçilerin uygulamayı bulmasına yardımcı olur. Sadece birkaç saniye sürer.', notNow: 'Şimdi değil', rate: 'Puan ver' },
   a11y: { statusOk: 'hedefte', statusWarning: 'eşikte', statusCritical: 'kritik', statusUnknown: 'veri yok', edit: 'Düzenle', delete: 'Sil', switchTank: 'Akvaryum değiştir', logReading: 'Yeni ölçüm kaydet' },
 };

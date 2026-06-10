@@ -28,6 +28,7 @@ Reef Monitor is a mobile app for tracking nano reef aquarium water parameters. I
 | Date formatting | `date-fns` with per-locale imports |
 | Slider | `@react-native-community/slider` |
 | Haptics | `expo-haptics` |
+| Ratings | `expo-store-review` — pre-prompt sheet then system prompt (`src/utils/reviewPrompt.ts`) |
 | File sharing | `expo-sharing` + `expo-file-system` |
 | File picking | `expo-document-picker` (CSV import) |
 | Icons | `@expo/vector-icons` (FontAwesome) |
@@ -241,6 +242,8 @@ Parameters are defined in `src/constants/parameters.ts` (runtime key list: `PARA
 - Ratio/ionic banners only fire when the paired readings were taken within 72h of each other (stale pairings are noise)
 - "Latest" reading = most recent `recorded_at` (NOT max id — imported backups can insert older rows with higher ids)
 - First-run hint (`log.subtitle`) renders until the tank has at least one reading; empty cards show a plus-circle affordance
+- Deep link `reefmonitor:///?log=<parameterKey>` opens the log sheet directly (Shortcuts/widgets later; screenshot pipeline today)
+- Rating pre-prompt (`maybePromptReview`) fires only after an in-range save, 3+ distinct logging days, 120-day prompt cooldown, 60-day decline cooldown; state in `app_settings` (`review_last_prompt_at`, `review_declined_at`)
 - **Tapping a card opens the ParamInput modal** to log a new reading (the card's threshold is passed in for live feedback)
 - After saving, dashboard refreshes automatically
 

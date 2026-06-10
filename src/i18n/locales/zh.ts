@@ -19,5 +19,6 @@ export default {
     exportFirst: '先导出 CSV',
   },
   ratios: { po4Undetectable: 'NO3 偏高但检测不到 PO4。有蓝藻/甲藻风险；通过喂食或滴定谨慎提升 PO4。', no3Undetectable: '可测到 PO4 但检测不到 NO3。考虑通过喂食或滴定提升 NO3，避免珊瑚营养不足。', insufficientData: '数据不足', ratioLow: 'NO3:PO4 比值偏低（%{ratio}:1）。磷酸盐相对偏高；去除 PO4 或提升 NO3。', ratioHigh: 'NO3:PO4 比值偏高（%{ratio}:1）。硝酸盐相对偏高；考虑碳源滴定或换水。', ratioOk: 'NO3:PO4比值 %{ratio}:1', mgLow: 'Mg相对Ca过低 — 先提高Mg', mgHigh: 'Mg 相对 Ca 过高；暂停补充 Mg。', mgInstability: '低Mg可能导致Ca/Alk不稳定', ionicOk: 'Ca/Alk/Mg平衡正常', alkSwing: '碱度在 24 小时内变动 %{swing} %{unit}。请稳定滴定。' },
+  review: { title: '喜欢 Reef Monitor 吗？', message: '您的评价能帮助其他鱼友发现这款应用，只需几秒钟。', notNow: '以后再说', rate: '去评分' },
   a11y: { statusOk: '在目标内', statusWarning: '处于阈值', statusCritical: '危险', statusUnknown: '无数据', edit: '编辑', delete: '删除', switchTank: '切换水族箱', logReading: '记录新测量' },
 };

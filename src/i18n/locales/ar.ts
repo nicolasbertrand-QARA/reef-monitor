@@ -19,5 +19,6 @@ export default {
     exportFirst: 'تصدير CSV أولاً',
   },
   ratios: { po4Undetectable: 'PO4 غير قابل للكشف مع ارتفاع NO3. خطر السيانو/الدينو؛ ارفع PO4 بحذر (تغذية أو جرعات).', no3Undetectable: 'NO3 غير قابل للكشف مع وجود PO4. فكّر في رفع NO3 (تغذية أو جرعات) حتى لا تجوع الشعاب.', insufficientData: 'بيانات غير كافية', ratioLow: 'نسبة NO3:PO4 منخفضة (%{ratio}:1). الفوسفات مرتفع نسبةً إلى النترات؛ أزل PO4 أو ارفع NO3.', ratioHigh: 'نسبة NO3:PO4 مرتفعة (%{ratio}:1). النترات مرتفعة نسبةً إلى الفوسفات؛ فكّر في جرعات الكربون أو تغيير الماء.', ratioOk: 'نسبة NO3:PO4 %{ratio}:1', mgLow: 'Mg منخفض جداً مقارنة بـ Ca — ارفع Mg أولاً', mgHigh: 'Mg مرتفع جدًا نسبةً إلى Ca؛ أوقف مكملات Mg مؤقتًا.', mgInstability: 'انخفاض Mg قد يسبب عدم استقرار Ca/Alk', ionicOk: 'توازن Ca/Alk/Mg جيد', alkSwing: 'تغيّرت القلوية بمقدار %{swing} %{unit} خلال 24 ساعة. ثبّت الجرعات.' },
+  review: { title: 'هل أعجبك Reef Monitor؟', message: 'تقييمك يساعد هواة الشعاب الآخرين على اكتشاف التطبيق. لن يستغرق سوى ثوانٍ.', notNow: 'ليس الآن', rate: 'قيّم التطبيق' },
   a11y: { statusOk: 'ضمن الهدف', statusWarning: 'عند الحد', statusCritical: 'حرج', statusUnknown: 'لا توجد بيانات', edit: 'تعديل', delete: 'حذف', switchTank: 'تبديل الحوض', logReading: 'تسجيل قراءة جديدة' },
 };

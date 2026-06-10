@@ -19,5 +19,6 @@ export default {
     exportFirst: '先にCSVをエクスポート',
   },
   ratios: { po4Undetectable: 'NO3が高いのにPO4が検出されません。シアノ/ダイノのリスク。給餌や添加でPO4を慎重に上げてください。', no3Undetectable: 'PO4が測定できるのにNO3が検出されません。サンゴが飢えないよう、給餌や添加でNO3を上げることを検討してください。', insufficientData: 'データ不足', ratioLow: 'NO3:PO4比が低い（%{ratio}:1）。硝酸塩に対してリン酸塩が高め。PO4を除去するかNO3を上げてください。', ratioHigh: 'NO3:PO4比が高い（%{ratio}:1）。リン酸塩に対して硝酸塩が高め。炭素源添加や換水を検討してください。', ratioOk: 'NO3:PO4比 %{ratio}:1', mgLow: 'Caに対してMgが低すぎる — まずMgを上げる', mgHigh: 'Caに対してMgが高すぎます。Mgの添加を中止してください。', mgInstability: 'Mg低下がCa/Alk不安定の原因の可能性', ionicOk: 'Ca/Alk/Mgバランス OK', alkSwing: 'アルカリ度が24時間で%{swing} %{unit}変動しました。添加を安定させてください。' },
+  review: { title: 'Reef Monitorはいかがですか？', message: 'レビューは他のリーファーがアプリを見つける助けになります。数秒で完了します。', notNow: '後で', rate: '評価する' },
   a11y: { statusOk: '目標範囲内', statusWarning: 'しきい値付近', statusCritical: '危険', statusUnknown: 'データなし', edit: '編集', delete: '削除', switchTank: '水槽を切り替え', logReading: '新しい測定を記録' },
 };

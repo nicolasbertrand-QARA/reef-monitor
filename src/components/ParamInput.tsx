@@ -7,6 +7,7 @@ import { THEME, STATUS_COLORS, STATUS_TEXT_COLORS } from '@/src/constants/colors
 import { insertReading, getLastReading } from '@/src/db/queries';
 import { getDisplayUnit } from '@/src/utils/units';
 import { evaluateStatus } from '@/src/utils/thresholds';
+import { maybePromptReview } from '@/src/utils/reviewPrompt';
 import { TestTimer } from './TestTimer';
 import i18n, { getDateLocale } from '@/src/i18n';
 
@@ -95,6 +96,7 @@ export function ParamInput({ paramDef, visible, tankId, threshold, unitPrefs, on
     if (status === 'critical') Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
     else if (status === 'warning') Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
     else Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    maybePromptReview(status);
     setSaving(false); onSaved(); onClose();
   };
 
