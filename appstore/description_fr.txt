@@ -27,7 +27,7 @@ CORRECTIONS, CORRÉLÉES
 Journal de dosage : Kalkwasser, balling, All-for-Reef, ou tout produit personnalisé.
 Changements d'eau : pourcentage, marque de sel, dilution en g/L.
 Les dosages s'affichent sur les graphiques concernés ; les changements d'eau sur tous.
-Une erreur de saisie ? Supprimez l'entrée. Rien n'est définitif par accident.
+Une erreur ? Supprimez l'entrée.
 
 MULTI-BACS
 Tous vos aquariums dans une seule app, changement de bac en un tap.

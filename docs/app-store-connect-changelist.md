@@ -190,11 +190,11 @@ If at any step CVR drops > 10 %, pause, A/B-test, do not proceed.
 
 ## 10. App ID placeholder
 
-The landing page (`docs/index.html`) and press kit (`docs/press.html`) reference an App Store ID of `id6753145061`. This is a placeholder.
+The landing page (`docs/index.html`) and press kit (`docs/press.html`) reference an App Store ID of `id6762493925`. This is a placeholder.
 
 **Action required**: replace with your real App Store ID. To find it:
 1. In ASC, go to My Apps > Reef Monitor > App Information.
 2. The "Apple ID" field shows the numeric ID.
-3. Search and replace `id6753145061` in `docs/index.html`, `docs/press.html`, and `docs/sitemap.xml` if present.
+3. Search and replace `id6762493925` in `docs/index.html`, `docs/press.html`, and `docs/sitemap.xml` if present.
 
 End of change list.
