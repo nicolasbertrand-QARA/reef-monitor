@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal, ScrollView } from 'rea
 import * as Haptics from 'expo-haptics';
 import { formatDistanceToNow } from 'date-fns';
 import { ParameterDef, Thresholds, Reading, Status } from '@/src/models/types';
-import { THEME, STATUS_COLORS } from '@/src/constants/colors';
+import { THEME, STATUS_COLORS, STATUS_TEXT_COLORS } from '@/src/constants/colors';
 import { insertReading, getLastReading } from '@/src/db/queries';
 import { getDisplayUnit } from '@/src/utils/units';
 import { evaluateStatus } from '@/src/utils/thresholds';
@@ -129,15 +129,15 @@ export function ParamInput({ paramDef, visible, tankId, threshold, unitPrefs, on
           <Text style={[styles.valueText, { color: valueColor }]}>{value.toFixed(displayUnit.decimals)}</Text>
           {displayUnit.unit ? <Text style={styles.unitText}>{displayUnit.unit}</Text> : null}
           {previewText ? (
-            <Text style={[styles.previewText, { color: status === 'ok' ? STATUS_COLORS.ok : STATUS_COLORS[status] }]}>{previewText}</Text>
+            <Text style={[styles.previewText, { color: STATUS_TEXT_COLORS[status] }]}>{previewText}</Text>
           ) : null}
           {targetText ? <Text style={styles.targetText}>{targetText}</Text> : null}
         </View>
         <View style={styles.steppers}>
-          <TouchableOpacity style={styles.stepBtn} onPress={() => adjustBig(-1)}><Text style={styles.stepLabel}>-{bigStep}</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.stepBtnMain} onPress={() => adjust(-1)}><Text style={styles.stepMainLabel}>-</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.stepBtnMain} onPress={() => adjust(1)}><Text style={styles.stepMainLabel}>+</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.stepBtn} onPress={() => adjustBig(1)}><Text style={styles.stepLabel}>+{bigStep}</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.stepBtn} onPress={() => adjustBig(-1)} accessibilityRole="button" accessibilityLabel={`-${bigStep}`}><Text style={styles.stepLabel}>-{bigStep}</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.stepBtnMain} onPress={() => adjust(-1)} accessibilityRole="button" accessibilityLabel={`-${displayUnit.step}`}><Text style={styles.stepMainLabel}>-</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.stepBtnMain} onPress={() => adjust(1)} accessibilityRole="button" accessibilityLabel={`+${displayUnit.step}`}><Text style={styles.stepMainLabel}>+</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.stepBtn} onPress={() => adjustBig(1)} accessibilityRole="button" accessibilityLabel={`+${bigStep}`}><Text style={styles.stepLabel}>+{bigStep}</Text></TouchableOpacity>
         </View>
         <Text style={styles.stepHint}>{i18n.t('log.step')} {displayUnit.step}{displayUnit.unit ? ` ${displayUnit.unit}` : ''}</Text>
         <TouchableOpacity style={[styles.saveBtn, saving && { opacity: 0.5 }]} onPress={handleSave} disabled={saving}>

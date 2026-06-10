@@ -5,7 +5,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Reading, Status, Thresholds, ParameterDef } from '@/src/models/types';
 import { StatusBadge } from './StatusBadge';
 import { MiniSparkline } from './MiniSparkline';
-import { THEME } from '@/src/constants/colors';
+import { THEME, STATUS_TEXT_COLORS } from '@/src/constants/colors';
 import { getDisplayUnit } from '@/src/utils/units';
 import i18n, { getDateLocale } from '@/src/i18n';
 
@@ -23,6 +23,10 @@ const STATUS_BG: Record<Status, string> = {
   ok: THEME.surfaceElevated, warning: THEME.statusWarnBg, critical: THEME.statusCritBg, unknown: THEME.surface,
 };
 
+const A11Y_STATUS_KEY: Record<Status, string> = {
+  ok: 'a11y.statusOk', warning: 'a11y.statusWarning', critical: 'a11y.statusCritical', unknown: 'a11y.statusUnknown',
+};
+
 export function ParamCard({ paramDef, reading, status, history, thresholds, unitPrefs, onPress }: Props) {
   const timeAgo = reading
     ? formatDistanceToNow(new Date(reading.recorded_at), { addSuffix: true, locale: getDateLocale() })
@@ -30,11 +34,28 @@ export function ParamCard({ paramDef, reading, status, history, thresholds, unit
 
   const u = getDisplayUnit(paramDef, unitPrefs ?? {});
 
+  // Non-color status channel: "low"/"high" word when out of range
+  const outOfRange = status === 'warning' || status === 'critical';
+  const below = outOfRange && reading && thresholds
+    ? (thresholds.critical_low != null && reading.value <= thresholds.critical_low) ||
+      (thresholds.warning_low != null && reading.value < thresholds.warning_low)
+    : false;
+  const directionWord = outOfRange ? i18n.t(below ? 'dashboard.low' : 'dashboard.high') : null;
+
+  const valueText = reading ? `${u.fromCanonical(reading.value).toFixed(u.decimals)} ${u.unit}`.trim() : i18n.t('dashboard.noData');
+  const a11yLabel = `${paramDef.label}, ${valueText}, ${i18n.t(A11Y_STATUS_KEY[status])}, ${timeAgo}`;
+
   return (
-    <TouchableOpacity style={[styles.card, { backgroundColor: STATUS_BG[status] }]} onPress={onPress} activeOpacity={0.7}>
+    <TouchableOpacity style={[styles.card, { backgroundColor: STATUS_BG[status] }]} onPress={onPress} activeOpacity={0.7}
+      accessibilityRole="button" accessibilityLabel={a11yLabel} accessibilityHint={i18n.t('a11y.logReading')}>
       <View style={styles.topRow}>
         <Text style={styles.label}>{paramDef.label}</Text>
-        <StatusBadge status={status} />
+        <View style={styles.statusGroup}>
+          {directionWord ? (
+            <Text style={[styles.directionWord, { color: STATUS_TEXT_COLORS[status === 'critical' ? 'critical' : 'warning'] }]}>{directionWord}</Text>
+          ) : null}
+          <StatusBadge status={status} />
+        </View>
       </View>
       {reading ? (
         <Text style={styles.value}>
@@ -60,6 +81,8 @@ export function ParamCard({ paramDef, reading, status, history, thresholds, unit
 const styles = StyleSheet.create({
   card: { borderRadius: 14, paddingTop: 16, paddingHorizontal: 16, paddingBottom: 8, width: '47%', marginBottom: 12 },
   topRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 },
+  statusGroup: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  directionWord: { fontSize: 10, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 0.4 },
   label: { color: THEME.textSecondary, fontSize: 13, fontWeight: '500', letterSpacing: 0.3 },
   value: { color: THEME.text, fontSize: 30, fontWeight: '700', letterSpacing: -0.5, fontVariant: ['tabular-nums'] },
   unit: { color: THEME.textSecondary, fontSize: 14, fontWeight: '400' },

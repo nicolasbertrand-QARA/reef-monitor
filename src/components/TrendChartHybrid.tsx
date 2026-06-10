@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import Svg, { Polyline, Line, Rect, Circle, G, Text as SvgText } from 'react-native-svg';
 import { format, differenceInDays } from 'date-fns';
-import { THEME, STATUS_COLORS } from '@/src/constants/colors';
+import { THEME, STATUS_COLORS, STATUS_TEXT_COLORS } from '@/src/constants/colors';
 import {
   ParameterDef, Reading, Thresholds, DosingEntry, WaterChange, ParameterKey, Status,
 } from '@/src/models/types';
@@ -75,7 +75,7 @@ function MonoView({ ds, doses = [], waterChanges = [], unitPrefs = {}, timeRange
 
   const status: Status = thresholds ? evaluateStatus(latest.value, thresholds) : 'ok';
   const statusColor = STATUS_COLORS[status];
-  const deltaColor = status === 'critical' ? STATUS_COLORS.critical : status === 'warning' ? STATUS_COLORS.warning : STATUS_COLORS.ok;
+  const deltaColor = STATUS_TEXT_COLORS[status];
   const deltaArrow = delta > 0.0001 ? '▲' : delta < -0.0001 ? '▼' : '◆';
 
   // y range
@@ -418,10 +418,13 @@ function MiniCard({
     .map(t => timeToX(t));
 
   const deltaArrow = delta > 0.0001 ? '▲' : delta < -0.0001 ? '▼' : '◆';
-  const deltaColor = status === 'critical' ? STATUS_COLORS.critical : status === 'warning' ? STATUS_COLORS.warning : THEME.textSecondary;
+  const deltaColor = status === 'critical' || status === 'warning' ? STATUS_TEXT_COLORS[status] : THEME.textSecondary;
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={[styles.miniRow, !last && styles.miniRowBorder]}>
+    <TouchableOpacity onPress={onPress} activeOpacity={0.7} style={[styles.miniRow, !last && styles.miniRowBorder]}
+      accessibilityRole="button"
+      accessibilityLabel={`${paramDef.label}, ${latestVal.toFixed(u.decimals)} ${u.unit}`.trim()}
+      accessibilityHint={i18n.t('trends.detail')}>
       <View style={styles.miniHead}>
         <View style={styles.miniHeadLeft}>
           <View style={[styles.statusDot, { backgroundColor: statusColor }]} />

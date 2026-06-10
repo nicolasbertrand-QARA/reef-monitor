@@ -165,10 +165,12 @@ export default function SettingsScreen() {
           <View key={tank.id} style={[styles.tankRow, idx < tanks.length - 1 && styles.rowBorder]}>
             <FontAwesome name="tint" size={14} color={tank.id === tankId ? THEME.accent : THEME.textSecondary} />
             <Text style={[styles.tankName, tank.id === tankId && styles.tankNameActive]}>{tank.name}</Text>
-            <TouchableOpacity onPress={() => handleRenameTank(tank)} hitSlop={8} style={styles.tankAction}>
+            <TouchableOpacity onPress={() => handleRenameTank(tank)} hitSlop={8} style={styles.tankAction}
+              accessibilityRole="button" accessibilityLabel={`${i18n.t('tanks.rename')} (${tank.name})`}>
               <FontAwesome name="pencil" size={14} color={THEME.textSecondary} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => handleDeleteTank(tank)} hitSlop={8} style={styles.tankAction}>
+            <TouchableOpacity onPress={() => handleDeleteTank(tank)} hitSlop={8} style={styles.tankAction}
+              accessibilityRole="button" accessibilityLabel={`${i18n.t('tanks.delete')} (${tank.name})`}>
               <FontAwesome name="trash-o" size={14} color={THEME.textSecondary} />
             </TouchableOpacity>
           </View>
@@ -195,8 +197,11 @@ export default function SettingsScreen() {
             <View key={paramDef.key}>
               <View style={[styles.row, !isLast && styles.rowBorder]}>
                 <Switch value={isVisible} onValueChange={() => toggleParam(paramDef.key)}
+                  accessibilityLabel={paramDef.label}
                   trackColor={{ false: THEME.surface, true: THEME.accent }} thumbColor={THEME.surfaceElevated} style={styles.toggle} />
-                <TouchableOpacity style={styles.rowContent} onPress={() => setEditing(isEditing ? null : paramDef.key)}>
+                <TouchableOpacity style={styles.rowContent} onPress={() => setEditing(isEditing ? null : paramDef.key)}
+                  accessibilityRole="button" accessibilityState={{ expanded: isEditing }}
+                  accessibilityLabel={`${paramDef.label}, ${t ? `${previewLow} – ${previewHigh} ${displayUnit.unit}` : ''}`}>
                   <Text style={[styles.rowLabel, !isVisible && styles.rowLabelDisabled]}>{paramDef.label}</Text>
                   <Text style={styles.rowValue}>{t ? `${previewLow} – ${previewHigh} ${displayUnit.unit}` : '—'}</Text>
                   <FontAwesome name={isEditing ? 'chevron-up' : 'chevron-down'} size={12} color={THEME.textSecondary} />
@@ -226,12 +231,12 @@ export default function SettingsScreen() {
       {/* Data */}
       <Text style={styles.sectionTitle}>{i18n.t('settings.data')}</Text>
       <View style={styles.section}>
-        <TouchableOpacity style={[styles.actionRow, styles.rowBorder]} onPress={handleExport}>
+        <TouchableOpacity style={[styles.actionRow, styles.rowBorder]} onPress={handleExport} accessibilityRole="button">
           <FontAwesome name="share-square-o" size={16} color={THEME.accent} />
           <Text style={styles.actionLabel}>{i18n.t('settings.exportCsv')}</Text>
           <FontAwesome name="chevron-right" size={12} color={THEME.textSecondary} style={{ marginLeft: 'auto' }} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionRow} onPress={handleImport}>
+        <TouchableOpacity style={styles.actionRow} onPress={handleImport} accessibilityRole="button">
           <FontAwesome name="upload" size={16} color={THEME.accent} />
           <Text style={styles.actionLabel}>{i18n.t('settings.importCsv')}</Text>
           <FontAwesome name="chevron-right" size={12} color={THEME.textSecondary} style={{ marginLeft: 'auto' }} />
@@ -285,6 +290,9 @@ function ParamEditor({ paramDef, threshold, tankId, unitPrefs, onUnitChange, onS
                   key={u.unit || '_'}
                   style={[editorStyles.unitChip, isActive && editorStyles.unitChipActive]}
                   onPress={() => onUnitChange(u.unit)}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: isActive }}
+                  hitSlop={{ top: 8, bottom: 8 }}
                 >
                   <Text style={[editorStyles.unitChipText, isActive && editorStyles.unitChipTextActive]}>
                     {u.unit || (paramDef.key === 'salinity' ? 'SG' : '—')}

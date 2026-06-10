@@ -76,7 +76,7 @@ export default function DosingScreen() {
                   <Text style={styles.entryDate}>{format(new Date(e.dosed_at), 'MMM d, HH:mm', { locale: getDateLocale() })}</Text>
                 </View>
                 <Text style={styles.entryAmount}>{e.amount} {e.unit}</Text>
-                <TouchableOpacity onPress={() => confirmDelete(`${e.product} · ${e.amount} ${e.unit}`, () => deleteDose(e.id))} hitSlop={12} style={styles.deleteBtn}>
+                <TouchableOpacity onPress={() => confirmDelete(`${e.product} · ${e.amount} ${e.unit}`, () => deleteDose(e.id))} hitSlop={12} style={styles.deleteBtn} accessibilityRole="button" accessibilityLabel={i18n.t('a11y.delete')}>
                   <FontAwesome name="trash-o" size={14} color={THEME.textSecondary} />
                 </TouchableOpacity>
               </View>
@@ -97,7 +97,7 @@ export default function DosingScreen() {
                   </Text>
                 </View>
                 <Text style={[styles.entryAmount, { color: WC_COLOR }]}>{w.percentage}%</Text>
-                <TouchableOpacity onPress={() => confirmDelete(`${i18n.t('waterChange.title')} ${w.percentage}%`, () => deleteWaterChange(w.id))} hitSlop={12} style={styles.deleteBtn}>
+                <TouchableOpacity onPress={() => confirmDelete(`${i18n.t('waterChange.title')} ${w.percentage}%`, () => deleteWaterChange(w.id))} hitSlop={12} style={styles.deleteBtn} accessibilityRole="button" accessibilityLabel={i18n.t('a11y.delete')}>
                   <FontAwesome name="trash-o" size={14} color={THEME.textSecondary} />
                 </TouchableOpacity>
               </View>
@@ -136,7 +136,8 @@ function AddDoseModal({ visible, tankId, onClose, onSaved }: { visible: boolean;
         <Text style={modalStyles.label}>{i18n.t('dosing.product')}</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={modalStyles.productScroll}>
           {products.map((p) => (
-            <TouchableOpacity key={p} style={[modalStyles.chip, product === p && modalStyles.chipActive]} onPress={() => setProduct(p)}>
+            <TouchableOpacity key={p} style={[modalStyles.chip, product === p && modalStyles.chipActive]} onPress={() => setProduct(p)}
+              accessibilityRole="button" accessibilityState={{ selected: product === p }} hitSlop={{ top: 8, bottom: 8 }}>
               <Text style={[modalStyles.chipText, product === p && modalStyles.chipTextActive]}>{p}</Text>
             </TouchableOpacity>
           ))}
@@ -147,7 +148,8 @@ function AddDoseModal({ visible, tankId, onClose, onSaved }: { visible: boolean;
           <TextInput style={[modalStyles.input, { flex: 1 }]} placeholder="0.0" placeholderTextColor={THEME.textSecondary} value={amount} onChangeText={setAmount} keyboardType="decimal-pad" />
           <View style={modalStyles.unitPicker}>
             {['ml', 'g', i18n.t('dosing.drops')].map((u) => (
-              <TouchableOpacity key={u} style={[modalStyles.chip, unit === u && modalStyles.chipActive]} onPress={() => setUnit(u)}>
+              <TouchableOpacity key={u} style={[modalStyles.chip, unit === u && modalStyles.chipActive]} onPress={() => setUnit(u)}
+                accessibilityRole="button" accessibilityState={{ selected: unit === u }} hitSlop={{ top: 8, bottom: 8 }}>
                 <Text style={[modalStyles.chipText, unit === u && modalStyles.chipTextActive]}>{u}</Text>
               </TouchableOpacity>
             ))}

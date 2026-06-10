@@ -147,6 +147,9 @@ export default function TrendsScreen() {
               key={p.key}
               style={[styles.chip, isActive && styles.chipActive]}
               onPress={() => handleChipTap(p.key)}
+              accessibilityRole="button"
+              accessibilityState={{ selected: isActive }}
+              hitSlop={{ top: 8, bottom: 8 }}
             >
               <Text style={[styles.chipText, isActive && styles.chipTextActive]}>{p.label}</Text>
             </TouchableOpacity>
@@ -186,8 +189,8 @@ export default function TrendsScreen() {
                         <View style={styles.editRow}>
                           <TextInput style={styles.editInput} value={editValue} onChangeText={setEditValue} keyboardType="decimal-pad" autoFocus selectTextOnFocus />
                           <Text style={styles.editUnit}>{primaryDisplayUnit?.unit ?? primaryDef.unit}</Text>
-                          <TouchableOpacity onPress={handleEditSave} style={styles.editBtn}><FontAwesome name="check" size={14} color={THEME.accent} /></TouchableOpacity>
-                          <TouchableOpacity onPress={() => setEditingId(null)} style={styles.editBtn}><FontAwesome name="times" size={14} color={THEME.textSecondary} /></TouchableOpacity>
+                          <TouchableOpacity onPress={handleEditSave} style={styles.editBtn} accessibilityRole="button" accessibilityLabel={i18n.t('settings.save')}><FontAwesome name="check" size={14} color={THEME.accent} /></TouchableOpacity>
+                          <TouchableOpacity onPress={() => setEditingId(null)} style={styles.editBtn} accessibilityRole="button" accessibilityLabel={i18n.t('log.cancel')}><FontAwesome name="times" size={14} color={THEME.textSecondary} /></TouchableOpacity>
                         </View>
                       ) : (
                         <Text style={styles.logValue}>
@@ -200,8 +203,8 @@ export default function TrendsScreen() {
                     </View>
                     {!isEditing && (
                       <View style={styles.logActions}>
-                        <TouchableOpacity onPress={() => handleEditStart(reading)} hitSlop={12} style={styles.actionBtn}><FontAwesome name="pencil" size={14} color={THEME.textSecondary} /></TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleDelete(reading)} hitSlop={12} style={styles.actionBtn}><FontAwesome name="trash-o" size={14} color={THEME.textSecondary} /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleEditStart(reading)} hitSlop={12} style={styles.actionBtn} accessibilityRole="button" accessibilityLabel={i18n.t('a11y.edit')}><FontAwesome name="pencil" size={14} color={THEME.textSecondary} /></TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleDelete(reading)} hitSlop={12} style={styles.actionBtn} accessibilityRole="button" accessibilityLabel={i18n.t('a11y.delete')}><FontAwesome name="trash-o" size={14} color={THEME.textSecondary} /></TouchableOpacity>
                       </View>
                     )}
                   </View>

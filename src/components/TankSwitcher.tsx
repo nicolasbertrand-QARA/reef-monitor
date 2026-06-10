@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useTank } from '@/src/hooks/useTank';
 import { THEME } from '@/src/constants/colors';
+import i18n from '@/src/i18n';
 
 export function TankSwitcher() {
   const { tanks, activeTank, switchTank } = useTank();
@@ -12,7 +13,9 @@ export function TankSwitcher() {
 
   return (
     <>
-      <TouchableOpacity style={styles.trigger} onPress={() => setShowPicker(true)} hitSlop={12}>
+      <TouchableOpacity style={styles.trigger} onPress={() => setShowPicker(true)} hitSlop={12}
+        accessibilityRole="button"
+        accessibilityLabel={`${i18n.t('a11y.switchTank')} (${activeTank?.name ?? ''})`}>
         <FontAwesome name="tint" size={14} color={THEME.accent} />
         <Text style={styles.triggerText} numberOfLines={1}>{activeTank?.name ?? ''}</Text>
         <FontAwesome name="chevron-down" size={10} color={THEME.textSecondary} />
@@ -26,6 +29,8 @@ export function TankSwitcher() {
                 key={tank.id}
                 style={[styles.option, tank.id === activeTank?.id && styles.optionActive]}
                 onPress={() => { switchTank(tank.id); setShowPicker(false); }}
+                accessibilityRole="button"
+                accessibilityState={{ selected: tank.id === activeTank?.id }}
               >
                 <Text style={[styles.optionText, tank.id === activeTank?.id && styles.optionTextActive]}>
                   {tank.name}

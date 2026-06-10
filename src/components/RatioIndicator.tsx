@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Status } from '@/src/models/types';
 import { StatusBadge } from './StatusBadge';
-import { THEME, STATUS_COLORS } from '@/src/constants/colors';
+import { THEME, STATUS_TEXT_COLORS } from '@/src/constants/colors';
 
 interface Props {
   title: string;
@@ -19,10 +19,15 @@ export function RatioIndicator({ title, message, status }: Props) {
   if (status === 'unknown' || status === 'ok') return null;
 
   return (
-    <View style={[styles.container, { backgroundColor: ALERT_BG[status] ?? THEME.surface }]}>
+    <View
+      style={[styles.container, { backgroundColor: ALERT_BG[status] ?? THEME.surface }]}
+      accessible
+      accessibilityRole="alert"
+      accessibilityLabel={`${title}. ${message}`}
+    >
       <View style={styles.row}>
         <StatusBadge status={status} size={6} />
-        <Text style={[styles.title, { color: STATUS_COLORS[status] }]}>{title}</Text>
+        <Text style={[styles.title, { color: STATUS_TEXT_COLORS[status] }]}>{title}</Text>
       </View>
       <Text style={styles.message}>{message}</Text>
     </View>

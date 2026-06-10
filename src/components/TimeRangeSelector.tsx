@@ -24,6 +24,9 @@ export function TimeRangeSelector({ selected, onSelect }: Props) {
           key={opt.value}
           style={[styles.chip, selected === opt.value && styles.chipActive]}
           onPress={() => onSelect(opt.value)}
+          accessibilityRole="button"
+          accessibilityState={{ selected: selected === opt.value }}
+          hitSlop={{ top: 8, bottom: 8 }}
         >
           <Text style={[styles.text, selected === opt.value && styles.textActive]}>
             {opt.label}

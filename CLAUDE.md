@@ -385,13 +385,21 @@ Defined in `src/constants/colors.ts`. Light theme with warm sand/driftwood tones
 | surface | #ece8e1 | Section backgrounds, inactive chips |
 | surfaceElevated | #ffffff | Cards, stats rows |
 | text | #2d2a26 | Primary text |
-| textSecondary | #8a8478 | Labels, hints, time-ago |
-| accent | #5a8f8b | Buttons, active chips, data dots |
+| textSecondary | #6e685c | Labels, hints, time-ago (4.95:1 on background, WCAG AA) |
+| accent | #47736f | Buttons, active chips, data lines (5.32:1 with white text, WCAG AA) |
+| waterChange | #5a8fb8 | Water-change markers and log entries, everywhere |
 | border | #ddd8d0 | Dividers |
 
-Status colors: ok `#6b9e7a` (sage), warning `#c4943e` (amber), critical `#c4644a` (coral).
+Status colors come in two sets:
+- `STATUS_COLORS` (ok `#6b9e7a` sage, warning `#c4943e` amber, critical `#c4644a` coral) for **dots, chart lines, fills**
+- `STATUS_TEXT_COLORS` (ok `#3f7354`, warning `#8a6520`, critical `#9c4630`) for **text** — the base set fails WCAG AA as text on the tinted backgrounds; the text set passes ≥4.5:1 on tint, surface, and white. Never put STATUS_COLORS on text.
 
 Cards use background tint for status (no border-left stripes). See `.impeccable.md` for full design context.
+
+### Accessibility conventions
+- Every interactive element has `accessibilityRole` (+ `accessibilityState` for selectable chips/options, `accessibilityLabel` for icon-only buttons).
+- ParamCard composes a full VoiceOver label (param, value, status word from `a11y.status*`, time-ago) and shows a visible low/high word next to the status dot when out of range (non-color channel).
+- Sub-44pt chips get `hitSlop={{ top: 8, bottom: 8 }}`.
 
 ---
 
