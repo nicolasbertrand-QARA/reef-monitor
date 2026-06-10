@@ -8,16 +8,16 @@ Polski rynek akwarystyki morskiej jest młody, ale szybko rosnący. Społecznoś
 Reef Monitor: log morski
 ```
 
-## Podtytuł (30 / 30 znaków)
+## Podtytuł (25 / 30 znaków)
 
 ```
-Salifert · KH · zasolenie · Ca
+Testy, trendy i dozowanie
 ```
 
-## Słowa kluczowe (97 / 100 znaków, bez spacji, liczba pojedyncza)
+## Słowa kluczowe (96 / 100 znaków, bez spacji, liczba pojedyncza)
 
 ```
-rafa,akwarium,morski,koralowiec,nano,sps,lps,alkalicznosc,wapn,magnez,azotan,fosforan,icp,kalk,zbio
+salifert,akwarium,rafa,koralowiec,morski,nano,kh,alkalicznosc,wapn,zasolenie,azotan,fosforan,icp
 ```
 
 ## Tekst promocyjny (158 / 170 znaków)

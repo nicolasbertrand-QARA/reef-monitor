@@ -8,16 +8,16 @@ O mercado brasileiro de aquário marinho cresce rápido. A comunidade gira em to
 Reef Monitor: log marinho
 ```
 
-## Subtítulo (30 / 30 caracteres)
+## Subtítulo (28 / 30 caracteres)
 
 ```
-Salifert · KH · salinidade · Ca
+Testes, tendências e dosagem
 ```
 
-## Palavras-chave (97 / 100 caracteres, sem espaços, singular)
+## Palavras-chave (96 / 100 caracteres, sem espaços, singular)
 
 ```
-recife,aquario,marinho,coral,nano,sps,lps,alcalinidade,calcio,magnesio,nitrato,fosfato,icp,kalk,bac
+salifert,aquario,recife,coral,marinho,nano,kh,alcalinidade,calcio,salinidade,nitrato,fosfato,icp
 ```
 
 ## Texto promocional (158 / 170 caracteres)

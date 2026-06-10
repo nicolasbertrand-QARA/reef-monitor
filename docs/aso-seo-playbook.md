@@ -42,6 +42,14 @@ The path to category #1 is three concentric rings:
 - Nobody owns "salifert" or "ICP log" or "alk consumption" or "nano reef". Those are clean grabs.
 - All competitors waste the subtitle field on a generic descriptor. The subtitle is the second-most-weighted ASO field. We will not.
 
+### Live-data addendum (iTunes Search API, 2026-06-10)
+
+The actual US ranking for "reef tank" diverges from the table above. Top results in rank order: ReefBay (4.8 x 421, Social Networking), Pocket Marine (4.8 x 595, paid $3.99), Reef Trak - Reef Manager (4.8 x 28), AquaticLog (4.2 x 376), Reef2Reef, Bulk Reef Supply, ... Reef Buddy at #9, Aquarimate at #11. **Reef Monitor does not appear in the top 15.** For "saltwater aquarium", the #1 result is "Saltwater Aquarium App" (2.8 x 26): exact name-token match outranks quality, confirming that name/subtitle tokens dominate the algorithm.
+
+Corrections to the battle map:
+- The metadata competitors that matter for tracker intent are Reef Trak ("Reef Manager" in title) and Aquarium Log - Tank Manager (4.9 x 259), both missing from the original table's focus.
+- Reef Monitor's US listing has **0 ratings** (FR: 5.0 x 2). The empty rating row is the page's single biggest conversion blocker; metadata work and the ratings engine (section 5) must ship together, not sequentially.
+
 ## 2. The five levers, in order of impact
 
 | Lever                              | Effort  | Lift on installs   | Time to result   |
@@ -80,21 +88,20 @@ Name (29 / 30 chars): **Reef Monitor: Saltwater Log**
 - Brand first (Reef Monitor) preserves search-by-name.
 - "Saltwater Log" hits the highest-volume hobbyist head term and the action verb "Log".
 
-Subtitle (30 / 30 chars): **Salifert · pH · dKH · Salinity**
-- Salifert: the single uncontested high-intent keyword in the niche.
-- pH, dKH, Salinity: three head-terms reef-keepers actually search.
-- The dot separators read as features, not stuffing.
+Subtitle (27 / 30 chars): **Tank tests, trends & dosing**
+- REVISED 2026-06-10. The original proposal ("Salifert · pH · dKH · Salinity") put a third-party trademark in a visible metadata field AND read as a keyword list; both are explicit Guideline 2.3.7 rejection triggers ("don't try to pack any of your metadata with trademarked terms... just to game the system").
+- The replacement reads as a human feature summary (conversion) while adding four clean tokens: tank, test, trend, dosing. Composes "reef tank log", "saltwater tank", "tank test", "dosing log" with the Name.
+- "salifert" moves to the hidden keyword field where it still matches searches but is not visible review bait. The description keeps exactly one factual "Works with Salifert test kits" (nominative use describing real functionality).
 
-Keyword field (99 / 100 chars, no spaces, singular, no overlap with name + subtitle):
+Keyword field (100 / 100 chars, no spaces, singular, no overlap with name + subtitle):
 ```
-reef,tank,aquarium,marine,coral,nano,sps,lps,alkalinity,calcium,magnesium,nitrate,phosphate,icp,kalk
+salifert,aquarium,tracker,coral,marine,nano,alkalinity,calcium,nitrate,phosphate,salinity,icp,sps,kh
 ```
-- Adds: reef, tank, aquarium, marine, coral, nano, sps, lps, alkalinity, calcium, magnesium, nitrate, phosphate, icp, kalk.
-- Compounded with Name + Subtitle this indexes for: "reef tank log", "saltwater aquarium tracker", "salifert nitrate", "nano reef log", "reef calcium tracker", "marine alkalinity log", "ICP test log", "coral tank monitor", and ~40 other long-tails.
+- Compounded with Name + Subtitle this indexes for: "reef tank log", "saltwater aquarium tracker", "salifert nitrate", "nano reef log", "alkalinity tracker", "kh test", "ICP test log", "coral tank monitor", and ~40 other long-tails.
 
-Promotional text (170 / 170 chars; updatable without re-review):
+Promotional text (162 / 170 chars; updatable without re-review):
 ```
-Built by a reef keeper, for reef keepers. Salifert timers, alk consumption rate, NO3:PO4 ratio, 15 languages. 100% offline. No ads, no account, no tracking.
+Built by a reef keeper. Live in-range verdict as you log, test-kit timers, alk consumption rate, full CSV backup, 15 languages. Free, offline, no ads, no account.
 ```
 
 Description (4000 chars; see `appstore/listings/en.md` for the full optimized copy).
@@ -146,7 +153,7 @@ The screenshots are currently:
 9. **CSV export**: file icon + headline "Export anytime. We don't trap your data.".
 10. **Social proof / closer**: rating stars + reef hobbyist quote + CTA "Free download · no ads, no tracking".
 
-Captions on the screenshot art itself are indexed for App Store search since iOS 17. Bake target keywords into the captions: "Salifert timer", "alkalinity drift", "reef tank trends", "nano reef".
+Captions on the screenshot art are indexed for App Store search since Apple's June 2025 algorithm change (observed by all major ASO trackers; never officially confirmed). Caption keywords do NOT dedupe against Name/Subtitle/Keywords, so repeat the head terms here: "reef tank", "saltwater", "alkalinity drift", "nano reef", "test timer".
 
 The cards (App Store screenshot thumbnails in search results) need the headline in the top 33 % of the image to read at thumb scale. The current screenshots put the headline below the screen mockup — invisible in the search-result thumbnail.
 

@@ -1,50 +1,71 @@
-Reef Monitor — Track your saltwater aquarium water parameters
+Reef Monitor is the free, offline saltwater aquarium log for reef keepers who actually test their water.
 
-Monitor your reef tank parameters with precision and peace of mind. Built for dedicated reef keepers of every tank size, Reef Monitor lets you log readings, visualize trends, and catch parameter drift before it becomes a problem.
+Log a reading in seconds with wet hands, see the verdict before you save, and catch alkalinity drift before your corals do.
 
-UNIT FLEXIBILITY
-• Choose your preferred units per parameter
-• Temperature in °C or °F
-• Salinity as specific gravity or ppt
-• Alkalinity in dKH, meq/L, or ppm CaCO₃
-• Nitrate as NO3 or NO₃-N, phosphate as ppm or ppb
-• Defaults, steppers, and thresholds adapt automatically
+Free forever. No account. No ads. No tracking. Works with Salifert test kits.
+
+QUICK LOGGING, BUILT FOR THE TEST BENCH
+Large touch targets sized for wet hands.
+Plus and minus steppers tuned per parameter, clamped to physically sensible bounds.
+The last recorded value is pre-filled, with your target range right under it.
+Built-in test timers (30-second shake, 3-minute wait) placed in the order you actually work: shake, wait, read, enter. They keep counting if your phone locks.
+
+THE VERDICT BEFORE YOU SAVE
+The value recolors live as you step past your own thresholds.
+"Within target range" or "Below target range" appears before you commit.
+Saves that land out of range buzz differently than healthy ones.
+
+TRENDS THAT THINK LIKE A REEF KEEPER
+Charts over 7, 30, 90 days or the entire history, with painted target zones.
+Alkalinity consumption rate (dKH per day), fitted on the recent dosing regime, with direction: falling means consumption, rising means check your dosing.
+Alkalinity swing alert when KH moves more than 1 dKH within 24 hours.
+NO3:PO4 ratio and Ca/Alk/Mg ionic balance checks that only pair fresh readings, and every alert tells you what to do next, not just what is wrong.
+Compare parameters in a stacked view, each with its own scale and target band.
+Full history with inline edit and delete.
+
+CORRECTIONS, CORRELATED
+Dosing log: Kalkwasser, 2-part, All-for-Reef, or any custom product.
+Water changes: percentage, salt brand, dilution in g/L.
+Doses appear as markers on the charts they affect; water changes on every chart.
+Mis-typed an entry? Delete it. Nothing is permanent by accident.
 
 MULTI-TANK
-• Manage multiple aquariums from a single app
-• Switch tanks with one tap from any screen
-• Each tank has its own readings, thresholds, and corrections
+Every aquarium in one app, switchable in one tap from any screen.
+Each tank keeps its own readings, thresholds, dosing log, and water changes.
 
-QUICK LOGGING
-• Large touch targets designed for wet hands
-• +/- steppers tuned per parameter
-• Haptic feedback on every save
-• Built-in Salifert test timers (30 sec, 3 min)
-• Last recorded value pre-filled
-• Mini trend sparklines on every card
+UNIT FLEXIBILITY
+Temperature in °C or °F. Salinity as specific gravity or ppt.
+Alkalinity in dKH, meq/L, or ppm CaCO₃. Nitrate as NO3 or NO₃-N. Phosphate in ppm or ppb.
+Steppers, defaults, and thresholds adapt automatically. Comma and dot decimals both work.
 
-UP TO 15 PARAMETERS
-• Water chemistry: temperature, salinity, pH, alkalinity, calcium, magnesium, potassium, strontium, iodine, boron
-• Nutrients: nitrate, phosphate, ammonia, nitrite, silicate
-• Enable only the parameters you track
-
-TRENDS & ALERTS
-• Charts per parameter over 7d, 30d, 90d, or all history
-• Overlay multiple parameters on the same chart
-• Alkalinity consumption rate (dKH/day) — key SPS health indicator
-• Configurable alert thresholds (warning and critical)
-• Automatic NO3:PO4 ratio and Ca/Alk/Mg ionic balance detection
-• Full reading history with inline edit and delete
-
-CORRECTIONS
-• Dosing log: Kalkwasser, 2-part, All-for-Reef, and custom products
-• Water changes: percentage, salt brand, dilution in g/L
-• Dosing and water changes displayed on trend charts
+WHAT YOU CAN TRACK
+Up to 15 parameters.
+Water chemistry: temperature, salinity, pH, alkalinity, calcium, magnesium, potassium, strontium, iodine, boron.
+Nutrients: nitrate, phosphate, ammonia, nitrite, silicate.
+Enable only what you test. Hide the rest.
 
 YOUR DATA STAYS YOURS
-• 100% local storage on your device
-• No account required, no internet connection needed
-• CSV export and import for backup and restore
-• Zero personal data collection
+100% local storage on your device. No cloud, no account, no sign-in.
+The app does not make a single network request. Zero analytics, zero ads.
+Full CSV backup: readings, doses, water changes, and thresholds in one file.
+Import shows a preview and skips duplicates. Your data is never trapped.
 
-Available in 15 languages.
+15 LANGUAGES, ACCESSIBLE TO EVERYONE
+English, French, German, Spanish, Portuguese, Italian, Dutch, Russian, Japanese, Korean, Chinese, Arabic, Hindi, Turkish, Polish. Auto-detected, no setup.
+Full VoiceOver support, and status is never shown by color alone.
+
+WHO THIS IS FOR
+Nano reefers tracking 4 parameters. SPS keepers tracking 10.
+Mixed-reef hobbyists who run their test kits every Sunday.
+Anyone who has ever forgotten what their alkalinity was three weeks ago.
+
+PRICING
+Free. Forever. No in-app purchases, no subscription, no paywalls, no ads.
+
+PRIVACY
+https://nicolasbertrand-qara.github.io/reef-monitor/privacy.html
+Short version: nothing leaves your device.
+
+FEEDBACK
+Found a bug? Want a feature? Email the developer: delegue.grs@gmail.com
+Built by one reef keeper for the reef community. Every email gets read.

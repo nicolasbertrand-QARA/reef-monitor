@@ -1,125 +1,151 @@
 # Reef Monitor: App Store listing (en-US)
 
-This is the canonical English listing. en-GB is the same except for "color" → "colour", "license" → "licence", and "calibre" spellings noted inline.
+This is the canonical English listing. en-GB is identical except for British spellings noted inline.
 
-## App Name (29 / 30 chars)
+Revised 2026-06-10 against live store data (iTunes Search API) and current ASO guidance:
+- The previous subtitle ("Salifert · pH · dKH · Salinity") put a third-party trademark in a visible metadata field and read as keyword stuffing. Both are explicit Guideline 2.3.7 rejection triggers. "salifert" moved to the hidden keyword field; the description keeps one factual compatibility mention ("Works with Salifert test kits"), which is nominative use describing real functionality.
+- Screenshot captions ARE indexed (June 2025 algorithm change, confirmed by multiple ASO trackers, never officially by Apple), and caption keywords do NOT dedupe against Name/Subtitle/Keywords. So captions should repeat the head terms. The old "since iOS 17" rationale was wrong; the conclusion stands.
+- Live check 2026-06-10: Reef Monitor has 0 US ratings and does not rank in the top 15 for "reef tank". The empty rating row is the single biggest conversion blocker on the page. Metadata fixes below help ranking; the ratings engine (expo-store-review prompt + honest seeding) is what unlocks conversion. Treat both as one project.
+
+## App Name (27 / 30 chars)
 
 ```
 Reef Monitor: Saltwater Log
 ```
 
-## Subtitle (30 / 30 chars)
+Covers four head tokens: reef, monitor, saltwater, log. Brand-first preserves search-by-name.
+
+## Subtitle (27 / 30 chars)
 
 ```
-Salifert · pH · dKH · Salinity
+Tank tests, trends & dosing
 ```
 
-## Keyword field (99 / 100 chars, no spaces, singular, no overlap with Name + Subtitle)
+Reads as a human feature summary (conversion) while adding four clean tokens: tank, test, trend, dosing. Zero overlap with the Name. Composes: "reef tank log", "saltwater tank", "tank test", "reef trends", "dosing log".
+
+## Keyword field (100 / 100 chars, no spaces, singular, no overlap with Name + Subtitle)
 
 ```
-reef,tank,aquarium,marine,coral,nano,sps,lps,alkalinity,calcium,magnesium,nitrate,phosphate,icp,kalk
+salifert,aquarium,tracker,coral,marine,nano,alkalinity,calcium,nitrate,phosphate,salinity,icp,sps,kh
 ```
 
-## Promotional text (165 / 170 chars; updatable without re-review)
+salifert is the single uncontested high-intent term in the niche and lives here, invisible, where trademark policing is lax and matching still works. Compounded with Name + Subtitle this indexes "saltwater aquarium tracker", "reef tank log", "nano reef", "alkalinity tracker", "kh test log", "icp test", and ~40 other long-tails.
+
+## Promotional text (162 / 170 chars; updatable without re-review)
 
 ```
-Built by a reef keeper, for reef keepers. Salifert timers, alk consumption rate, NO3:PO4 ratio, 15 languages. 100% offline. No ads, no account, no tracking.
+Built by a reef keeper. Live in-range verdict as you log, test-kit timers, alk consumption rate, full CSV backup, 15 languages. Free, offline, no ads, no account.
 ```
 
-## Description (3,920 / 4,000 chars)
+## Description (~3,400 / 4,000 chars)
 
 ```
-Reef Monitor is the free, offline saltwater aquarium tracker built for reef keepers who actually test their water.
+Reef Monitor is the free, offline saltwater aquarium log for reef keepers who actually test their water.
 
-Built-in Salifert kit timers. Alkalinity consumption rate. NO3:PO4 ratio. Multi-tank. 15 languages. No account. No ads.
+Log a reading in seconds with wet hands, see the verdict before you save, and catch alkalinity drift before your corals do.
 
-WHAT YOU CAN TRACK
-Up to 15 reef parameters across two groups.
-Water chemistry: temperature, salinity, pH, alkalinity, calcium, magnesium, potassium, strontium, iodine, boron.
-Nutrients: nitrate, phosphate, ammonia, nitrite, silicate.
-Enable only the parameters you actually test. Hide the rest.
+Free forever. No account. No ads. No tracking. Works with Salifert test kits.
 
-UNIT FLEXIBILITY
-Choose your preferred unit per parameter.
-Temperature in °C or °F.
-Salinity as specific gravity or ppt.
-Alkalinity in dKH, meq/L, or ppm CaCO₃.
-Nitrate as NO3 or NO₃-N. Phosphate in ppm or ppb.
-Steppers, defaults, and thresholds adapt automatically.
-
-BUILT-IN SALIFERT TIMERS
-Nitrate: 30-second shake timer plus 3-minute wait timer.
-Phosphate: 30-second shake timer.
-Countdowns. Progress bar. Haptic ping when ready. No more squinting at a kitchen timer with wet hands.
-
-QUICK LOGGING
+QUICK LOGGING, BUILT FOR THE TEST BENCH
 Large touch targets sized for wet hands.
-Plus / minus steppers tuned per parameter.
-Haptic feedback on every save.
-The last recorded value is pre-filled.
-Mini trend sparklines on every dashboard card so you see drift before you tap.
+Plus and minus steppers tuned per parameter, clamped to physically sensible bounds.
+The last recorded value is pre-filled, with your target range right under it.
+Built-in test timers (30-second shake, 3-minute wait) placed in the order you actually work: shake, wait, read, enter. They keep counting if your phone locks.
 
-TRENDS AND ALERTS
-Charts per parameter over 7 days, 30 days, 90 days, or the entire history.
-Compare multiple parameters on a single stacked view, each with its own scale and target band.
-Alkalinity consumption rate (dKH per day): the SPS health signal nobody else surfaces this clearly.
-Configurable alert thresholds (warning and critical).
-Automatic NO3:PO4 ratio detection.
-Automatic Ca / Alk / Mg ionic balance detection.
-Full history list with inline edit and delete.
+THE VERDICT BEFORE YOU SAVE
+The value recolors live as you step past your own thresholds.
+"Within target range" or "Below target range" appears before you commit.
+Saves that land out of range buzz differently than healthy ones.
 
-CORRECTIONS
-Dosing log: Kalkwasser, 2-part, All-for-Reef, and any custom product.
-Water changes: percentage, salt brand, and dilution in g/L.
-Dosing markers appear on the charts they affect.
-Water changes appear on every parameter chart.
-See exactly what each correction did to your trend.
+TRENDS THAT THINK LIKE A REEF KEEPER
+Charts over 7, 30, 90 days or the entire history, with painted target zones.
+Alkalinity consumption rate (dKH per day), fitted on the recent dosing regime, with direction: falling means consumption, rising means check your dosing.
+Alkalinity swing alert when KH moves more than 1 dKH within 24 hours.
+NO3:PO4 ratio and Ca/Alk/Mg ionic balance checks that only pair fresh readings, and every alert tells you what to do next, not just what is wrong.
+Compare parameters in a stacked view, each with its own scale and target band.
+Full history with inline edit and delete.
+
+CORRECTIONS, CORRELATED
+Dosing log: Kalkwasser, 2-part, All-for-Reef, or any custom product.
+Water changes: percentage, salt brand, dilution in g/L.
+Doses appear as markers on the charts they affect; water changes on every chart.
+Mis-typed an entry? Delete it. Nothing is permanent by accident.
 
 MULTI-TANK
-Manage every aquarium from a single app.
-Switch between tanks in one tap from any screen.
-Each tank has its own readings, thresholds, dosing log, and water-change log.
+Every aquarium in one app, switchable in one tap from any screen.
+Each tank keeps its own readings, thresholds, dosing log, and water changes.
+
+UNIT FLEXIBILITY
+Temperature in °C or °F. Salinity as specific gravity or ppt.
+Alkalinity in dKH, meq/L, or ppm CaCO₃. Nitrate as NO3 or NO₃-N. Phosphate in ppm or ppb.
+Steppers, defaults, and thresholds adapt automatically. Comma and dot decimals both work.
+
+WHAT YOU CAN TRACK
+Up to 15 parameters.
+Water chemistry: temperature, salinity, pH, alkalinity, calcium, magnesium, potassium, strontium, iodine, boron.
+Nutrients: nitrate, phosphate, ammonia, nitrite, silicate.
+Enable only what you test. Hide the rest.
 
 YOUR DATA STAYS YOURS
-100% local storage on your device. SQLite. No cloud.
-No account required. No sign-in.
-No internet connection needed. The app does not make a single network request.
-Zero analytics, zero tracking, zero advertising SDKs.
-CSV export and import for your own backups.
+100% local storage on your device. No cloud, no account, no sign-in.
+The app does not make a single network request. Zero analytics, zero ads.
+Full CSV backup: readings, doses, water changes, and thresholds in one file.
+Import shows a preview and skips duplicates. Your data is never trapped.
 
-15 LANGUAGES
-English, French, German, Spanish, Portuguese, Italian, Dutch, Russian, Japanese, Korean, Chinese, Arabic, Hindi, Turkish, Polish.
-Auto-detected from your device. No setup.
+15 LANGUAGES, ACCESSIBLE TO EVERYONE
+English, French, German, Spanish, Portuguese, Italian, Dutch, Russian, Japanese, Korean, Chinese, Arabic, Hindi, Turkish, Polish. Auto-detected, no setup.
+Full VoiceOver support, and status is never shown by color alone.
 
 WHO THIS IS FOR
-Nano reefers tracking 4 parameters.
-SPS keepers tracking 10.
-Mixed-reef hobbyists who run Salifert weekly.
+Nano reefers tracking 4 parameters. SPS keepers tracking 10.
+Mixed-reef hobbyists who run their test kits every Sunday.
 Anyone who has ever forgotten what their alkalinity was three weeks ago.
 
 PRICING
-Free. Forever. No in-app purchases. No subscription. No paywalls. No ads.
+Free. Forever. No in-app purchases, no subscription, no paywalls, no ads.
 
 PRIVACY
-Read the privacy policy at https://nicolasbertrand-qara.github.io/reef-monitor/privacy.html
+https://nicolasbertrand-qara.github.io/reef-monitor/privacy.html
 Short version: nothing leaves your device.
 
 FEEDBACK
 Found a bug? Want a feature? Email the developer: delegue.grs@gmail.com
-This app is built by one reef keeper, for the reef community. Every email gets read.
+Built by one reef keeper for the reef community. Every email gets read.
 ```
 
-## Release notes for v1.4.0 (351 / 4,000 chars)
+en-GB spelling deltas: "recolors" → "recolours", "color" → "colour".
+
+## Release notes for v1.5.0
 
 ```
-Trends got a redesign.
+Your save now tells you the verdict.
 
-What is new
-A narrative card at the top: delta, status, and observed range at a glance.
-For alkalinity, the consumption rate is folded into the narrative.
-Chart now paints status zones (target, out of range) with dashed threshold lines and labelled event markers.
-Compare mode: stack multiple parameters as mini-charts, each with its own scale and target band. Tap one to expand to the full detail view.
+• The value recolors live as you pass your thresholds, and "Within target range" (or not) appears before you save. Out-of-range saves buzz differently.
+• Built-in test timers moved above the value, matching the real sequence: shake, wait, read, enter. They keep counting if the phone locks.
+• New alkalinity swing alert: a move of more than 1 dKH within 24 hours raises a banner.
+• Consumption rate now has a direction: rising alkalinity says "check dosing".
+• Full backup: CSV export now includes doses, water changes, and thresholds. Import shows a preview and skips duplicates.
+• Doses and water changes can now be deleted.
+• Comma decimals ("8,2") save correctly in every language.
+• Full VoiceOver support, larger touch targets, higher-contrast text.
 ```
+
+## Screenshot captions (indexed; repeat head terms here, dedupe does NOT apply)
+
+First 3 are visible in search results; headline must sit in the top third of the art.
+
+1. "Reef tank log with a live verdict" (hook + trust pill: 100% free · offline · no account)
+2. "All 15 saltwater parameters at a glance" (real dashboard capture)
+3. "Test-kit timers built in" (timer mid-countdown)
+4. "Spot alkalinity drift before your SPS does" (consumption narrative + chart)
+5. "Dosing and water changes on your trends" (markers)
+6. "Every tank in one app" (switcher)
+7. "Your data stays on your device" (privacy)
+8. "Full CSV backup. Never trapped." (export)
+9. "Speaks 15 languages" (locale collage)
+10. "Free. No ads. No tracking." (closer)
+
+All screenshots: real simulator captures over a seeded demo tank (see docs/screenshot-brief.md). No synthetic mockups.
 
 ## Privacy URL
 
@@ -135,20 +161,22 @@ https://nicolasbertrand-qara.github.io/reef-monitor/
 
 ## Primary category
 
-`Utilities` (matches Aquarimate and Reef Buddy; the strongest category for parameter-tracking apps).
+`Utilities` (matches the strongest direct competitors for tracker intent; Productivity is the A/B candidate once Product Page Optimization is available to us).
 
 ## Secondary category
 
-`Health & Fitness` (reaches users browsing health-tracking apps; aligns with "tracker" intent).
+`Health & Fitness` (tracker-intent browsing).
 
-## Age rating
+## Ratings (page blocker, not optional)
 
-4+. No restricted content.
+The US listing shows 0 ratings as of 2026-06-10. Until the rating row is populated, conversion work is capped.
+1. Ship the `expo-store-review` prompt with v1.5 (trigger: readings logged on 3+ distinct days, never after a critical-alert session, max once per 120 days).
+2. Seed 15 to 25 honest ratings from real users (reefer friends, colleagues who keep tanks). Never trade or buy reviews.
 
 ## Notes on what NOT to put in the description
 
-- No emojis. The category is "Utilities" and the buyer profile reads them as juvenile.
-- No "best", "top", "ultimate", "#1". Apple may reject for promotional claims, and reefers find them off-putting.
-- No competitor brand names in the description (Aquarimate, Reef Buddy, etc.). Apple may reject for impersonation. Competitor brand names in the keyword field are tolerated; in the description they are not.
-- No "as seen on" / fake press logos.
-- No screenshots embedded in the description (Apple ignores them).
+- No emojis. The buyer profile reads them as juvenile.
+- No "best", "top", "ultimate", "#1". Apple may reject promotional claims, and reefers find them off-putting.
+- No competitor brand names anywhere in metadata.
+- No third-party trademark in Name or Subtitle (Guideline 2.3.7). One factual "Works with Salifert test kits" in the description body is the ceiling.
+- No em dashes in any store copy.

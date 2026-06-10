@@ -1,50 +1,71 @@
-Reef Monitor — Suivi des paramètres de votre aquarium d'eau de mer
+Reef Monitor est le journal gratuit et hors ligne pour les récifalistes qui testent vraiment leur eau.
 
-Suivez les paramètres de votre bac récifal avec précision et sérénité, quelle que soit sa taille. Conçu pour tous les récifalistes, Reef Monitor vous permet d'enregistrer vos mesures, visualiser les tendances et détecter les dérives avant qu'elles ne deviennent un problème.
+Enregistrez une mesure en quelques secondes les mains mouillées, voyez le verdict avant d'enregistrer, et repérez la dérive d'alcalinité avant vos coraux.
 
-CHOIX DES UNITÉS
-• Choisissez vos unités préférées par paramètre
-• Température en °C ou °F
-• Salinité en densité ou en ppt
-• Alcalinité en dKH, meq/L ou ppm CaCO₃
-• Nitrates en NO3 ou NO₃-N, phosphates en ppm ou ppb
-• Valeurs par défaut, pas et seuils s'adaptent automatiquement
+Gratuit pour toujours. Sans compte. Sans pub. Sans tracking. Compatible avec les tests Salifert.
+
+SAISIE RAPIDE, PENSÉE POUR LA PAILLASSE
+Boutons grand format, utilisables les mains mouillées.
+Steppers +/- au pas adapté à chaque paramètre, bornés à des valeurs physiquement plausibles.
+La dernière valeur est pré-remplie, avec votre plage cible juste en dessous.
+Minuteurs de test intégrés (30 secondes d'agitation, 3 minutes d'attente), placés dans l'ordre réel du geste : agiter, attendre, lire, saisir. Ils continuent de tourner si le téléphone se verrouille.
+
+LE VERDICT AVANT D'ENREGISTRER
+La valeur change de couleur en direct quand vous dépassez vos seuils.
+"Dans la plage cible" ou "Sous la plage cible" s'affiche avant de valider.
+Un enregistrement hors plage ne vibre pas comme un enregistrement sain.
+
+DES TENDANCES QUI RAISONNENT EN RÉCIFALISTE
+Graphiques sur 7, 30, 90 jours ou tout l'historique, avec zones cibles colorées.
+Taux de consommation d'alcalinité (dKH/jour), calculé sur le régime de dosage récent, avec sa direction : en baisse, c'est de la consommation ; en hausse, vérifiez le dosage.
+Alerte de variation : plus de 1 dKH en 24 h déclenche un bandeau.
+Ratio NO3:PO4 et équilibre ionique Ca/Alc/Mg calculés uniquement sur des mesures fraîches, et chaque alerte indique quoi faire, pas seulement ce qui ne va pas.
+Comparez plusieurs paramètres dans une vue empilée, chacun avec son échelle et sa plage cible.
+Historique complet avec modification et suppression en ligne.
+
+CORRECTIONS, CORRÉLÉES
+Journal de dosage : Kalkwasser, balling, All-for-Reef, ou tout produit personnalisé.
+Changements d'eau : pourcentage, marque de sel, dilution en g/L.
+Les dosages s'affichent sur les graphiques concernés ; les changements d'eau sur tous.
+Une erreur de saisie ? Supprimez l'entrée. Rien n'est définitif par accident.
 
 MULTI-BACS
-• Gérez plusieurs aquariums depuis une seule app
-• Changez de bac en un tap depuis n'importe quel écran
-• Chaque bac a ses propres mesures, seuils et corrections
+Tous vos aquariums dans une seule app, changement de bac en un tap.
+Chaque bac garde ses mesures, seuils, dosages et changements d'eau.
 
-ENREGISTREMENT RAPIDE
-• Interface tactile grand format, utilisable les mains mouillées
-• Boutons +/- avec pas configuré par paramètre
-• Retour haptique à chaque enregistrement
-• Minuteurs intégrés pour les tests Salifert (30 sec, 3 min)
-• La dernière valeur enregistrée est pré-remplie
-• Mini courbes de tendance sur chaque carte
+CHOIX DES UNITÉS
+Température en °C ou °F. Salinité en densité ou ppt.
+Alcalinité en dKH, meq/L ou ppm CaCO₃. Nitrates en NO3 ou NO₃-N. Phosphates en ppm ou ppb.
+Pas, valeurs par défaut et seuils s'adaptent automatiquement. Virgule ou point décimal, les deux fonctionnent.
 
-JUSQU'À 15 PARAMÈTRES
-• Chimie de l'eau : température, salinité, pH, alcalinité, calcium, magnésium, potassium, strontium, iode, bore
-• Nutriments : nitrates, phosphates, ammoniac, nitrites, silicates
-• Activez uniquement les paramètres que vous suivez
-
-TENDANCES ET ALERTES
-• Graphiques par paramètre sur 7j, 30j, 90j ou tout l'historique
-• Superposition de plusieurs paramètres sur le même graphique
-• Taux de consommation d'alcalinité (dKH/jour) — indicateur clé pour les SPS
-• Seuils d'alerte configurables (avertissement et critique)
-• Détection automatique du ratio NO3:PO4 et de l'équilibre ionique Ca/Alk/Mg
-• Historique des mesures avec modification et suppression en ligne
-
-CORRECTIONS
-• Journal de dosage : Kalkwasser, balling, All-for-Reef et produits personnalisés
-• Changements d'eau : pourcentage, marque de sel, dilution en g/L
-• Dosages et changements d'eau affichés sur les graphiques de tendances
+CE QUE VOUS POUVEZ SUIVRE
+Jusqu'à 15 paramètres.
+Chimie de l'eau : température, salinité, pH, alcalinité, calcium, magnésium, potassium, strontium, iode, bore.
+Nutriments : nitrates, phosphates, ammoniaque, nitrites, silicates.
+Activez uniquement ce que vous mesurez, masquez le reste.
 
 VOS DONNÉES RESTENT LES VÔTRES
-• Stockage 100% local sur votre appareil
-• Aucun compte requis, aucune connexion internet
-• Export et import CSV pour sauvegarder ou restaurer vos données
-• Aucune collecte de données personnelles
+Stockage 100 % local sur votre appareil. Pas de cloud, pas de compte.
+L'app ne fait pas une seule requête réseau. Zéro analytics, zéro pub.
+Sauvegarde CSV complète : mesures, dosages, changements d'eau et seuils dans un seul fichier.
+L'import affiche un aperçu et ignore les doublons. Vos données ne sont jamais captives.
 
-Disponible en 15 langues.
+15 LANGUES, ACCESSIBLE À TOUS
+Anglais, français, allemand, espagnol, portugais, italien, néerlandais, russe, japonais, coréen, chinois, arabe, hindi, turc, polonais. Détection automatique.
+Compatibilité VoiceOver complète, et le statut n'est jamais indiqué par la couleur seule.
+
+POUR QUI
+Récifalistes nano qui suivent 4 paramètres. Aquariophiles SPS qui en suivent 10.
+Bacs mixtes qui font leurs tests chaque dimanche.
+Tous ceux qui ont déjà oublié leur alcalinité d'il y a trois semaines.
+
+TARIF
+Gratuit. Pour toujours. Aucun achat intégré, aucun abonnement, aucune pub.
+
+CONFIDENTIALITÉ
+https://nicolasbertrand-qara.github.io/reef-monitor/privacy.html
+En bref : rien ne quitte votre appareil.
+
+CONTACT
+Un bug ? Une idée ? Écrivez au développeur : delegue.grs@gmail.com
+Faite par un récifaliste, pour la communauté récifale. Chaque message est lu.

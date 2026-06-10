@@ -1,8 +1,12 @@
-Nouveautés de la version 1.4.0 :
+Nouveautés de la version 1.5.0 :
 
-• Écran Tendances entièrement repensé
-• Carte narrative en haut : delta sur la période, statut et plage observée
-• Pour l'alcalinité, le taux de consommation est intégré dans la narrative
-• Graphique avec zones colorées (cible, hors cible), seuils en pointillés et marqueurs d'évènements
-• Comparaison de paramètres : vue compacte empilée, un mini-graphique par paramètre avec sa propre échelle et sa zone cible
-• Touchez un paramètre dans la comparaison pour ouvrir sa vue détaillée
+Votre enregistrement vous donne maintenant le verdict.
+
+• La valeur change de couleur en direct quand vous dépassez vos seuils, et "Dans la plage cible" (ou non) s'affiche avant d'enregistrer. Un enregistrement hors plage vibre différemment.
+• Les minuteurs de test passent au-dessus de la valeur, dans l'ordre réel du geste : agiter, attendre, lire, saisir. Ils continuent si le téléphone se verrouille.
+• Nouvelle alerte de variation d'alcalinité : plus de 1 dKH en 24 h déclenche un bandeau.
+• Le taux de consommation a maintenant une direction : une alcalinité en hausse affiche "vérifier le dosage".
+• Sauvegarde complète : l'export CSV inclut désormais dosages, changements d'eau et seuils. L'import affiche un aperçu et ignore les doublons.
+• Les dosages et changements d'eau peuvent être supprimés.
+• Les décimales à virgule ("8,2") sont enregistrées correctement dans toutes les langues.
+• Compatibilité VoiceOver complète, cibles tactiles agrandies, contrastes renforcés.

@@ -8,16 +8,16 @@ L'acquariofilia marina italiana è concentrata sui forum AcquaPortal, DanireefFo
 Reef Monitor: acqua salata
 ```
 
-## Sottotitolo (28 / 30 caratteri)
+## Sottotitolo (25 / 30 caratteri)
 
 ```
-Salifert · KH · salinità · Ca
+Test, tendenze e dosaggio
 ```
 
 ## Parole chiave (96 / 100 caratteri, senza spazi, singolare)
 
 ```
-barriera,acquario,marino,corallo,nano,sps,lps,alcalinita,calcio,magnesio,nitrato,fosfato,icp,kalk
+salifert,acquario,barriera,corallo,marino,nano,kh,alcalinita,calcio,salinita,nitrato,fosfato,icp
 ```
 
 ## Testo promozionale (160 / 170 caratteri)

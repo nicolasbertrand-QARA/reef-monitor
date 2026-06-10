@@ -2,127 +2,145 @@
 
 Le marché français du récifal est dense, vocal, et concentré autour de quelques forums historiques (Cap-Récifal, Récif France, Aquariophilie.org). Le terme "récifal" est la requête native ; "marin" est plus rare. "Bac" est la forme familière de "aquarium".
 
-## Nom de l'app (29 / 30 caractères)
+Révision 2026-06-10 : le sous-titre précédent ("Salifert · KH · salinité · Ca") plaçait une marque tierce dans un champ visible et ressemblait à du bourrage de mots-clés, deux déclencheurs explicites de rejet (règle 2.3.7). "salifert" passe dans le champ mots-clés caché ; la description conserve une seule mention factuelle de compatibilité.
+
+## Nom de l'app (28 / 30 caractères)
 
 ```
 Reef Monitor : suivi récifal
 ```
 
-## Sous-titre (29 / 30 caractères)
+## Sous-titre (26 / 30 caractères)
 
 ```
-Salifert · KH · salinité · Ca
+Tests, tendances et dosage
 ```
 
-## Mots-clés (98 / 100 caractères, sans espaces, singulier, sans doublon avec Nom + Sous-titre)
+Lisible comme un résumé de fonctionnalités (conversion) tout en ajoutant trois tokens propres : test, tendance, dosage. Aucun doublon avec le nom.
+
+## Mots-clés (100 / 100 caractères, sans espaces, singulier, sans doublon avec Nom + Sous-titre)
 
 ```
-recif,aquarium,marine,corail,nano,sps,lps,alcalinite,calcium,magnesium,nitrate,phosphate,icp,kalk,bac
+salifert,aquarium,marin,corail,nano,densite,alcalinite,kh,calcium,salinite,nitrate,phosphate,icp,bac
 ```
 
-Note : Apple gère les accents, mais retirer les accents dans les mots-clés évite des collisions de tokenisation (alcalinité vs alcalinite). Les utilisateurs continueront à matcher quelle que soit la forme tapée.
+Note : accents retirés pour éviter les collisions de tokenisation (alcalinité vs alcalinite). Les utilisateurs matchent quelle que soit la forme tapée.
 
-## Texte promotionnel (168 / 170 caractères)
-
-```
-Pensée par un récifaliste, pour les récifalistes. Minuteurs Salifert, taux de consommation KH, ratio NO3:PO4, 15 langues. 100% hors ligne. Pas de pub, pas de compte.
-```
-
-## Description (3,970 / 4,000 caractères)
+## Texte promotionnel (163 / 170 caractères ; modifiable sans re-soumission)
 
 ```
-Reef Monitor est l'app gratuite et hors ligne de suivi des paramètres pour aquariums récifaux, conçue par un récifaliste qui teste vraiment son eau.
+Par un récifaliste. Verdict en direct à la saisie, minuteurs de test, consommation KH, sauvegarde CSV complète, 15 langues. Gratuit, hors ligne, sans pub ni compte.
+```
 
-Minuteurs Salifert intégrés. Taux de consommation KH. Ratio NO3:PO4. Multi-bacs. 15 langues. Sans compte. Sans publicité.
+## Description (~3 500 / 4 000 caractères)
 
-CE QUE VOUS POUVEZ SUIVRE
-Jusqu'à 15 paramètres récifaux répartis en deux groupes.
-Chimie de l'eau : température, salinité, pH, alcalinité, calcium, magnésium, potassium, strontium, iode, bore.
-Nutriments : nitrates, phosphates, ammoniaque, nitrites, silicates.
-Activez uniquement les paramètres que vous mesurez vraiment, masquez les autres.
+```
+Reef Monitor est le journal gratuit et hors ligne pour les récifalistes qui testent vraiment leur eau.
 
-CHOIX DES UNITÉS
-Choisissez vos unités préférées, paramètre par paramètre.
-Température en °C ou °F.
-Salinité en densité ou en ppt.
-Alcalinité en dKH, meq/L, ou ppm CaCO₃.
-Nitrates en NO3 ou en NO₃-N. Phosphates en ppm ou ppb.
-Pas, valeurs par défaut et seuils s'adaptent automatiquement.
+Enregistrez une mesure en quelques secondes les mains mouillées, voyez le verdict avant d'enregistrer, et repérez la dérive d'alcalinité avant vos coraux.
 
-MINUTEURS SALIFERT INTÉGRÉS
-Nitrates : minuteur de 30 secondes pour le shake, puis 3 minutes pour la lecture.
-Phosphates : minuteur de 30 secondes pour le shake.
-Compte à rebours, barre de progression, vibration à la fin. Plus besoin de plisser les yeux sur la minuterie de la cuisine avec les mains mouillées.
+Gratuit pour toujours. Sans compte. Sans pub. Sans tracking. Compatible avec les tests Salifert.
 
-SAISIE RAPIDE
+SAISIE RAPIDE, PENSÉE POUR LA PAILLASSE
 Boutons grand format, utilisables les mains mouillées.
-Steppers +/- avec un pas adapté à chaque paramètre.
-Retour haptique à chaque enregistrement.
-La dernière valeur enregistrée est pré-remplie.
-Mini-courbes de tendance sur chaque carte du tableau de bord : vous voyez les dérives avant même de toucher la carte.
+Steppers +/- au pas adapté à chaque paramètre, bornés à des valeurs physiquement plausibles.
+La dernière valeur est pré-remplie, avec votre plage cible juste en dessous.
+Minuteurs de test intégrés (30 secondes d'agitation, 3 minutes d'attente), placés dans l'ordre réel du geste : agiter, attendre, lire, saisir. Ils continuent de tourner si le téléphone se verrouille.
 
-TENDANCES ET ALERTES
-Graphiques par paramètre sur 7 jours, 30 jours, 90 jours, ou tout l'historique.
+LE VERDICT AVANT D'ENREGISTRER
+La valeur change de couleur en direct quand vous dépassez vos seuils.
+"Dans la plage cible" ou "Sous la plage cible" s'affiche avant de valider.
+Un enregistrement hors plage ne vibre pas comme un enregistrement sain.
+
+DES TENDANCES QUI RAISONNENT EN RÉCIFALISTE
+Graphiques sur 7, 30, 90 jours ou tout l'historique, avec zones cibles colorées.
+Taux de consommation d'alcalinité (dKH/jour), calculé sur le régime de dosage récent, avec sa direction : en baisse, c'est de la consommation ; en hausse, vérifiez le dosage.
+Alerte de variation : plus de 1 dKH en 24 h déclenche un bandeau.
+Ratio NO3:PO4 et équilibre ionique Ca/Alc/Mg calculés uniquement sur des mesures fraîches, et chaque alerte indique quoi faire, pas seulement ce qui ne va pas.
 Comparez plusieurs paramètres dans une vue empilée, chacun avec son échelle et sa plage cible.
-Taux de consommation d'alcalinité (dKH/jour) : l'indicateur de santé SPS que peu d'apps savent afficher proprement.
-Seuils d'alerte configurables (avertissement et critique).
-Détection automatique du ratio NO3:PO4.
-Détection automatique de l'équilibre ionique Ca / Alc / Mg.
 Historique complet avec modification et suppression en ligne.
 
-CORRECTIONS
+CORRECTIONS, CORRÉLÉES
 Journal de dosage : Kalkwasser, balling, All-for-Reef, ou tout produit personnalisé.
 Changements d'eau : pourcentage, marque de sel, dilution en g/L.
-Les dosages s'affichent sur les graphiques concernés. Les changements d'eau sur tous les paramètres. Vous voyez exactement l'effet de chaque correction sur la tendance.
+Les dosages s'affichent sur les graphiques concernés ; les changements d'eau sur tous.
+Une erreur de saisie ? Supprimez l'entrée. Rien n'est définitif par accident.
 
 MULTI-BACS
-Gérez tous vos aquariums depuis une seule app.
-Changez de bac en un tap depuis n'importe quel écran.
-Chaque bac a ses propres mesures, seuils, dosages, et changements d'eau.
+Tous vos aquariums dans une seule app, changement de bac en un tap.
+Chaque bac garde ses mesures, seuils, dosages et changements d'eau.
+
+CHOIX DES UNITÉS
+Température en °C ou °F. Salinité en densité ou ppt.
+Alcalinité en dKH, meq/L ou ppm CaCO₃. Nitrates en NO3 ou NO₃-N. Phosphates en ppm ou ppb.
+Pas, valeurs par défaut et seuils s'adaptent automatiquement. Virgule ou point décimal, les deux fonctionnent.
+
+CE QUE VOUS POUVEZ SUIVRE
+Jusqu'à 15 paramètres.
+Chimie de l'eau : température, salinité, pH, alcalinité, calcium, magnésium, potassium, strontium, iode, bore.
+Nutriments : nitrates, phosphates, ammoniaque, nitrites, silicates.
+Activez uniquement ce que vous mesurez, masquez le reste.
 
 VOS DONNÉES RESTENT LES VÔTRES
-Stockage 100% local sur votre appareil. SQLite. Pas de cloud.
-Aucun compte requis, aucune inscription.
-Aucune connexion Internet nécessaire. L'app ne fait pas une seule requête réseau.
-Zéro analytics, zéro tracking, zéro SDK publicitaire.
-Export et import CSV pour vos sauvegardes personnelles.
+Stockage 100 % local sur votre appareil. Pas de cloud, pas de compte.
+L'app ne fait pas une seule requête réseau. Zéro analytics, zéro pub.
+Sauvegarde CSV complète : mesures, dosages, changements d'eau et seuils dans un seul fichier.
+L'import affiche un aperçu et ignore les doublons. Vos données ne sont jamais captives.
 
-15 LANGUES
-Anglais, français, allemand, espagnol, portugais, italien, néerlandais, russe, japonais, coréen, chinois, arabe, hindi, turc, polonais.
-Détection automatique selon la langue de l'appareil. Aucune configuration.
+15 LANGUES, ACCESSIBLE À TOUS
+Anglais, français, allemand, espagnol, portugais, italien, néerlandais, russe, japonais, coréen, chinois, arabe, hindi, turc, polonais. Détection automatique.
+Compatibilité VoiceOver complète, et le statut n'est jamais indiqué par la couleur seule.
 
 POUR QUI
-Récifalistes nano qui suivent 4 paramètres.
-Aquariophiles SPS qui en suivent 10.
-Bacs mixtes qui font leurs Salifert chaque semaine.
+Récifalistes nano qui suivent 4 paramètres. Aquariophiles SPS qui en suivent 10.
+Bacs mixtes qui font leurs tests chaque dimanche.
 Tous ceux qui ont déjà oublié leur alcalinité d'il y a trois semaines.
 
 TARIF
-Gratuit. Pour toujours. Aucun achat intégré. Aucun abonnement. Aucune fonctionnalité bloquée. Aucune publicité.
+Gratuit. Pour toujours. Aucun achat intégré, aucun abonnement, aucune pub.
 
 CONFIDENTIALITÉ
-Politique : https://nicolasbertrand-qara.github.io/reef-monitor/privacy.html
+https://nicolasbertrand-qara.github.io/reef-monitor/privacy.html
 En bref : rien ne quitte votre appareil.
 
 CONTACT
 Un bug ? Une idée ? Écrivez au développeur : delegue.grs@gmail.com
-Cette app est faite par un récifaliste, pour la communauté récifale. Chaque message est lu.
+Faite par un récifaliste, pour la communauté récifale. Chaque message est lu.
 ```
 
-## Notes de version pour v1.4.0
+## Notes de version pour v1.5.0
 
 ```
-L'écran Tendances a été repensé.
+Votre enregistrement vous donne maintenant le verdict.
 
-Quoi de neuf
-Carte narrative en haut : delta, statut, et plage observée d'un seul coup d'œil.
-Pour l'alcalinité, le taux de consommation est intégré dans le récit.
-Le graphique affiche des zones de statut (cible, hors plage) avec seuils en pointillés et marqueurs d'événements étiquetés.
-Mode comparaison : empilez plusieurs paramètres en mini-graphiques, chacun avec son échelle et sa plage cible. Touchez-en un pour ouvrir la vue détaillée.
+• La valeur change de couleur en direct quand vous dépassez vos seuils, et "Dans la plage cible" (ou non) s'affiche avant d'enregistrer. Un enregistrement hors plage vibre différemment.
+• Les minuteurs de test passent au-dessus de la valeur, dans l'ordre réel du geste : agiter, attendre, lire, saisir. Ils continuent si le téléphone se verrouille.
+• Nouvelle alerte de variation d'alcalinité : plus de 1 dKH en 24 h déclenche un bandeau.
+• Le taux de consommation a maintenant une direction : une alcalinité en hausse affiche "vérifier le dosage".
+• Sauvegarde complète : l'export CSV inclut désormais dosages, changements d'eau et seuils. L'import affiche un aperçu et ignore les doublons.
+• Les dosages et changements d'eau peuvent être supprimés.
+• Les décimales à virgule ("8,2") sont enregistrées correctement dans toutes les langues.
+• Compatibilité VoiceOver complète, cibles tactiles agrandies, contrastes renforcés.
 ```
+
+## Légendes des captures (indexées ; répéter les termes de tête, pas de déduplication ici)
+
+1. "Le journal de bac récifal avec verdict en direct" (+ pastille : 100 % gratuit · hors ligne · sans compte)
+2. "Vos 15 paramètres d'eau de mer d'un coup d'œil"
+3. "Minuteurs de test intégrés"
+4. "Repérez la dérive d'alcalinité avant vos SPS"
+5. "Dosages et changements d'eau sur vos tendances"
+6. "Tous vos bacs dans une seule app"
+7. "Vos données restent sur votre appareil"
+8. "Sauvegarde CSV complète. Jamais captives."
+9. "Parle 15 langues"
+10. "Gratuit. Sans pub. Sans tracking."
+
+Captures réelles sur simulateur avec bac de démonstration (voir docs/screenshot-brief.md). Pas de maquettes synthétiques.
 
 ## Notes marché
 
 - Sites communautaires français à cibler : Cap-Récifal, Récif France, Aquariophilie.org, le subreddit r/aquariophilie.
-- Marques de sel populaires en France : Tropic Marin, Red Sea, Aquaforest. Mentionnées explicitement dans les mockups de "marque de sel" du formulaire de changement d'eau.
+- Marques de sel populaires en France : Tropic Marin, Red Sea, Aquaforest.
 - Le terme "récifaliste" (au lieu de "aquariophile marin") est le marqueur d'authenticité. L'utiliser dans tout le copy.
+- La fiche FR a déjà 2 notes à 5,0 : déclencher le prompt de notation en France en priorité, le social proof y démarre plus vite qu'aux US.

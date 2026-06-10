@@ -63,16 +63,16 @@ Path: My Apps > Reef Monitor > iOS App > [version].
 ### Subtitle
 - **Change to**:
   ```
-  Salifert · pH · dKH · Salinity
+  Tank tests, trends & dosing
   ```
-- 30 chars. The `·` is a U+00B7 middle dot, allowed by ASC.
+- 27 chars. Revised 2026-06-10: the previous proposal ("Salifert · pH · dKH · Salinity") combined a third-party trademark with a keyword-list look in a visible field, two explicit Guideline 2.3.7 rejection triggers. "salifert" moved to the hidden keyword field.
 
 ### Promotional Text (170 chars max)
 - **Change to**:
   ```
-  Built by a reef keeper, for reef keepers. Salifert timers, alk consumption rate, NO3:PO4 ratio, 15 languages. 100% offline. No ads, no account, no tracking.
+  Built by a reef keeper. Live in-range verdict as you log, test-kit timers, alk consumption rate, full CSV backup, 15 languages. Free, offline, no ads, no account.
   ```
-- This field updates without re-review. Use it for time-bound messaging later (e.g. "v1.5 just shipped with ICP import").
+- 162 chars. This field updates without re-review. Use it for time-bound messaging later.
 
 ### Description
 - **Replace with the contents of**: `appstore/listings/en-US.md` (the "Description" code block).
@@ -80,9 +80,9 @@ Path: My Apps > Reef Monitor > iOS App > [version].
 ### Keywords (100 chars max, hidden)
 - **Change to**:
   ```
-  reef,tank,aquarium,marine,coral,nano,sps,lps,alkalinity,calcium,magnesium,nitrate,phosphate,icp,kalk
+  salifert,aquarium,tracker,coral,marine,nano,alkalinity,calcium,nitrate,phosphate,salinity,icp,sps,kh
   ```
-- 99 chars. No spaces. Singular forms. No words from Name or Subtitle.
+- 100 chars. No spaces. Singular forms. No words from Name or Subtitle (tank/test/trend/dosing now live in the subtitle; reef/saltwater/log in the name).
 
 ### Support URL
 - **Change to**: `https://nicolasbertrand-qara.github.io/reef-monitor/`
@@ -95,6 +95,7 @@ Path: My Apps > Reef Monitor > iOS App > [version].
 - **Replace with the contents of**: `appstore/listings/en-US.md` (the "Release notes" code block).
 
 ### Screenshots
+- **All screenshots must be real simulator captures over a seeded demo tank** (decision 2026-06-10; the previous synthetic SVG compositions depicted a UI that does not exist and were a Guideline 2.3.3 risk). Pipeline: seed demo data, capture via `xcrun simctl io booted screenshot`, frame + caption per `docs/screenshot-brief.md`.
 - **Required**: at minimum a 6.7" iPhone set (1290x2796) and a 6.5" set (1242x2688).
 - **Recommended**: also iPad 12.9" set, even if the binary does not support iPad. ASC will allow you to upload an iPhone screenshot in iPad slot if iPad is not enabled.
 - Apple permits 3 to 10 screenshots per device size. Upload all 10 per the new screenshot brief (`docs/screenshot-brief.md`).
@@ -174,6 +175,7 @@ Compare CVR before and after each change. Roll back any change that drops CVR by
 
 To minimize risk:
 
+0. **Before anything**: the US listing shows 0 ratings (live check 2026-06-10). Seed 15 to 25 honest ratings from real users and ship the `expo-store-review` prompt with v1.5. An empty rating row caps conversion regardless of metadata quality.
 1. **Day 1**: change Name + Subtitle + Promotional Text + Description + Keywords for **en-US only**. Save. This is reversible if anything breaks.
 2. **Day 1**: update Privacy Policy URL to point to the new `privacy.html`. Save.
 3. **Day 2 to 3**: monitor en-US installs and CVR. Apple takes up to 24 hours to index new metadata.

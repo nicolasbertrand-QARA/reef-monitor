@@ -7,7 +7,8 @@ App Store screenshots drive conversion rate (CVR). Doubling CVR is equivalent to
 - Users decide to install (or scroll past) in under 1.5 seconds.
 - The first 3 screenshots are the only ones visible in search results. They are also the only ones autoplayed in the carousel before requiring a swipe.
 - App Preview videos (autoplay muted) lift CVR by 20 to 40 % when present (none of Reef Monitor's competitors ship one as of June 2026).
-- Captions baked into the screenshot art are indexed for App Store search (since iOS 17).
+- Captions baked into the screenshot art are indexed for App Store search since Apple's June 2025 algorithm change (observed by every major ASO tracker; never officially confirmed by Apple). Crucially, caption keywords do NOT dedupe against Name/Subtitle/Keywords: repeat the head terms ("reef tank", "saltwater", "alkalinity") in captions even though they appear in the metadata.
+- All screenshots are REAL simulator captures over a seeded demo tank (decision 2026-06-10). The synthetic SVG pipeline is retired for store assets: it depicted a UI that does not exist (Guideline 2.3.3 risk) and had drifted from its own generator.
 
 The current Reef Monitor screenshots have three problems:
 
@@ -43,9 +44,10 @@ The first three are the only ones visible in search results. Optimize them ruthl
    - Visual: dashboard screen, slightly larger than the hook, with visible parameter cards (temperature, salinity, pH, alkalinity, calcium, magnesium, nitrate, phosphate).
    - This is the "does it cover what I need" sell.
 
-3. **SALIFERT TIMERS** (visible in search)
-   - Headline: "Built-in Salifert kit timers."
-   - Caption: "30s shake. 3min wait. Haptic ping. No more squinting."
+3. **TEST TIMERS** (visible in search)
+   - Headline: "Test-kit timers built in."
+   - Caption: "30s shake. 3min wait. Made for Salifert workflows."
+   - (Trademark note: one factual "Salifert" mention in caption text is nominative use; do not put the brand in the headline.)
    - Visual: ParamInput screen with the countdown timer prominent.
    - This is the "this app gets me" sell. Salifert users will install immediately.
 

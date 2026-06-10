@@ -8,16 +8,16 @@ El mercado hispanohablante de acuarios marinos se centra en España, México, Ar
 Reef Monitor: agua salada
 ```
 
-## Subtítulo (29 / 30 caracteres)
+## Subtítulo (25 / 30 caracteres)
 
 ```
-Salifert · KH · salinidad · Ca
+Tests, tendencias y dosis
 ```
 
-## Palabras clave (96 / 100 caracteres, sin espacios, singular)
+## Palabras clave (95 / 100 caracteres, sin espacios, singular)
 
 ```
-arrecife,acuario,marino,coral,nano,sps,lps,alcalinidad,calcio,magnesio,nitrato,fosfato,icp,kalk,pez
+salifert,acuario,arrecife,coral,marino,nano,kh,alcalinidad,calcio,salinidad,nitrato,fosfato,icp
 ```
 
 ## Texto promocional (162 / 170 caracteres)

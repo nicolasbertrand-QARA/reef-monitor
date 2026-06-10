@@ -8,16 +8,16 @@ Nederland heeft de hoogste rif-aquarist-dichtheid per inwoner in Europa. De comm
 Reef Monitor: zeewater-log
 ```
 
-## Ondertitel (29 / 30 tekens)
+## Ondertitel (25 / 30 tekens)
 
 ```
-Salifert · KH · zoutgehalte · Ca
+Tests, trends en dosering
 ```
 
-## Trefwoorden (96 / 100 tekens, geen spaties, enkelvoud)
+## Trefwoorden (93 / 100 tekens, geen spaties, enkelvoud)
 
 ```
-rif,aquarium,zeewater,koraal,nano,sps,lps,alkaliteit,calcium,magnesium,nitraat,fosfaat,icp,kalk,bak
+salifert,aquarium,rif,koraal,zout,nano,kh,alkaliniteit,calcium,saliniteit,nitraat,fosfaat,icp
 ```
 
 ## Promotietekst (160 / 170 tekens)

@@ -8,16 +8,16 @@ Der deutsche Meerwasseraquaristik-Markt ist groß, technisch, und vereint um For
 Reef Monitor: Meerwasser-Log
 ```
 
-## Untertitel (29 / 30 Zeichen)
+## Untertitel (25 / 30 Zeichen)
 
 ```
-Salifert · KH · Salzgehalt · Ca
+Tests, Trends & Dosierung
 ```
 
-## Schlüsselwörter (98 / 100 Zeichen, keine Leerzeichen, Singular)
+## Schlüsselwörter (97 / 100 Zeichen, keine Leerzeichen, Singular)
 
 ```
-riff,aquarium,meerwasser,koralle,nano,sps,lps,alkalinitat,calcium,magnesium,nitrat,phosphat,icp,kalk
+salifert,aquarium,riff,koralle,nano,kh,alkalinitaet,calcium,salinitaet,nitrat,phosphat,icp,becken
 ```
 
 Hinweis: Umlaute weggelassen (alkalinitat statt Alkalinität), Apple matcht beide Formen. Spart ein paar Zeichen für mehr Tokens.

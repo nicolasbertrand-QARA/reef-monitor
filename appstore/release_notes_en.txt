@@ -1,8 +1,12 @@
-What's new in version 1.4.0:
+What's new in version 1.5.0:
 
-• Redesigned Trends screen
-• Narrative card at the top: delta over the period, status, and observed range
-• For alkalinity, the consumption rate is folded into the narrative
-• Chart with status zones (target, out of range), dashed thresholds, and labelled event markers
-• Compare parameters: stacked compact view with one mini-chart per parameter, each with its own scale and target band
-• Tap a parameter in compare mode to open its detail view
+Your save now tells you the verdict.
+
+• The value recolors live as you pass your thresholds, and "Within target range" (or not) appears before you save. Out-of-range saves buzz differently.
+• Built-in test timers moved above the value, matching the real sequence: shake, wait, read, enter. They keep counting if the phone locks.
+• New alkalinity swing alert: a move of more than 1 dKH within 24 hours raises a banner.
+• Consumption rate now has a direction: rising alkalinity says "check dosing".
+• Full backup: CSV export now includes doses, water changes, and thresholds. Import shows a preview and skips duplicates.
+• Doses and water changes can now be deleted.
+• Comma decimals ("8,2") save correctly in every language.
+• Full VoiceOver support, larger touch targets, higher-contrast text.
