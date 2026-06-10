@@ -5,7 +5,8 @@ import { getCoreParams, getNutrientParams, PARAMETERS, getParameterList } from '
 import { THEME } from '@/src/constants/colors';
 import { useLatestReadings } from '@/src/hooks/useParameters';
 import { evaluateStatus } from '@/src/utils/thresholds';
-import { evaluateNO3PO4Ratio, evaluateIonicBalance } from '@/src/utils/ratios';
+import { evaluateNO3PO4Ratio, evaluateIonicBalance, detectAlkSwing } from '@/src/utils/ratios';
+import { getDisplayUnit } from '@/src/utils/units';
 import { ParamCard } from '@/src/components/ParamCard';
 import { ParamInput } from '@/src/components/ParamInput';
 import { RatioIndicator } from '@/src/components/RatioIndicator';
@@ -42,8 +43,17 @@ export default function DashboardScreen() {
 
   const no3 = readingMap.get('nitrate'), po4 = readingMap.get('phosphate');
   const ca = readingMap.get('calcium'), alk = readingMap.get('alkalinity'), mg = readingMap.get('magnesium');
-  const ratioResult = no3 && po4 ? evaluateNO3PO4Ratio(no3.value, po4.value) : null;
-  const ionicResult = ca && alk && mg ? evaluateIonicBalance(ca.value, alk.value, mg.value) : null;
+  // Ratio alerts are only meaningful when the paired readings were taken
+  // close together; a 3-week-old PO4 against today's NO3 is noise.
+  const PAIRING_WINDOW_MS = 72 * 60 * 60 * 1000;
+  const contemporaneous = (...rs: Reading[]) => {
+    const ts = rs.map((r) => new Date(r.recorded_at).getTime());
+    return Math.max(...ts) - Math.min(...ts) <= PAIRING_WINDOW_MS;
+  };
+  const ratioResult = no3 && po4 && contemporaneous(no3, po4) ? evaluateNO3PO4Ratio(no3.value, po4.value) : null;
+  const ionicResult = ca && alk && mg && contemporaneous(ca, alk, mg) ? evaluateIonicBalance(ca.value, alk.value, mg.value) : null;
+  const alkSwing = detectAlkSwing(historyMap.get('alkalinity') ?? []);
+  const alkUnit = getDisplayUnit(PARAMETERS.alkalinity, unitPrefs);
 
   const renderCard = (paramDef: ReturnType<typeof getCoreParams>[0]) => {
     const reading = readingMap.get(paramDef.key);
@@ -63,6 +73,11 @@ export default function DashboardScreen() {
       )}
       {ionicResult && ionicResult.status !== 'ok' && ionicResult.status !== 'unknown' && (
         <View style={styles.alertSection}><RatioIndicator title={i18n.t('dashboard.ionicBalance')} message={ionicResult.message} status={ionicResult.status} /></View>
+      )}
+      {(alkSwing.status === 'warning' || alkSwing.status === 'critical') && (
+        <View style={styles.alertSection}><RatioIndicator title={i18n.t('dashboard.alkSwing')}
+          message={i18n.t('ratios.alkSwing', { swing: alkUnit.fromCanonical(alkSwing.swing).toFixed(alkUnit.decimals), unit: alkUnit.unit })}
+          status={alkSwing.status} /></View>
       )}
       <Text style={styles.sectionLabel}>{i18n.t('dashboard.waterChemistry')}</Text>
       <View style={styles.grid}>{getCoreParams().filter((p) => visible.has(p.key)).map(renderCard)}</View>

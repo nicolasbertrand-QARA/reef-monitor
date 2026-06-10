@@ -140,15 +140,19 @@ function MonoView({ ds, doses = [], waterChanges = [], unitPrefs = {}, timeRange
     });
   }
 
-  // Alk consumption inline
+  // Alk consumption inline: fit on the recent regime only (14 days back from
+  // the latest reading), and keep the sign — rising alk is a dosing warning,
+  // not "consumption".
   let consumptionInline = '';
   if (paramDef.key === 'alkalinity' && n >= 2) {
-    const rate = calculateConsumptionRate(sorted);
+    const windowStart = tMax - 14 * 24 * 60 * 60 * 1000;
+    const recent = sorted.filter((r) => new Date(r.recorded_at).getTime() >= windowStart);
+    const rate = recent.length >= 2 ? calculateConsumptionRate(recent) : null;
     if (rate !== null && Math.abs(rate) >= 0.01) {
-      consumptionInline = ' ' + i18n.t('trends.consumptionInline', {
-        rate: Math.abs(rate).toFixed(2),
-        unit: u.unit,
-      });
+      // Alk units are pure scale factors, so converting the daily delta works
+      const displayRate = Math.abs(u.fromCanonical(rate));
+      const key = rate < 0 ? 'trends.consumptionInline' : 'trends.consumptionInlineRising';
+      consumptionInline = ' ' + i18n.t(key, { rate: displayRate.toFixed(2), unit: u.unit });
     }
   }
 

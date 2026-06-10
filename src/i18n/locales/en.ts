@@ -31,6 +31,7 @@ export default {
     nutrients: 'Nutrients',
     ratioNO3PO4: 'NO3:PO4 Ratio',
     ionicBalance: 'Ionic Balance',
+    alkSwing: 'Alkalinity Swing',
     noData: 'no data',
   },
   // Log
@@ -70,6 +71,7 @@ export default {
     narrativeCritical: 'Critical zone (%{value} %{unit}). Immediate check recommended.',
     narrativeSingle: 'First reading recorded. Log another in a few days to see the trend.',
     consumptionInline: 'Consumption about %{rate} %{unit} per day.',
+    consumptionInlineRising: 'Rising about %{rate} %{unit} per day. Check dosing.',
     compared: '%{count} parameters compared',
     clear: 'Clear',
     detail: 'Detail',
@@ -102,6 +104,10 @@ export default {
     importSuccess: 'Import complete',
     importSuccessMsg: '%{count} readings imported.',
     importError: 'Import failed',
+    importPreviewTitle: 'Import backup',
+    importPreviewMsg: 'Import %{readings} readings, %{doses} doses and %{wc} water changes into "%{tank}"?',
+    importConfirm: 'Import',
+    importResultMsg: '%{imported} entries imported, %{skipped} skipped.',
     warnLow: 'Warn Low',
     warnHigh: 'Warn High',
     critLow: 'Crit Low',
@@ -120,6 +126,8 @@ export default {
     notesPlaceholder: 'Optional...',
     cancel: 'Cancel',
     save: 'Save',
+    deleteTitle: 'Delete entry',
+    deleteMessage: 'Delete %{label}?',
     products: {
       kalkwasser: 'Kalkwasser',
       allForReef: 'All-for-Reef',
@@ -139,6 +147,7 @@ export default {
     deleteConfirm: 'Delete "%{name}" and all its data?',
     cantDeleteLast: "Can't delete the only tank",
     namePrompt: 'Tank name',
+    exportFirst: 'Export CSV first',
   },
   // Water changes
   waterChange: {
@@ -163,5 +172,6 @@ export default {
     mgHigh: 'Mg too high relative to Ca',
     mgInstability: 'Low Mg may be causing Ca/Alk instability',
     ionicOk: 'Ca/Alk/Mg balance OK',
+    alkSwing: 'Alkalinity moved %{swing} %{unit} within 24h. Stabilize dosing.',
   },
 };

@@ -32,6 +32,7 @@ Reef Monitor is a mobile app for tracking nano reef aquarium water parameters. I
 | File picking | `expo-document-picker` (CSV import) |
 | Icons | `@expo/vector-icons` (FontAwesome) |
 | Icon generation | `sharp` (devDependency, scripts only) |
+| Tests | `jest` + `jest-expo` — unit tests for chemistry math, CSV, parsing (`npm test`) |
 
 **No backend. No auth. No network calls. No state management library** (React context + hooks only).
 
@@ -81,8 +82,11 @@ reef-monitor/
 │   │   └── types.ts              # TypeScript interfaces (Reading, Thresholds, DosingEntry, etc.)
 │   └── utils/
 │       ├── consumption.ts        # Alkalinity consumption rate (linear regression)
+│       ├── csv.ts                # Backup CSV v2: RFC-4180 build/parse, v1-compatible
+│       ├── number.ts             # parseLocaleFloat — comma-decimal-safe input parsing
 │       ├── ratios.ts             # NO3:PO4 ratio, Ca/Alk/Mg balance, Alk swing detection
-│       └── thresholds.ts         # Status evaluation (ok/warning/critical)
+│       ├── thresholds.ts         # Status evaluation (ok/warning/critical)
+│       └── __tests__/            # Unit tests (also src/constants/__tests__/)
 ├── scripts/
 │   ├── generate-icon.mjs         # SVG → PNG icon generation (uses sharp)
 │   └── generate-screenshots.mjs  # App Store screenshot generation (uses sharp)
@@ -106,6 +110,8 @@ reef-monitor/
 SQLite database `reef-monitor.db`. Schema version tracked via `PRAGMA user_version` (currently v5).
 
 **All data tables are tank-scoped** via `tank_id` foreign key.
+
+Migrations + default seeding run inside a single `BEGIN IMMEDIATE` transaction (`initDatabase`): a kill mid-migration rolls back instead of leaving the schema half-rebuilt. Per-tank seeding (`seedDefaultsForAllTanks`, also called by `createTank`) respects `HIDDEN_BY_DEFAULT` so new tanks get the same curated 8 visible parameters as fresh installs.
 
 ### `tanks`
 ```sql
@@ -197,7 +203,9 @@ CREATE TABLE reminder_schedules (
 
 ---
 
-## The 8 Monitored Parameters
+## The 15 Monitored Parameters
+
+8 visible by default:
 
 | Key | Label (en) | Unit | Step | Default | Thresholds (warn/crit) |
 |-----|-----------|------|------|---------|----------------------|
@@ -210,7 +218,19 @@ CREATE TABLE reminder_schedules (
 | nitrate | Nitrate | ppm | 0.1 | 5 | 0.5–20 / 0–40 |
 | phosphate | Phosphate | ppm | 0.01 | 0.05 | 0.01–0.15 / 0–0.25 |
 
-Parameters are defined in `src/constants/parameters.ts`. Labels come from i18n.
+7 hidden by default (`HIDDEN_BY_DEFAULT` in `src/db/database.ts`, applies to fresh installs AND newly created tanks), enabled per tank in Settings:
+
+| Key | Label (en) | Unit | Step | Default | Thresholds (warn/crit) |
+|-----|-----------|------|------|---------|----------------------|
+| ammonia | Ammonia | ppm | 0.05 | 0 | high only 0.1 / 0.25 |
+| nitrite | Nitrite | ppm | 0.05 | 0 | high only 0.1 / 0.25 |
+| potassium | Potassium | ppm | 5 | 400 | 380–450 / 350–480 |
+| strontium | Strontium | ppm | 0.5 | 9 | 7–12 / 5–14 |
+| iodine | Iodine | ppm | 0.01 | 0.06 | 0.02–0.1 / 0.01–0.15 |
+| boron | Boron | ppm | 0.5 | 5 | 3–7 / 2–9 |
+| silicate | Silicate | ppm | 0.1 | 0 | high only 0.5 / 2 |
+
+Parameters are defined in `src/constants/parameters.ts` (runtime key list: `PARAMETER_KEYS` in `src/models/types.ts`). Labels come from i18n.
 
 ---
 
@@ -219,7 +239,9 @@ Parameters are defined in `src/constants/parameters.ts`. Labels come from i18n.
 ### Dashboard (`app/(tabs)/index.tsx`)
 - 2-column grid of ParamCard components, grouped: "Water Chemistry" (6) + "Nutrients" (2)
 - Each card shows: label, last value, status dot (green/amber/red), time-ago
-- Alert banners at top for NO3:PO4 ratio and Ca/Alk/Mg ionic balance issues
+- Alert banners at top for NO3:PO4 ratio, Ca/Alk/Mg ionic balance, and alkalinity swing (>1 dKH within 24h = warning, >1.5 = critical, via `detectAlkSwing`)
+- Ratio/ionic banners only fire when the paired readings were taken within 72h of each other (stale pairings are noise)
+- "Latest" reading = most recent `recorded_at` (NOT max id — imported backups can insert older rows with higher ids)
 - **Tapping a card opens the ParamInput modal** to log a new reading
 - After saving, dashboard refreshes automatically
 
@@ -227,25 +249,25 @@ Parameters are defined in `src/constants/parameters.ts`. Labels come from i18n.
 - Horizontal parameter selector chips (tap to add/remove; multiselect enters compare mode)
 - Time range toggle (7d / 30d / 90d / All)
 - **TrendChartHybrid** (`src/components/TrendChartHybrid.tsx`):
-  - **Mono mode** (1 param): narrative card (delta + status sentence + observed range; alk gets consumption rate folded into the narrative inline) + chart (painted status zones, dashed warning thresholds, polyline with no intermediate dots, current-value marker, vertical dashed lines + colored dots at top for water changes / doses, 3 X-axis date labels) + stats row (current / min / avg / max)
+  - **Mono mode** (1 param): narrative card (delta + status sentence + observed range; alk gets consumption rate folded into the narrative inline — fitted on the last 14 days only, signed: falling = consumption, rising = "check dosing" via `trends.consumptionInlineRising`) + chart (painted status zones, dashed warning thresholds, polyline with no intermediate dots, current-value marker, vertical dashed lines + colored dots at top for water changes / doses, 3 X-axis date labels) + stats row (current / min / avg / max)
   - **Multi mode** (2+ params): compare banner (count + Clear action) + status synthesis line (e.g. "2 on target, 1 at threshold") + stacked mini-cards per param (status dot, current value, full-width sparkline with own scale and target band, water-change vertical hairlines, delta over the range, "Detail ›" affordance — tap whole card to switch to mono for that param)
 - History list (single param only): all readings reverse-chronological with inline edit (pencil) and delete (trash)
 - KeyboardAvoidingView for inline editing
 
 ### Corrections (`app/(tabs)/dosing.tsx`)
 - Two buttons: "Add Dose" and "Water Change"
-- Add dose: product quick-pick chips + free text, amount, unit (ml/g/gouttes), notes
-- Water change: percentage slider (0–100%, step 5), salt brand (free text), dilution (g/L). All fields retain last entered values.
-- Merged chronological list of doses and water changes, sorted by date
+- Add dose: product quick-pick chips + free text, amount, unit (ml/g/gouttes), notes. Amount must parse to > 0 (comma decimals accepted via `parseLocaleFloat`).
+- Water change: percentage slider (0–100%, step 5; 0% not saveable), salt brand (free text), dilution (g/L). All fields retain last entered values.
+- Merged chronological list of doses and water changes, sorted by date; each row has a trash icon with a confirm alert (`deleteDose` / `deleteWaterChange`)
 - Water changes appear as blue markers on ALL trend charts; doses appear as amber markers on relevant charts only
 
 ### Settings (`app/(tabs)/settings.tsx`)
-- **Tank management** (top section): list tanks with rename/delete, add new tank button
-- **Parameter toggles + thresholds**: expandable per-parameter editor with visibility toggle
+- **Tank management** (top section): list tanks with rename/delete, add new tank button. Delete alert offers "Export CSV first"; deleting the active tank re-points `active_tank_id` to the first remaining tank.
+- **Parameter toggles + thresholds**: expandable per-parameter editor with visibility toggle. Threshold fields parse via `parseLocaleFloat` (comma decimals safe).
 - **Unit picker**: when a parameter has multiple unit options, chips show in the expanded row to switch display unit
 - Threshold editor displays/edits in chosen display unit; values are converted to canonical for storage
-- Export as CSV (via `expo-sharing`) — exports active tank only, canonical units
-- Import CSV backup (via `expo-document-picker`) — imports into active tank
+- Export as CSV (via `expo-sharing`) — full backup v2 of the active tank (see CSV Backup Format below), filename `reef-monitor-<tank-slug>-<yyyyMMdd>.csv`
+- Import CSV backup (via `expo-document-picker`) — shows a preview alert (counts + target tank), then imports into the active tank with dedupe inside a transaction
 
 ---
 
@@ -268,6 +290,26 @@ Parameters with multiple units:
 | phosphate | ppm | ppb |
 
 CSV exports always use canonical units to remain importable across unit preference changes.
+
+## CSV Backup Format (v2)
+
+Built/parsed by `src/utils/csv.ts` (pure, fully unit-tested). RFC-4180 quoting throughout (commas, quotes, newlines in notes/salt brands survive round-trips). Numbers always use dot decimals in files.
+
+```
+# Reef Monitor backup v2
+# tank: <name>            # exported_at: <ISO>
+[readings]       parameter,value,unit,recorded_at,notes
+[dosing]         product,amount,unit,dosed_at,notes
+[water_changes]  percentage,salt_brand,dilution_gpl,changed_at
+[thresholds]     parameter,warning_low,warning_high,critical_low,critical_high
+```
+
+- `parseBackupCsv` also accepts legacy v1 files (plain readings CSV, no section markers); columns are matched by header name, not position. Invalid rows are counted, not imported.
+- `importBackup` (`src/db/queries.ts`) runs in a transaction, dedupes readings on (parameter, recorded_at, value), doses on (product, dosed_at, amount), water changes on (changed_at, percentage) — re-importing the same file is a no-op. Unknown parameter names are skipped. Thresholds are replaced, not counted as imported.
+
+## Number Input Convention
+
+**Never call `parseFloat` directly on a `TextInput` value.** Use `parseLocaleFloat` (`src/utils/number.ts`): most European locales show a comma on the iOS decimal pad, and `parseFloat("8,2")` silently returns 8. Applies to dose amounts, dilution, threshold fields, inline history edit, and any future numeric input.
 
 ## Multi-Tank Architecture
 
@@ -326,7 +368,7 @@ Built into `ParamInput.tsx`, shown at the bottom of the log entry modal:
 - **Nitrate**: 30-sec shake timer + 3-min wait timer
 - **Phosphate**: 30-sec shake timer
 
-Timer component: `src/components/TestTimer.tsx` — countdown with progress bar and haptic feedback on completion.
+Timer component: `src/components/TestTimer.tsx` — countdown with progress bar and haptic feedback on completion. Remaining time is derived from a wall-clock deadline (`Date.now()` vs end time), never decremented: JS timers suspend while the app is backgrounded, and the timer resyncs instantly on foreground via an AppState listener.
 
 ---
 
@@ -404,6 +446,12 @@ Output in `appstore/` directory, sizes: 1284x2778 (6.7") and 1242x2688 (6.5").
 ### Add a dosing product mapping
 1. Add entry to `DOSING_PARAMETER_MAP` in `src/constants/dosingMap.ts`
 2. Use lowercase substring matching
+
+### Run the tests
+```bash
+npm test
+```
+Unit tests cover: unit conversions, NO3:PO4 / ionic balance / alk swing logic, consumption regression, status thresholds, CSV v1/v2 parsing and round-trips, locale-safe number parsing. Tests that import modules touching i18n must `jest.mock('@/src/i18n', ...)`.
 
 ### Bump version
 1. Update `version` in `app.json`

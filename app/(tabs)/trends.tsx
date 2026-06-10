@@ -15,6 +15,7 @@ import { useVisibleParams } from '@/src/hooks/useVisibility';
 import { useTank } from '@/src/hooks/useTank';
 import { useUnitPrefs } from '@/src/hooks/useUnitPrefs';
 import { getDisplayUnit } from '@/src/utils/units';
+import { parseLocaleFloat } from '@/src/utils/number';
 import i18n, { getDateLocale } from '@/src/i18n';
 
 export default function TrendsScreen() {
@@ -127,7 +128,7 @@ export default function TrendsScreen() {
 
   const handleEditSave = useCallback(async () => {
     if (editingId === null) return;
-    const parsed = parseFloat(editValue);
+    const parsed = parseLocaleFloat(editValue);
     if (isNaN(parsed)) return;
     // Convert display value → canonical before storing
     const canonical = primaryDisplayUnit ? primaryDisplayUnit.toCanonical(parsed) : parsed;

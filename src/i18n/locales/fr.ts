@@ -28,6 +28,7 @@ export default {
     nutrients: 'Nutriments',
     ratioNO3PO4: 'Ratio NO3:PO4',
     ionicBalance: 'Équilibre ionique',
+    alkSwing: "Variation d'alcalinité",
     noData: 'aucune donnée',
   },
   log: {
@@ -64,6 +65,7 @@ export default {
     narrativeCritical: 'Zone critique (%{value} %{unit}). Vérification urgente recommandée.',
     narrativeSingle: 'Première mesure enregistrée. Refaire une mesure dans quelques jours pour voir la tendance.',
     consumptionInline: 'Consommation environ %{rate} %{unit} par jour.',
+    consumptionInlineRising: "En hausse d'environ %{rate} %{unit} par jour. Vérifier le dosage.",
     compared: '%{count} paramètres comparés',
     clear: 'Vider',
     detail: 'Détail',
@@ -94,6 +96,10 @@ export default {
     importSuccess: 'Import terminé',
     importSuccessMsg: '%{count} mesures importées.',
     importError: "Échec de l'import",
+    importPreviewTitle: 'Importer la sauvegarde',
+    importPreviewMsg: "Importer %{readings} mesures, %{doses} doses et %{wc} changements d'eau dans « %{tank} » ?",
+    importConfirm: 'Importer',
+    importResultMsg: '%{imported} entrées importées, %{skipped} ignorées.',
     warnLow: 'Alerte bas',
     warnHigh: 'Alerte haut',
     critLow: 'Crit bas',
@@ -111,6 +117,8 @@ export default {
     notesPlaceholder: 'Facultatif...',
     cancel: 'Annuler',
     save: 'Enregistrer',
+    deleteTitle: "Supprimer l'entrée",
+    deleteMessage: 'Supprimer %{label} ?',
     products: {
       kalkwasser: 'Kalkwasser',
       allForReef: 'All-for-Reef',
@@ -129,6 +137,7 @@ export default {
     deleteConfirm: 'Supprimer « %{name} » et toutes ses données ?',
     cantDeleteLast: 'Impossible de supprimer le dernier bac',
     namePrompt: "Nom de l'aquarium",
+    exportFirst: "Exporter le CSV d'abord",
   },
   waterChange: {
     title: "Changement d'eau",
@@ -151,5 +160,6 @@ export default {
     mgHigh: 'Mg trop élevé par rapport au Ca',
     mgInstability: 'Mg bas peut causer une instabilité Ca/Alk',
     ionicOk: 'Équilibre Ca/Alk/Mg OK',
+    alkSwing: "L'alcalinité a varié de %{swing} %{unit} en 24 h. Stabiliser le dosage.",
   },
 };

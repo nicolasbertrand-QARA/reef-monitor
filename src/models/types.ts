@@ -1,19 +1,22 @@
-export type ParameterKey =
-  | 'temperature'
-  | 'salinity'
-  | 'ph'
-  | 'alkalinity'
-  | 'calcium'
-  | 'magnesium'
-  | 'nitrate'
-  | 'phosphate'
-  | 'ammonia'
-  | 'nitrite'
-  | 'potassium'
-  | 'strontium'
-  | 'iodine'
-  | 'boron'
-  | 'silicate';
+export const PARAMETER_KEYS = [
+  'temperature',
+  'salinity',
+  'ph',
+  'alkalinity',
+  'calcium',
+  'magnesium',
+  'nitrate',
+  'phosphate',
+  'ammonia',
+  'nitrite',
+  'potassium',
+  'strontium',
+  'iodine',
+  'boron',
+  'silicate',
+] as const;
+
+export type ParameterKey = (typeof PARAMETER_KEYS)[number];
 
 export type Status = 'critical' | 'warning' | 'ok' | 'unknown';
 

@@ -4,21 +4,25 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
 import { Paths, File } from 'expo-file-system/next';
+import { format } from 'date-fns';
 import { getParameterList } from '@/src/constants/parameters';
 import { THEME } from '@/src/constants/colors';
 import { Thresholds, ParameterKey, Tank, ParameterDef, UnitOption } from '@/src/models/types';
 import {
-  getThresholds, updateThreshold, getAllReadingsForExport, importReadingsFromCSV,
+  getThresholds, updateThreshold, getAllReadingsForExport, importBackup,
+  getDosingHistory, getWaterChanges,
   getAllParamVisibility, setParamVisibility,
   createTank, renameTank, deleteTank,
 } from '@/src/db/queries';
 import { useTank } from '@/src/hooks/useTank';
 import { useUnitPrefs } from '@/src/hooks/useUnitPrefs';
 import { getDisplayUnit, thresholdsToDisplay, thresholdsToCanonical } from '@/src/utils/units';
+import { buildBackupCsv, parseBackupCsv, BackupData } from '@/src/utils/csv';
+import { parseLocaleFloat } from '@/src/utils/number';
 import i18n from '@/src/i18n';
 
 export default function SettingsScreen() {
-  const { tanks, activeTank, refreshTanks } = useTank();
+  const { tanks, activeTank, refreshTanks, switchTank } = useTank();
   const tankId = activeTank?.id ?? 1;
   const { prefs: unitPrefs, setPref: setUnitPref } = useUnitPrefs();
   const [thresholds, setThresholds] = useState<Thresholds[]>([]);
@@ -37,13 +41,30 @@ export default function SettingsScreen() {
     setVisibility((prev) => ({ ...prev, [key]: newVal }));
   };
 
-  const handleExport = async () => {
-    const readings = await getAllReadingsForExport(tankId);
-    if (readings.length === 0) { Alert.alert(i18n.t('settings.noDataExport'), i18n.t('settings.noDataExportMsg')); return; }
-    const csv = ['parameter,value,unit,recorded_at,notes', ...readings.map((r) => `${r.parameter},${r.value},${r.unit},${r.recorded_at},${r.notes ?? ''}`)].join('\n');
-    const file = new File(Paths.document, 'reef-monitor-export.csv');
+  const exportTank = async (tank: Tank) => {
+    const [readings, doses, waterChanges, tankThresholds] = await Promise.all([
+      getAllReadingsForExport(tank.id),
+      getDosingHistory(tank.id),
+      getWaterChanges(tank.id),
+      getThresholds(tank.id),
+    ]);
+    if (readings.length === 0 && doses.length === 0 && waterChanges.length === 0) {
+      Alert.alert(i18n.t('settings.noDataExport'), i18n.t('settings.noDataExportMsg'));
+      return;
+    }
+    const csv = buildBackupCsv(
+      { readings, doses, waterChanges, thresholds: tankThresholds },
+      { tankName: tank.name, exportedAt: new Date().toISOString() }
+    );
+    const slug = tank.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'tank';
+    const file = new File(Paths.document, `reef-monitor-${slug}-${format(new Date(), 'yyyyMMdd')}.csv`);
+    if (file.exists) file.delete();
     file.create(); file.write(csv);
     await Sharing.shareAsync(file.uri);
+  };
+
+  const handleExport = async () => {
+    if (activeTank) await exportTank(activeTank);
   };
 
   const handleImport = async () => {
@@ -51,12 +72,40 @@ export default function SettingsScreen() {
     if (result.canceled || !result.assets?.[0]) return;
     const file = new File(result.assets[0].uri);
     const content = await file.text();
+    let parsed: BackupData;
     try {
-      const count = await importReadingsFromCSV(content, tankId);
-      Alert.alert(i18n.t('settings.importSuccess'), i18n.t('settings.importSuccessMsg', { count }));
+      parsed = parseBackupCsv(content);
     } catch (e: any) {
       Alert.alert(i18n.t('settings.importError'), e.message);
+      return;
     }
+    Alert.alert(
+      i18n.t('settings.importPreviewTitle'),
+      i18n.t('settings.importPreviewMsg', {
+        readings: parsed.readings.length,
+        doses: parsed.doses.length,
+        wc: parsed.waterChanges.length,
+        tank: activeTank?.name ?? '',
+      }),
+      [
+        { text: i18n.t('log.cancel'), style: 'cancel' },
+        {
+          text: i18n.t('settings.importConfirm'),
+          onPress: async () => {
+            try {
+              const res = await importBackup(parsed, tankId);
+              setThresholds(await getThresholds(tankId));
+              Alert.alert(
+                i18n.t('settings.importSuccess'),
+                i18n.t('settings.importResultMsg', { imported: res.imported, skipped: res.skipped + parsed.invalidRows })
+              );
+            } catch (e: any) {
+              Alert.alert(i18n.t('settings.importError'), e.message);
+            }
+          },
+        },
+      ]
+    );
   };
 
   const handleAddTank = () => {
@@ -95,7 +144,14 @@ export default function SettingsScreen() {
       i18n.t('tanks.deleteConfirm', { name: tank.name }),
       [
         { text: i18n.t('log.cancel'), style: 'cancel' },
-        { text: i18n.t('tanks.delete'), style: 'destructive', onPress: async () => { await deleteTank(tank.id); refreshTanks(); } },
+        { text: i18n.t('tanks.exportFirst'), onPress: () => exportTank(tank) },
+        { text: i18n.t('tanks.delete'), style: 'destructive', onPress: async () => {
+            const remaining = tanks.filter((t) => t.id !== tank.id);
+            await deleteTank(tank.id);
+            // Keep the persisted active tank pointing at a tank that exists
+            if (tank.id === tankId && remaining[0]) await switchTank(remaining[0].id);
+            refreshTanks();
+          } },
       ]
     );
   };
@@ -249,12 +305,17 @@ function ParamEditor({ paramDef, threshold, tankId, unitPrefs, onUnitChange, onS
       </View>
       <TouchableOpacity style={editorStyles.saveBtn} onPress={() => {
         // Build display thresholds object, then convert to canonical
+        const toVal = (s: string): number | null => {
+          if (!s) return null;
+          const v = parseLocaleFloat(s);
+          return isNaN(v) ? null : v;
+        };
         const displayT: Thresholds = {
           parameter: paramDef.key,
-          warning_low: wl ? parseFloat(wl) : null,
-          warning_high: wh ? parseFloat(wh) : null,
-          critical_low: cl ? parseFloat(cl) : null,
-          critical_high: ch ? parseFloat(ch) : null,
+          warning_low: toVal(wl),
+          warning_high: toVal(wh),
+          critical_low: toVal(cl),
+          critical_high: toVal(ch),
         };
         const canonical = thresholdsToCanonical(displayT, paramDef, unitPrefs);
         onSave({ ...canonical, tank_id: tankId });

@@ -1,4 +1,5 @@
-import { Reading, Thresholds, DosingEntry, WaterChange, Tank, ParameterKey } from '@/src/models/types';
+import { Reading, Thresholds, DosingEntry, WaterChange, Tank, ParameterKey, PARAMETER_KEYS } from '@/src/models/types';
+import { BackupData } from '@/src/utils/csv';
 import { getDatabase, seedDefaultsForAllTanks } from './database';
 
 // --- Tanks ---
@@ -114,11 +115,15 @@ export async function insertReading(
 
 export async function getLatestReadings(tankId: number): Promise<Reading[]> {
   const db = await getDatabase();
+  // Latest = most recent recorded_at (id breaks ties), NOT max id: imported
+  // backups can insert older readings with higher ids.
   return db.getAllAsync<Reading>(
     `SELECT r.* FROM readings r
-     INNER JOIN (
-       SELECT parameter, MAX(id) as max_id FROM readings WHERE tank_id = ? GROUP BY parameter
-     ) latest ON r.id = latest.max_id
+     WHERE r.tank_id = ? AND r.id = (
+       SELECT r2.id FROM readings r2
+       WHERE r2.tank_id = r.tank_id AND r2.parameter = r.parameter
+       ORDER BY r2.recorded_at DESC, r2.id DESC LIMIT 1
+     )
      ORDER BY r.parameter`,
     tankId
   );
@@ -190,6 +195,11 @@ export async function insertDose(
   );
 }
 
+export async function deleteDose(id: number): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync('DELETE FROM dosing_log WHERE id = ?', id);
+}
+
 export async function getDosingHistory(tankId: number, days?: number): Promise<DosingEntry[]> {
   const db = await getDatabase();
   if (days) {
@@ -215,6 +225,11 @@ export async function insertWaterChange(
     'INSERT INTO water_changes (percentage, salt_brand, dilution_gpl, changed_at, tank_id) VALUES (?, ?, ?, ?, ?)',
     percentage, saltBrand ?? null, dilutionGpl ?? null, new Date().toISOString(), tankId
   );
+}
+
+export async function deleteWaterChange(id: number): Promise<void> {
+  const db = await getDatabase();
+  await db.runAsync('DELETE FROM water_changes WHERE id = ?', id);
 }
 
 export async function getWaterChanges(tankId: number, days?: number): Promise<WaterChange[]> {
@@ -248,27 +263,76 @@ export async function getAllReadingsForExport(tankId: number): Promise<Reading[]
   );
 }
 
-export async function importReadingsFromCSV(csvContent: string, tankId: number): Promise<number> {
+export interface ImportResult { imported: number; skipped: number; }
+
+/**
+ * Import a parsed backup into a tank, inside a transaction.
+ * Dedupes against existing rows so re-importing the same file is a no-op.
+ * Unknown parameter names are skipped. Thresholds are applied (replace) but
+ * not counted in `imported`.
+ */
+export async function importBackup(data: BackupData, tankId: number): Promise<ImportResult> {
   const db = await getDatabase();
-  const lines = csvContent.trim().split('\n');
-  if (lines.length < 2) return 0;
-  const header = lines[0].toLowerCase();
-  if (!header.includes('parameter') || !header.includes('value')) {
-    throw new Error('Invalid CSV format');
-  }
+  const knownParams = new Set<string>(PARAMETER_KEYS);
   let imported = 0;
-  for (let i = 1; i < lines.length; i++) {
-    const cols = lines[i].split(',');
-    if (cols.length < 4) continue;
-    const [parameter, valueStr, unit, recorded_at, ...rest] = cols;
-    const value = parseFloat(valueStr);
-    if (isNaN(value) || !parameter || !recorded_at) continue;
-    const notes = rest.join(',').trim() || null;
-    await db.runAsync(
-      'INSERT INTO readings (parameter, value, unit, recorded_at, tank_id, notes) VALUES (?, ?, ?, ?, ?, ?)',
-      parameter.trim(), value, unit.trim(), recorded_at.trim(), tankId, notes
+  let skipped = 0;
+
+  await db.withTransactionAsync(async () => {
+    const existingReadings = await db.getAllAsync<{ parameter: string; recorded_at: string; value: number }>(
+      'SELECT parameter, recorded_at, value FROM readings WHERE tank_id = ?', tankId
     );
-    imported++;
-  }
-  return imported;
+    const readingKeys = new Set(existingReadings.map((r) => `${r.parameter}|${r.recorded_at}|${r.value}`));
+    for (const r of data.readings) {
+      if (!knownParams.has(r.parameter)) { skipped++; continue; }
+      const key = `${r.parameter}|${r.recorded_at}|${r.value}`;
+      if (readingKeys.has(key)) { skipped++; continue; }
+      readingKeys.add(key);
+      await db.runAsync(
+        'INSERT INTO readings (parameter, value, unit, recorded_at, tank_id, notes) VALUES (?, ?, ?, ?, ?, ?)',
+        r.parameter, r.value, r.unit, r.recorded_at, tankId, r.notes
+      );
+      imported++;
+    }
+
+    const existingDoses = await db.getAllAsync<{ product: string; dosed_at: string; amount: number }>(
+      'SELECT product, dosed_at, amount FROM dosing_log WHERE tank_id = ?', tankId
+    );
+    const doseKeys = new Set(existingDoses.map((d) => `${d.product}|${d.dosed_at}|${d.amount}`));
+    for (const d of data.doses) {
+      const key = `${d.product}|${d.dosed_at}|${d.amount}`;
+      if (doseKeys.has(key)) { skipped++; continue; }
+      doseKeys.add(key);
+      await db.runAsync(
+        'INSERT INTO dosing_log (product, amount, unit, dosed_at, tank_id, notes) VALUES (?, ?, ?, ?, ?, ?)',
+        d.product, d.amount, d.unit, d.dosed_at, tankId, d.notes
+      );
+      imported++;
+    }
+
+    const existingWCs = await db.getAllAsync<{ changed_at: string; percentage: number }>(
+      'SELECT changed_at, percentage FROM water_changes WHERE tank_id = ?', tankId
+    );
+    const wcKeys = new Set(existingWCs.map((w) => `${w.changed_at}|${w.percentage}`));
+    for (const w of data.waterChanges) {
+      const key = `${w.changed_at}|${w.percentage}`;
+      if (wcKeys.has(key)) { skipped++; continue; }
+      wcKeys.add(key);
+      await db.runAsync(
+        'INSERT INTO water_changes (percentage, salt_brand, dilution_gpl, changed_at, tank_id) VALUES (?, ?, ?, ?, ?)',
+        w.percentage, w.salt_brand, w.dilution_gpl, w.changed_at, tankId
+      );
+      imported++;
+    }
+
+    for (const t of data.thresholds) {
+      if (!knownParams.has(t.parameter)) { skipped++; continue; }
+      await db.runAsync(
+        `INSERT OR REPLACE INTO thresholds (parameter, tank_id, warning_low, warning_high, critical_low, critical_high)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        t.parameter, tankId, t.warning_low, t.warning_high, t.critical_low, t.critical_high
+      );
+    }
+  });
+
+  return { imported, skipped };
 }

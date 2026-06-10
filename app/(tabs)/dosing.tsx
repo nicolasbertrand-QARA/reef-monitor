@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Modal } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Modal, Alert } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { format } from 'date-fns';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { THEME } from '@/src/constants/colors';
 import { DosingEntry, WaterChange } from '@/src/models/types';
-import { insertDose, getDosingHistory, insertWaterChange, getWaterChanges, getLastWaterChange } from '@/src/db/queries';
+import { insertDose, getDosingHistory, insertWaterChange, getWaterChanges, getLastWaterChange, deleteDose, deleteWaterChange } from '@/src/db/queries';
 import { useTank } from '@/src/hooks/useTank';
+import { parseLocaleFloat } from '@/src/utils/number';
 import i18n, { getDateLocale } from '@/src/i18n';
 
 const PRODUCT_KEYS = ['kalkwasser', 'allForReef', 'caBalling', 'alkBalling', 'mgSupplement', 'aminoAcids', 'coralFood'] as const;
@@ -27,6 +28,17 @@ export default function DosingScreen() {
   }, [tankId]);
 
   useEffect(() => { refresh(); }, [refresh]);
+
+  const confirmDelete = (label: string, onDelete: () => Promise<void>) => {
+    Alert.alert(
+      i18n.t('dosing.deleteTitle'),
+      i18n.t('dosing.deleteMessage', { label }),
+      [
+        { text: i18n.t('dosing.cancel'), style: 'cancel' },
+        { text: i18n.t('trends.deleteConfirm'), style: 'destructive', onPress: async () => { await onDelete(); refresh(); } },
+      ]
+    );
+  };
 
   // Merge and sort all events by date
   type Event = { type: 'dose'; data: DosingEntry; date: string } | { type: 'wc'; data: WaterChange; date: string };
@@ -64,6 +76,9 @@ export default function DosingScreen() {
                   <Text style={styles.entryDate}>{format(new Date(e.dosed_at), 'MMM d, HH:mm', { locale: getDateLocale() })}</Text>
                 </View>
                 <Text style={styles.entryAmount}>{e.amount} {e.unit}</Text>
+                <TouchableOpacity onPress={() => confirmDelete(`${e.product} · ${e.amount} ${e.unit}`, () => deleteDose(e.id))} hitSlop={12} style={styles.deleteBtn}>
+                  <FontAwesome name="trash-o" size={14} color={THEME.textSecondary} />
+                </TouchableOpacity>
               </View>
             );
           } else {
@@ -82,6 +97,9 @@ export default function DosingScreen() {
                   </Text>
                 </View>
                 <Text style={[styles.entryAmount, { color: WC_COLOR }]}>{w.percentage}%</Text>
+                <TouchableOpacity onPress={() => confirmDelete(`${i18n.t('waterChange.title')} ${w.percentage}%`, () => deleteWaterChange(w.id))} hitSlop={12} style={styles.deleteBtn}>
+                  <FontAwesome name="trash-o" size={14} color={THEME.textSecondary} />
+                </TouchableOpacity>
               </View>
             );
           }
@@ -100,8 +118,9 @@ function AddDoseModal({ visible, tankId, onClose, onSaved }: { visible: boolean;
   const [unit, setUnit] = useState('ml');
   const [notes, setNotes] = useState('');
   const handleSave = async () => {
-    if (!product || !amount) return;
-    await insertDose(product, parseFloat(amount), unit, tankId, notes || undefined);
+    const amt = parseLocaleFloat(amount);
+    if (!product.trim() || isNaN(amt) || amt <= 0) return;
+    await insertDose(product.trim(), amt, unit, tankId, notes || undefined);
     setProduct(''); setAmount(''); setNotes(''); onSaved();
   };
   const products = PRODUCT_KEYS.map((k) => i18n.t(`dosing.products.${k}`));
@@ -160,10 +179,12 @@ function WaterChangeModal({ visible, tankId, onClose, onSaved }: { visible: bool
   }, [visible]);
 
   const handleSave = async () => {
+    if (percentage <= 0) return;
+    const dil = dilution ? parseLocaleFloat(dilution) : NaN;
     await insertWaterChange(
       percentage, tankId,
       saltBrand || undefined,
-      dilution ? parseFloat(dilution) : undefined
+      isNaN(dil) ? undefined : dil
     );
     onSaved();
   };
@@ -235,6 +256,7 @@ const styles = StyleSheet.create({
   entryProduct: { color: THEME.text, fontSize: 15, fontWeight: '600' },
   entryDate: { color: THEME.textSecondary, fontSize: 12, marginTop: 2 },
   entryAmount: { color: THEME.accent, fontSize: 18, fontWeight: '700', fontVariant: ['tabular-nums'] },
+  deleteBtn: { padding: 4, marginLeft: 14 },
 });
 
 const modalStyles = StyleSheet.create({

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, AppState } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { THEME } from '@/src/constants/colors';
 import i18n from '@/src/i18n';
@@ -11,28 +11,45 @@ export function TestTimer({ seconds, label }: Props) {
   const [running, setRunning] = useState(false);
   const [finished, setFinished] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Wall-clock deadline: JS timers suspend while the app is backgrounded,
+  // so remaining time is always derived from Date.now(), never decremented.
+  const endTimeRef = useRef<number | null>(null);
 
-  useEffect(() => { return () => { if (intervalRef.current) clearInterval(intervalRef.current); }; }, []);
+  const clearTick = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = null;
+  };
+
+  const tick = () => {
+    const end = endTimeRef.current;
+    if (end === null) return;
+    const rem = Math.max(0, Math.ceil((end - Date.now()) / 1000));
+    setRemaining(rem);
+    if (rem <= 0) {
+      clearTick(); endTimeRef.current = null;
+      setRunning(false); setFinished(true);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    }
+  };
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') tick(); // resync immediately on foreground
+    });
+    return () => { sub.remove(); clearTick(); };
+  }, []);
 
   const start = () => {
+    endTimeRef.current = Date.now() + seconds * 1000;
     setRemaining(seconds); setRunning(true); setFinished(false);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    intervalRef.current = setInterval(() => {
-      setRemaining((prev) => {
-        if (prev <= 1) {
-          clearInterval(intervalRef.current!); intervalRef.current = null;
-          setRunning(false); setFinished(true);
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    clearTick();
+    intervalRef.current = setInterval(tick, 250);
   };
 
   const reset = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = null; setRemaining(seconds); setRunning(false); setFinished(false);
+    clearTick(); endTimeRef.current = null;
+    setRemaining(seconds); setRunning(false); setFinished(false);
   };
 
   const formatTime = (s: number) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;

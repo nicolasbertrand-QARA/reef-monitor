@@ -4,7 +4,7 @@ import i18n from '@/src/i18n';
 export interface RatioResult { ratio: number | null; status: Status; message: string; }
 
 export function evaluateNO3PO4Ratio(no3: number, po4: number): RatioResult {
-  if (po4 <= 0 || no3 < 0) {
+  if (po4 <= 0 || no3 <= 0) {
     if (po4 <= 0 && no3 > 5) return { ratio: null, status: 'warning', message: i18n.t('ratios.po4Undetectable') };
     if (no3 <= 0 && po4 > 0.03) return { ratio: null, status: 'warning', message: i18n.t('ratios.no3Undetectable') };
     return { ratio: null, status: 'unknown', message: i18n.t('ratios.insufficientData') };

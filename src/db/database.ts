@@ -4,16 +4,41 @@ import { PARAMETER_LIST } from '@/src/constants/parameters';
 const DB_NAME = 'reef-monitor.db';
 const DB_VERSION = 5;
 
+// Parameters hidden on the dashboard until the user enables them.
+// Used both by the v3 migration and by per-tank default seeding.
+const HIDDEN_BY_DEFAULT = ['ammonia', 'nitrite', 'potassium', 'strontium', 'iodine', 'boron', 'silicate'];
+
 let db: SQLite.SQLiteDatabase | null = null;
 
 export async function getDatabase(): Promise<SQLite.SQLiteDatabase> {
   if (db) return db;
-  db = await SQLite.openDatabaseAsync(DB_NAME);
-  await initDatabase(db);
+  const opened = await SQLite.openDatabaseAsync(DB_NAME);
+  try {
+    await initDatabase(opened);
+  } catch (e) {
+    // Do not cache a half-initialized connection
+    await opened.closeAsync().catch(() => {});
+    throw e;
+  }
+  db = opened;
   return db;
 }
 
 async function initDatabase(database: SQLite.SQLiteDatabase) {
+  // All migrations + seeding run in one transaction: a kill mid-migration
+  // must not leave the schema half-rebuilt (the v5 thresholds table swap
+  // is not idempotent otherwise).
+  await database.execAsync('BEGIN IMMEDIATE');
+  try {
+    await runMigrations(database);
+    await database.execAsync('COMMIT');
+  } catch (e) {
+    await database.execAsync('ROLLBACK').catch(() => {});
+    throw e;
+  }
+}
+
+async function runMigrations(database: SQLite.SQLiteDatabase) {
   const { user_version } = await database.getFirstAsync<{ user_version: number }>(
     'PRAGMA user_version'
   ) ?? { user_version: 0 };
@@ -64,9 +89,8 @@ async function initDatabase(database: SQLite.SQLiteDatabase) {
         visible INTEGER NOT NULL DEFAULT 1
       );
     `);
-    const hiddenByDefault = ['ammonia', 'nitrite', 'potassium', 'strontium', 'iodine', 'boron', 'silicate'];
     for (const param of PARAMETER_LIST) {
-      const visible = hiddenByDefault.includes(param.key) ? 0 : 1;
+      const visible = HIDDEN_BY_DEFAULT.includes(param.key) ? 0 : 1;
       await database.runAsync(
         'INSERT OR IGNORE INTO parameter_visibility (parameter, visible) VALUES (?, ?)',
         param.key, visible
@@ -169,7 +193,7 @@ async function seedDefaultsForAllTanks(database: SQLite.SQLiteDatabase) {
       );
       await database.runAsync(
         `INSERT OR IGNORE INTO parameter_visibility (parameter, tank_id, visible) VALUES (?, ?, ?)`,
-        param.key, tank.id, 1
+        param.key, tank.id, HIDDEN_BY_DEFAULT.includes(param.key) ? 0 : 1
       );
     }
   }
