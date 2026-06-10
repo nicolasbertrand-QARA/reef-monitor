@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, AppState } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { THEME } from '@/src/constants/colors';
+import { THEME, STATUS_TEXT_COLORS, STATUS_COLORS } from '@/src/constants/colors';
 import i18n from '@/src/i18n';
 
 interface Props { seconds: number; label: string; }
@@ -76,14 +76,14 @@ const styles = StyleSheet.create({
   containerFinished: { backgroundColor: THEME.statusOkBg },
   info: { flex: 1 },
   label: { color: THEME.textSecondary, fontSize: 12, fontWeight: '500', marginBottom: 2 },
-  labelFinished: { color: '#6b9e7a' },
+  labelFinished: { color: STATUS_TEXT_COLORS.ok },
   time: { color: THEME.text, fontSize: 24, fontWeight: '700', fontVariant: ['tabular-nums'], letterSpacing: -0.5 },
-  timeFinished: { color: '#6b9e7a' },
+  timeFinished: { color: STATUS_TEXT_COLORS.ok },
   progressTrack: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 3, backgroundColor: THEME.surface, borderBottomLeftRadius: 14, borderBottomRightRadius: 14, overflow: 'hidden' },
   progressFill: { height: '100%', backgroundColor: THEME.accent, borderRadius: 3 },
   btn: { backgroundColor: THEME.accent, borderRadius: 10, paddingHorizontal: 16, paddingVertical: 10 },
   btnRunning: { backgroundColor: THEME.surface },
-  btnFinished: { backgroundColor: '#6b9e7a' },
+  btnFinished: { backgroundColor: STATUS_COLORS.ok },
   btnText: { color: THEME.surfaceElevated, fontSize: 14, fontWeight: '600' },
   btnTextFinished: { color: THEME.surfaceElevated },
 });

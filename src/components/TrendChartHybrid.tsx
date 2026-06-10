@@ -229,14 +229,14 @@ function MonoView({ ds, doses = [], waterChanges = [], unitPrefs = {}, timeRange
 
           {wcMarkers.map((x, i) => (
             <G key={`wc-${i}`}>
-              <Line x1={x} y1={PY0} x2={x} y2={PY1} stroke={THEME.accent} strokeWidth={1} strokeDasharray="2 4" opacity={0.5} />
-              <Circle cx={x} cy={14} r={4} fill={THEME.accent} />
+              <Line x1={x} y1={PY0} x2={x} y2={PY1} stroke={THEME.waterChange} strokeWidth={1} strokeDasharray="2 4" opacity={0.5} />
+              <Circle cx={x} cy={10} r={4} fill={THEME.waterChange} />
             </G>
           ))}
           {doseMarkers.map((x, i) => (
             <G key={`dose-${i}`}>
               <Line x1={x} y1={PY0} x2={x} y2={PY1} stroke={STATUS_COLORS.warning} strokeWidth={1} strokeDasharray="2 4" opacity={0.5} />
-              <Circle cx={x} cy={14} r={4} fill={STATUS_COLORS.warning} />
+              <Circle cx={x} cy={19} r={4} fill={STATUS_COLORS.warning} />
             </G>
           ))}
 
@@ -251,7 +251,7 @@ function MonoView({ ds, doses = [], waterChanges = [], unitPrefs = {}, timeRange
             />
           )}
 
-          <Circle cx={lastX} cy={lastY} r={3.5} fill="white" stroke={THEME.accent} strokeWidth={2} />
+          <Circle cx={lastX} cy={lastY} r={3.5} fill={THEME.surfaceElevated} stroke={THEME.accent} strokeWidth={2} />
 
           {xLabels.map((l, i) => (
             <SvgText key={`xl-${i}`} x={l.x} y={262} fill={THEME.textSecondary} fontSize={9} textAnchor="middle">
@@ -326,7 +326,6 @@ function MultiView({ datasets, waterChanges = [], unitPrefs = {}, onSelectSingle
         ))}
       </View>
 
-      <Text style={styles.footerHint}>{i18n.t('trends.tapForDetail')}</Text>
     </View>
   );
 }
@@ -447,7 +446,7 @@ function MiniCard({
           />
         )}
         {wcLines.map((x, i) => (
-          <Line key={`wcl-${i}`} x1={x} y1={PY0} x2={x} y2={PY1} stroke={THEME.accent} strokeWidth={0.8} strokeDasharray="2 3" opacity={0.5} />
+          <Line key={`wcl-${i}`} x1={x} y1={PY0} x2={x} y2={PY1} stroke={THEME.waterChange} strokeWidth={0.8} strokeDasharray="2 3" opacity={0.5} />
         ))}
         {n > 1 && (
           <Polyline
@@ -459,7 +458,7 @@ function MiniCard({
             strokeLinejoin="round"
           />
         )}
-        <Circle cx={lastX} cy={lastY} r={3} fill="white" stroke={lineColor} strokeWidth={1.8} />
+        <Circle cx={lastX} cy={lastY} r={3} fill={THEME.surfaceElevated} stroke={lineColor} strokeWidth={1.8} />
       </Svg>
       <View style={styles.miniMeta}>
         <Text style={[styles.miniDelta, { color: deltaColor }]}>
@@ -568,12 +567,4 @@ const styles = StyleSheet.create({
   miniDelta: { fontSize: 11, fontWeight: '700' },
   miniDetail: { fontSize: 11, fontWeight: '700', color: THEME.accent },
   miniEmpty: { fontSize: 12, color: THEME.textSecondary, marginTop: 4 },
-
-  footerHint: { marginHorizontal: 20, marginTop: 8, color: THEME.textSecondary, fontSize: 11, textAlign: 'center' },
 });
-
-// Keep export for any legacy callers
-export const LINE_COLORS = [
-  '#5a8f8b', '#c4644a', '#c4943e', '#6b9e7a',
-  '#8b6b9e', '#5a7fb8', '#b88a5a', '#9e6b7a',
-];

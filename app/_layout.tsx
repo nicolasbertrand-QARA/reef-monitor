@@ -36,7 +36,6 @@ function AppContent() {
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   });
   const [db, setDb] = useState<SQLite.SQLiteDatabase | null>(null);

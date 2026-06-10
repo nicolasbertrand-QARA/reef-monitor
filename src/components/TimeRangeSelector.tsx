@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { THEME } from '@/src/constants/colors';
+import i18n from '@/src/i18n';
 
 export type TimeRange = 7 | 30 | 90 | 0;
 
@@ -9,30 +10,28 @@ interface Props {
   onSelect: (range: TimeRange) => void;
 }
 
-const OPTIONS: { label: string; value: TimeRange }[] = [
-  { label: '7d', value: 7 },
-  { label: '30d', value: 30 },
-  { label: '90d', value: 90 },
-  { label: 'All', value: 0 },
-];
+const VALUES: TimeRange[] = [7, 30, 90, 0];
 
 export function TimeRangeSelector({ selected, onSelect }: Props) {
   return (
     <View style={styles.container}>
-      {OPTIONS.map((opt) => (
-        <TouchableOpacity
-          key={opt.value}
-          style={[styles.chip, selected === opt.value && styles.chipActive]}
-          onPress={() => onSelect(opt.value)}
-          accessibilityRole="button"
-          accessibilityState={{ selected: selected === opt.value }}
-          hitSlop={{ top: 8, bottom: 8 }}
-        >
-          <Text style={[styles.text, selected === opt.value && styles.textActive]}>
-            {opt.label}
-          </Text>
-        </TouchableOpacity>
-      ))}
+      {VALUES.map((value) => {
+        const label = value === 0 ? i18n.t('trends.rangeAll') : i18n.t('trends.rangeDays', { n: value });
+        return (
+          <TouchableOpacity
+            key={value}
+            style={[styles.chip, selected === value && styles.chipActive]}
+            onPress={() => onSelect(value)}
+            accessibilityRole="button"
+            accessibilityState={{ selected: selected === value }}
+            hitSlop={{ top: 8, bottom: 8 }}
+          >
+            <Text style={[styles.text, selected === value && styles.textActive]}>
+              {label}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 }

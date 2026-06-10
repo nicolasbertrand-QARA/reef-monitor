@@ -11,7 +11,7 @@ import { parseLocaleFloat } from '@/src/utils/number';
 import i18n, { getDateLocale } from '@/src/i18n';
 
 const PRODUCT_KEYS = ['kalkwasser', 'allForReef', 'caBalling', 'alkBalling', 'mgSupplement', 'aminoAcids', 'coralFood'] as const;
-const WC_COLOR = '#5a8fb8';
+const WC_COLOR = THEME.waterChange;
 
 export default function DosingScreen() {
   const { activeTank } = useTank();
