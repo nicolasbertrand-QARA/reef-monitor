@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { Platform, Settings } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SQLite from 'expo-sqlite';
 import { StatusBar } from 'expo-status-bar';
@@ -19,6 +20,18 @@ SplashScreen.preventAutoHideAsync();
 
 function AppContent() {
   const tankState = useTankProvider();
+
+  // Screenshot/automation tour: `xcrun simctl spawn <udid> defaults write
+  // com.nicolasbertrand.reefmonitor screenshotRoute /trends` navigates on
+  // launch without the simctl openurl confirmation dialog. Inert for users
+  // (the key never exists outside automation).
+  useEffect(() => {
+    if (Platform.OS !== 'ios') return;
+    const route = Settings.get('screenshotRoute');
+    if (typeof route === 'string' && route.startsWith('/')) {
+      setTimeout(() => router.replace(route as never), 400);
+    }
+  }, []);
 
   return (
     <TankContext.Provider value={tankState}>

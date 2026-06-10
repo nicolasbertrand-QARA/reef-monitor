@@ -429,11 +429,17 @@ node scripts/generate-icon.mjs
 cp assets/images/icon.png ios/reefmonitor/Images.xcassets/AppIcon.appiconset/App-Icon-1024x1024@1x.png
 ```
 
-### Regenerate App Store screenshots
+### Regenerate App Store screenshots (real captures)
 ```bash
-node scripts/generate-screenshots.mjs
+node scripts/seed-demo-db.mjs /tmp/reef-monitor.db     # 90-day demo dataset
+# Build for a simulator, copy the DB into the app container, then per screen:
+#   xcrun simctl spawn <udid> defaults write com.nicolasbertrand.reefmonitor screenshotRoute /trends
+#   xcrun simctl launch <udid> com.nicolasbertrand.reefmonitor -AppleLanguages "(fr)" -AppleLocale fr_FR
+#   xcrun simctl io <udid> screenshot trends.png
+node scripts/compose-screenshots.mjs /tmp/caps-en en   # → appstore/screenshots/v1.5/en/{6.7,6.5}/
+node scripts/compose-screenshots.mjs /tmp/caps-fr fr
 ```
-Output in `appstore/` directory, sizes: 1284x2778 (6.7") and 1242x2688 (6.5").
+The app reads the `screenshotRoute` NSUserDefaults key on launch (root layout) and navigates there: this avoids the `simctl openurl` confirmation dialog. The old synthetic SVG pipeline is retired (it depicted nonexistent UI, a Guideline 2.3.3 risk).
 
 ---
 
